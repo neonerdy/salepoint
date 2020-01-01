@@ -1,0 +1,11 @@
+D:\Repos\Projects\salepoint\public\api\obj\Debug\netcoreapp2.0\SalePointAPI.csprojAssemblyReference.cache
+D:\Repos\Projects\salepoint\public\api\obj\Debug\netcoreapp2.0\SalePointAPI.csproj.CoreCompileInputs.cache
+D:\Repos\Projects\salepoint\public\api\obj\Debug\netcoreapp2.0\SalePointAPI.AssemblyInfoInputs.cache
+D:\Repos\Projects\salepoint\public\api\obj\Debug\netcoreapp2.0\SalePointAPI.AssemblyInfo.cs
+D:\Repos\Projects\salepoint\public\api\bin\Debug\netcoreapp2.0\SalePointAPI.deps.json
+D:\Repos\Projects\salepoint\public\api\bin\Debug\netcoreapp2.0\SalePointAPI.runtimeconfig.json
+D:\Repos\Projects\salepoint\public\api\bin\Debug\netcoreapp2.0\SalePointAPI.runtimeconfig.dev.json
+D:\Repos\Projects\salepoint\public\api\bin\Debug\netcoreapp2.0\SalePointAPI.dll
+D:\Repos\Projects\salepoint\public\api\bin\Debug\netcoreapp2.0\SalePointAPI.pdb
+D:\Repos\Projects\salepoint\public\api\obj\Debug\netcoreapp2.0\SalePointAPI.dll
+D:\Repos\Projects\salepoint\public\api\obj\Debug\netcoreapp2.0\SalePointAPI.pdb

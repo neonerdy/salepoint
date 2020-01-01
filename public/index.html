@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+   
+    <meta charset="utf-8">
+    <title>SalePoint</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+
+    <link href="css/plugins/codemirror/codemirror.css" rel="stylesheet">
+    <link href="css/plugins/codemirror/ambiance.css" rel="stylesheet">
+    <link href="css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+
+    
+     <script src="js/jquery-3.1.1.min.js"></script>
+     <script src="js/popper.min.js"></script>
+     <script src="js/bootstrap.js"></script>
+     <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+     <script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+     <script src="js/plugins/datapicker/bootstrap-datepicker.js"></script>
+     
+    
+
+    <!-- Custom and plugin javascript -->
+    
+    <script src="js/inspinia.js"></script>    
+    <script src="js/plugins/pace/pace.min.js"></script>
+
+    <script>
+    
+    $(document).ready(function(){
+
+      var mem = $('#data_1 .input-group.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true
+        });
+
+
+
+    });
+    
+    </script>
+
+  
+  </head>
+  <body class="pace-done fixed-nav">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>

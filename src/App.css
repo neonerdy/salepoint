@@ -1,0 +1,60 @@
+.App {
+  text-align: center;
+}
+
+.required {
+  border-right: 6px solid orange;
+}
+
+
+.test {
+  color: red;
+}
+
+.Scroll1 {
+  position: relative; overflow: hidden; width: auto; height: 100%;
+}
+
+.Scroll2 {
+  overflow: hidden; width: auto; height: 100%;
+}
+
+.Scroll3 {
+  background: rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 366.599px;
+}
+
+.Scroll4 {
+  width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;
+}
+
+
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
