@@ -1,0 +1,476 @@
+USE [SALEPOINT]
+GO
+/****** Object:  Table [dbo].[Users]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Users](
+	[ID] [uniqueidentifier] NOT NULL,
+	[UserName] [varchar](50) NULL,
+	[Password] [varchar](50) NULL,
+	[EmployeeId] [uniqueidentifier] NULL,
+	[CreatedDate] [datetime] NULL,
+	[ModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Units]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Units](
+	[ID] [uniqueidentifier] NOT NULL,
+	[UnitName] [varchar](50) NULL,
+ CONSTRAINT [PK_Units] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Suppliers]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Suppliers](
+	[ID] [uniqueidentifier] NOT NULL,
+	[SupplierName] [varchar](50) NULL,
+	[Address] [varchar](250) NULL,
+	[City] [varchar](50) NULL,
+	[Province] [varchar](50) NULL,
+	[ZipCode] [varchar](50) NULL,
+	[Phone] [varchar](50) NULL,
+	[Email] [varchar](50) NULL,
+	[ContactPerson] [varchar](50) NULL,
+	[ContactPhone] [varchar](50) NULL,
+	[IsActive] [bit] NULL,
+ CONSTRAINT [PK_Suppliers] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[SalesReceipts]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[SalesReceipts](
+	[ID] [uniqueidentifier] NOT NULL,
+	[SalesCode] [varchar](50) NULL,
+	[SalesDate] [datetime] NULL,
+	[CustomerId] [uniqueidentifier] NULL,
+	[CashierId] [uniqueidentifier] NULL,
+	[Notes] [varchar](50) NULL,
+	[Amount] [decimal](18, 0) NULL,
+	[Tax] [decimal](18, 0) NULL,
+	[Discount] [decimal](18, 0) NULL,
+	[Total] [decimal](18, 0) NULL,
+	[Status] [varchar](50) NULL,
+	[CreatedDate] [datetime] NULL,
+	[ModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_SalesItems] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[SalesReceiptItems]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SalesReceiptItems](
+	[ID] [uniqueidentifier] NULL,
+	[SalesId] [uniqueidentifier] NULL,
+	[ProductId] [uniqueidentifier] NULL,
+	[Qty] [int] NULL,
+	[Price] [decimal](18, 0) NULL,
+	[TaxPct] [int] NULL,
+	[DiscountPct] [int] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[SalesPayments]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[SalesPayments](
+	[ID] [uniqueidentifier] NOT NULL,
+	[CustomerId] [uniqueidentifier] NULL,
+	[PaymentDate] [datetime] NULL,
+	[AccountId] [uniqueidentifier] NULL,
+	[PaymentTypeId] [uniqueidentifier] NULL,
+	[TotalAmountPaid] [decimal](18, 0) NULL,
+	[Notes] [varchar](150) NULL,
+ CONSTRAINT [PK_SalesPayments] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[SalesPaymentItems]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SalesPaymentItems](
+	[ID] [uniqueidentifier] NULL,
+	[SalesPaymentId] [uniqueidentifier] NULL,
+	[SalesInvoiceId] [uniqueidentifier] NULL,
+	[AmountPaid] [decimal](18, 0) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[SalesInvoices]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[SalesInvoices](
+	[ID] [uniqueidentifier] NOT NULL,
+	[InvoiceCode] [varchar](50) NULL,
+	[CustomerId] [uniqueidentifier] NULL,
+	[InvoiceDate] [datetime] NULL,
+	[DueDate] [datetime] NULL,
+	[SalesPersonId] [uniqueidentifier] NULL,
+	[Notes] [varchar](150) NULL,
+	[Amount] [decimal](18, 0) NULL,
+	[Tax] [decimal](18, 0) NULL,
+	[Discount] [decimal](18, 0) NULL,
+	[Total] [decimal](18, 0) NULL,
+	[AmountPaid] [decimal](18, 0) NULL,
+	[Status] [varchar](50) NULL,
+	[CreatedDate] [datetime] NULL,
+	[ModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_SalesInvoices] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[SalesInvoiceItems]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SalesInvoiceItems](
+	[ID] [uniqueidentifier] NULL,
+	[SalesInvoiceId] [uniqueidentifier] NULL,
+	[ProductId] [uniqueidentifier] NULL,
+	[Qty] [int] NULL,
+	[Price] [decimal](18, 0) NULL,
+	[TaxPct] [int] NULL,
+	[DiscountPct] [int] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PurchasePayments]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[PurchasePayments](
+	[ID] [uniqueidentifier] NOT NULL,
+	[SupplierId] [uniqueidentifier] NULL,
+	[PaymentDate] [datetime] NULL,
+	[AccountId] [uniqueidentifier] NULL,
+	[PaymentTypeId] [uniqueidentifier] NULL,
+	[TotalAmountPaid] [decimal](18, 0) NULL,
+	[Notes] [varchar](150) NULL,
+	[CreatedDate] [datetime] NULL,
+	[ModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_PurchasePayments] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[PurchasePaymentItems]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PurchasePaymentItems](
+	[ID] [uniqueidentifier] NULL,
+	[PurchasePaymentId] [uniqueidentifier] NULL,
+	[PurchaseInvoiceId] [uniqueidentifier] NULL,
+	[AmountPaid] [decimal](18, 0) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PurchaseInvoices]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[PurchaseInvoices](
+	[ID] [uniqueidentifier] NOT NULL,
+	[InvoiceCode] [varchar](50) NULL,
+	[SupplierId] [uniqueidentifier] NULL,
+	[InvoiceDate] [datetime] NULL,
+	[DueDate] [datetime] NULL,
+	[Notes] [varchar](150) NULL,
+	[Amount] [decimal](18, 0) NULL,
+	[Tax] [decimal](18, 0) NULL,
+	[Discount] [decimal](18, 0) NULL,
+	[Total] [decimal](18, 0) NULL,
+	[AmountPaid] [decimal](18, 0) NULL,
+	[Status] [varchar](50) NULL,
+	[CreatedDate] [datetime] NULL,
+	[ModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_PurchaseInvoices] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[PurchaseInvoiceItems]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PurchaseInvoiceItems](
+	[ID] [uniqueidentifier] NULL,
+	[PurchaseInvoiceId] [uniqueidentifier] NULL,
+	[ProductId] [uniqueidentifier] NULL,
+	[Qty] [int] NULL,
+	[Price] [decimal](18, 0) NULL,
+	[TaxPct] [int] NULL,
+	[DiscountPct] [int] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Products]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Products](
+	[ID] [uniqueidentifier] NOT NULL,
+	[ProductCode] [varchar](50) NULL,
+	[ProductName] [varchar](50) NULL,
+	[CategoryId] [uniqueidentifier] NULL,
+	[Brand] [varchar](50) NULL,
+	[Model] [varchar](50) NULL,
+	[PurchasePrice] [decimal](18, 0) NULL,
+	[SalePrice] [decimal](18, 0) NULL,
+	[Stock] [int] NULL,
+	[Unit] [uniqueidentifier] NULL,
+	[Description] [nchar](10) NULL,
+	[IsStockTracking] [bit] NULL,
+	[IsDiscontinued] [bit] NULL,
+	[CreatedDate] [datetime] NULL,
+	[ModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Products] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[ProductCategories]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[ProductCategories](
+	[ID] [uniqueidentifier] NOT NULL,
+	[CategoryName] [varchar](50) NULL,
+	[Notes] [varchar](50) NULL,
+ CONSTRAINT [PK_Categories] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[PaymentTypes]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[PaymentTypes](
+	[ID] [uniqueidentifier] NOT NULL,
+	[PaymentTypeName] [varchar](50) NULL,
+ CONSTRAINT [PK_PaymentTypes] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[JobTitles]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[JobTitles](
+	[ID] [uniqueidentifier] NOT NULL,
+	[JobTitleName] [varchar](50) NULL,
+ CONSTRAINT [PK_JobTitles] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Expenses]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Expenses](
+	[ID] [uniqueidentifier] NOT NULL,
+	[Date] [datetime] NULL,
+	[CategoryId] [uniqueidentifier] NULL,
+	[AccountId] [uniqueidentifier] NULL,
+	[Amount] [decimal](18, 0) NULL,
+	[Description] [varchar](150) NULL,
+	[CreatedDate] [datetime] NULL,
+	[ModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Expenses] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[ExpenseCategories]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[ExpenseCategories](
+	[ID] [uniqueidentifier] NOT NULL,
+	[CategorName] [varchar](50) NULL,
+	[MonthlyBudget] [decimal](18, 0) NULL,
+ CONSTRAINT [PK_ExpenseCategories] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Employees]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Employees](
+	[ID] [uniqueidentifier] NOT NULL,
+	[EmployeeName] [varchar](50) NULL,
+	[JobTitleId] [uniqueidentifier] NULL,
+	[JoinDate] [datetime] NULL,
+	[Address] [varchar](250) NULL,
+	[City] [varchar](50) NULL,
+	[Phone] [varchar](50) NULL,
+	[Email] [varchar](50) NULL,
+	[IsActive] [bit] NULL,
+ CONSTRAINT [PK_Employees] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Customers]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Customers](
+	[ID] [uniqueidentifier] NOT NULL,
+	[CustomerName] [varchar](50) NULL,
+	[Address] [varchar](250) NULL,
+	[City] [varchar](50) NULL,
+	[Province] [varchar](50) NULL,
+	[ZipCode] [varchar](50) NULL,
+	[Phone] [varchar](50) NULL,
+	[Email] [varchar](50) NULL,
+	[IsActive] [bit] NULL,
+ CONSTRAINT [PK_Customers] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Accounts]    Script Date: 03/30/2020 21:48:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Accounts](
+	[ID] [uniqueidentifier] NOT NULL,
+	[AccountName] [varchar](50) NULL,
+	[AccountType] [varchar](50) NULL,
+	[Balance] [decimal](18, 0) NULL,
+	[Description] [varchar](150) NULL,
+ CONSTRAINT [PK_Accounts] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
