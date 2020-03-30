@@ -12,11 +12,13 @@ class AccountEdit extends Component
         super(props);
         this.state = {
             error: {},
+            accountTypes: ['Asset', 'Liabilities', 'Income', 'Expense', 'Capital'],
             id: '',
+            accountCode: '',
             accountName: '',
             accountType: '',
             balance: '',
-            notes: ''
+            description: ''
         }
     }
 
@@ -32,10 +34,11 @@ class AccountEdit extends Component
         axios.get(config.serverUrl + '/api/account/getbyid/' + id).then(response=> {
             this.setState({
                 id: response.data.id,
+                accountCode: response.data.accountCode,
                 accountName: response.data.accountName,
                 accountType: response.data.accountType,
                 balance: response.data.balance,
-                notes: response.data.notes
+                description: response.data.description
             })
         })
     }
@@ -53,6 +56,12 @@ class AccountEdit extends Component
 
         let isValid = true;
         let error = {};
+
+        
+        if (this.state.accountCode === '') {
+            error.accountCode = 'is required';
+            isValid = false;
+        }
 
         if (this.state.accountName === '') {
             error.accountName = 'is required';
@@ -86,13 +95,15 @@ class AccountEdit extends Component
 
             let account = {
                 id: this.state.id,
+                accountCode: this.state.accountCode,
                 accountName: this.state.accountName,
                 accountType: this.state.accountType,
-                balance: this.state.balance
+                balance: this.state.balance,
+                description: this.state.description
             }
 
             axios.put(config.serverUrl + '/api/account/update', account).then(response=> {
-                this.props.history.push('/expense');
+                this.props.history.push('/accounting');
             })
         }
     }
@@ -101,14 +112,14 @@ class AccountEdit extends Component
     deleteAccount = (id) => {
 
         axios.delete(config.serverUrl + '/api/account/delete/' + id).then(response=> {
-            this.props.history.push('/expense');
+            this.props.history.push('/accounting');
         })
     }
 
 
 
     cancelUpdate = () => {
-        this.props.history.push('/expense');
+        this.props.history.push('/accounting');
     }
 
 
@@ -122,28 +133,6 @@ class AccountEdit extends Component
         return(
            
            <div id="page-wrapper" class="gray-bg">
-
-            <div id="deleteAccount" class="modal fade" role="dialog">
-                
-                <div class="modal-dialog">
-                    
-                    <div class="modal-content">
-
-                          <div class="modal-header">
-                            <h4>Delete Category</h4>
-                          </div>
-                          <div class="modal-body">
-                          Are you sure want to delete '{this.state.accountName}' ?
-                          </div>
-
-                          <div class="modal-footer">
-                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteAccount(this.state.id)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
-                          </div>
-                        
-                      </div>
-                  </div>
-            </div>
 
                 
             <div class="row wrapper border-bottom white-bg page-heading">
@@ -170,6 +159,13 @@ class AccountEdit extends Component
                       <br/>
                             <form>
 
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account Code</label>
+                                    <div class="col-md-7 col-sm-12 required">
+                                        <input type="text" class="form-control" name="accountCode" onChange={this.onValueChange} value={this.state.accountCode}/>
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountCode}</span>
+                                </div>
+
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account Name</label>
                                     <div class="col-md-7 col-sm-12 required">
                                         <input type="text" class="form-control" name="accountName" onChange={this.onValueChange} value={this.state.accountName}/>
@@ -181,9 +177,9 @@ class AccountEdit extends Component
                                     <div class="col-md-7 col-sm-12 required">
                                         <select name="accountType" class="form-control" onChange={this.onValueChange} value={this.state.accountType}> 
                                             <option value="">Select Account Type</option>
-                                            <option value="Cash">Cash</option> 
-                                            <option value="Bank">Bank</option> 
-                                            <option value="Credit Card">Credit Card</option> 
+                                            {this.state.accountTypes.map(at=> 
+                                               <option value={at}>{at}</option> 
+                                            )}
                                         </select>    
 
                                     </div>
@@ -197,9 +193,9 @@ class AccountEdit extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.balance}</span>
                                 </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Notes</label>
-                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="notes" 
-                                        onChange={this.onValueChange} value={this.state.notes}/></div>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
+                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="description" 
+                                        onChange={this.onValueChange} value={this.state.description}/></div>
                                 </div>
 
                                 <br/><br/>
@@ -208,16 +204,9 @@ class AccountEdit extends Component
                             
 
                                 <div class="text-right">
-                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
-                                        <button type="button" onClick={this.updateAccount} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <a data-toggle="modal" data-target="#deleteAccount" ><i class="fa fa-trash"></i></a>
-
-                                 
-                                    </div>
-
-                                
-                                
+                                    <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
+                                    <button type="button" onClick={this.updateAccount} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
+                                </div>
 
                             </form>
 

@@ -4,29 +4,39 @@ import Footer from './Footer';
 import axios from 'axios';
 import config from './Config';
 import moment from 'moment';
+import uuid from 'uuid';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
+
 
 class ExpenseAdd extends Component
 {
 
     constructor(props) {
         super(props);
+
+        this.ledgerDateText = React.createRef()
+
+
         this.state = {
             error: {},
             today: new Date(), 
-            categories: [],
+            expenses: [],
             accounts: [],
+            id: uuid.v4(),
+            ledgerCode: '',
             date: '',
-            outletId: '00000000-0000-0000-0000-000000000000',
-            categoryId: '',
+            expenseId: '',
             accountId: '',
             amount: '',
-            notes: ''
+            description: '',
+            isPosted: true
         }
     }
 
 
     componentDidMount() {
-        this.getCategories();
+        this.getExpenses();
         this.getAccounts();
     }
 
@@ -37,13 +47,17 @@ class ExpenseAdd extends Component
         })
     }
 
+    onPostChanged = (e) => {
+        this.setState({isPosted: e.target.checked})
+    }
+
 
     
-    getCategories = () => {
+    getExpenses = () => {
   
-        axios.get(config.serverUrl + '/api/expensecategory/getall').then(response=> {
+        axios.get(config.serverUrl + '/api/account/getexpense').then(response=> {
             this.setState({
-                categories: response.data
+                expenses: response.data
             })
         })
     }
@@ -52,7 +66,7 @@ class ExpenseAdd extends Component
 
     getAccounts = () => {
   
-        axios.get(config.serverUrl + '/api/account/getall').then(response=> {
+        axios.get(config.serverUrl + '/api/account/getasset').then(response=> {
             this.setState({
                 accounts: response.data
             })
@@ -66,13 +80,19 @@ class ExpenseAdd extends Component
         let isValid = true;
         let error = {};
 
-        if (this.state.date === '') {
+        
+        if (this.state.ledgerCode === '') {
+            error.ledgerCode = 'is required';
+            isValid = false;
+        }
+
+        if (this.ledgerDateText.current.value === '') {
             error.date = 'is required';
             isValid = false;
         }
         
-        if (this.state.categoryId === '') {
-            error.categoryName = 'is required';
+        if (this.state.expenseId === '') {
+            error.expenseId = 'is required';
             isValid = false;
         }
 
@@ -83,6 +103,11 @@ class ExpenseAdd extends Component
 
         if (this.state.amount === '') {
             error.amount = 'is required';
+            isValid = false;
+        }
+
+        if (this.state.description === '') {
+            error.description = 'is required';
             isValid = false;
         }
 
@@ -102,20 +127,27 @@ class ExpenseAdd extends Component
 
         if (isValid) {
 
-            let expense = {
-                date: this.state.date,
-                outletId: this.state.outletId,
-                categoryId: this.state.categoryId,
-                accountId: this.state.accountId,
-                amount: this.state.amount,
-                notes: this.state.notes
+            let ledgerItems = [
+                {id: uuid.v4(), generalLedgerId: this.state.id, accountId: this.state.expenseId, debet: parseFloat(this.state.amount), credit:0},
+                {id: uuid.v4(), generalLedgerId: this.state.id, accountId: this.state.accountId, debet: 0, credit: parseFloat(this.state.amount)}
+            ];
+
+            let generalLedger = {
+                id: this.state.id,
+                ledgerCode: this.state.ledgerCode,
+                ledgerDate: this.ledgerDateText.current.value,
+                description: this.state.description,
+                amount: parseFloat(this.state.amount),
+                status: this.state.isPosted == true ? 'Posted' : 'New',
+                generalLedgerItems: ledgerItems
             }
 
-            console.log(expense);
+            console.log(generalLedger);
 
-            axios.post(config.serverUrl + '/api/expense/save', expense).then(response=> {
+            axios.post(config.serverUrl + '/api/generalledger/save', generalLedger).then(response=> {
                 this.props.history.push('/expense');
             })
+
         }
     }
 
@@ -159,31 +191,45 @@ class ExpenseAdd extends Component
                       <div class="ibox-content">
 
                       <br/>
+
+                        <form autoComplete="off">
+
+                               <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Ledger Code</label>
+                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                        name="ledgerCode" onChange={this.onValueChange}/>
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.ledgerCode}</span>
+                                </div>
+
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Date</label>
                                     <div class="input-group date col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control"  
-                                            name="date" onChange={this.onValueChange}/>
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                          <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">
+                                                <input type="text" name="date" class="form-control" ref={this.ledgerDateText}/>
+                                                <div class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </div>
+                                           </div>
 
                                     </div>
                                   &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.date}</span>
                                 </div>
+                                
 
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Category Name</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Expense Name</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <select name="categoryId" class="form-control" onChange={this.onValueChange}> 
-                                            <option value="">Select Category</option>
-                                            {this.state.categories.map(c=> 
-                                                <option value={c.id}>{c.categoryName}</option>
+                                        <select name="expenseId" class="form-control" onChange={this.onValueChange}> 
+                                            <option value="">Select Expense</option>
+                                            {this.state.expenses.map(e=> 
+                                                <option value={e.id}>{e.accountName}</option>
                                             )} 
                                         </select>    
                                       
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.categoryName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.expenseId}</span>
                                 </div>
                                 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>From Account</label>
                                     <div class="col-md-7 col-sm-12 required">
                                         <select name="accountId" class="form-control" onChange={this.onValueChange}> 
                                             <option value="">Select Account</option>
@@ -205,12 +251,23 @@ class ExpenseAdd extends Component
                                 </div>
 
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Notes</label>
-                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
-                                        name="notes" onChange={this.onValueChange}/>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
+                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                        name="description" onChange={this.onValueChange}/>
                                     </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.description}</span>
                                 </div>
 
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Post</label>
+                                    <div class="col-md-7 col-sm-12">
+
+                                    <Switch
+                                        color="#1ab394"
+                                        checked={this.state.isPosted}
+                                        onChange={this.onPostChanged} />
+                                    </div>
+
+                                </div>
 
                                 <br/><br/>
 
@@ -222,8 +279,7 @@ class ExpenseAdd extends Component
                                         <button type="button" onClick={this.saveExpense} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
                                     </div>
 
-                        
-
+                        </form>
 
                       </div>
                       

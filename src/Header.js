@@ -21,8 +21,12 @@ class Header extends Component
             </div>
         
                 <ul class="nav navbar-top-links navbar-right">
+
                     <li>
-                        <span class="m-r-sm text-muted welcome-message">Erika Kartawidjaja</span>
+                    </li>
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message">
+                            Erika Kartawidjaja</span>
                     </li>
                   
                    
@@ -31,6 +35,13 @@ class Header extends Component
                             <i class="fa fa-user"></i> Log out
                         </a>
                     </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-gear" data-toggle="tooltip" data-placement="left" title="Tooltip on left"></i>
+                        </a>
+                    </li>
+                    
+
                 </ul>
 
             </nav>

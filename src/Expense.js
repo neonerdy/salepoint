@@ -26,6 +26,21 @@ class Expense extends Component
     }
 
 
+    renderStatus = (status) => {
+      
+        if (status === 'New') {
+            return(
+                <span class="label label-warning">{status.toUpperCase()}</span>
+            )
+        } else if (status === 'Posted') {
+            return(
+                <span class="label label-primary">{status.toUpperCase()}</span>
+            )
+        }
+    }
+
+
+
     render() {
 
         return(
@@ -35,12 +50,12 @@ class Expense extends Component
                     <i class="fa fa-calendar"></i>
                     {this.props.date}
                     <br/>
-                    <small class="text-navy">{this.props.categoryGroup.toUpperCase()}</small>
+                    <small class="text-navy">{this.props.ledgerCode}</small>
                 </div>
                 <div class="col content no-top-border">
                     <p class="m-b-xs">{this.props.categoryName} From {this.props.accountName}</p>
                     <p>{this.props.amount}</p>
-                    <p> {this.renderOverBudget(this.props.data)}</p>
+                    <p> {this.renderStatus(this.props.status)}</p>
 
                 </div>
             </div>

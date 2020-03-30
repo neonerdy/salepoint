@@ -95,6 +95,7 @@ class Partner extends Component
       
         return(
           
+
             <div id="page-wrapper" class="gray-bg">
 
 
@@ -175,8 +176,8 @@ class Partner extends Component
                               <div class="ibox-content">
 
                                <ul class="nav nav-tabs">
-                                    <li><a class="nav-link active show" data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> Customers ({this.state.customers.length})</a></li>
-                                    <li><a class="nav-link" data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> Suppliers ({this.state.suppliers.length})</a></li>
+                                    <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Customers ({this.state.customers.length})</a></li>
+                                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Suppliers ({this.state.suppliers.length})</a></li>
                                 </ul>
 
                                 <div class="tab-content">
@@ -184,6 +185,17 @@ class Partner extends Component
 
                                          <table class="table table-hover table-striped">
                                          
+                                            <thead>
+                                                <th>Customer Name</th>
+                                                <th>Address</th>
+                                                <th>City</th>
+                                                <th>Phone</th>
+                                                <th>E-Mail</th>
+                                                <th></th>
+                                                <th></th>
+                                                
+                                            </thead>
+                                           
                                             <tbody>
                                             
                                             {this.state.customers.map(c=> 
@@ -194,12 +206,13 @@ class Partner extends Component
                                                     <td>{c.city}</td>
                                                     <td>{c.phone}</td>
                                                     <td>{c.email}</td>
-                                                    <td>{c.isActive}</td>
-                                                    {c.isActive===true? 
-                                                        <td class="client-status"><span class="label label-danger">Not Active</span></td>
-                                                    : <td></td>
-                                                    }
-                                                    <td>
+                                                    <td class="middle">
+                                                        {c.isActive === false? 
+                                                            <span class="label label-danger">Not Active</span>
+                                                        : null
+                                                        }
+                                                    </td>
+                                                    <td class="right">
                                                         <a onClick={()=>this.editCustomer(c.id)}><i class="fa fa-edit"></i></a>
                                                         &nbsp;&nbsp;
                                                         <a data-toggle="modal" data-target="#deleteCustomer" onClick={()=>this.onDeleteCustomer(c.id,c.customerName)}><i class="fa fa-trash"></i></a>
@@ -217,6 +230,17 @@ class Partner extends Component
                                     <div id="tab-2" class="tab-pane show">
 
                                     <table class="table table-hover table-striped">
+                                        
+                                         <thead>
+                                                <th>Customer Name</th>
+                                                <th>Address</th>
+                                                <th>City</th>
+                                                <th>Phone</th>
+                                                <th>E-Mail</th>
+                                                <th></th>
+                                                <th></th>                                               
+                                         </thead>
+                                        
                                         <tbody>
                                             
                                             {this.state.suppliers.map(s=> 
@@ -227,12 +251,13 @@ class Partner extends Component
                                                     <td>{s.city}</td>
                                                     <td>{s.phone}</td>
                                                     <td>{s.email}</td>
-                                                    <td>{s.isActive}</td>
-                                                    {s.isActive===true? 
-                                                        <td class="client-status"><span class="label label-danger">Not Active</span></td>
-                                                    : <td></td>
-                                                    }
-                                                    <td>
+                                                    <td class="middle">
+                                                        {s.isActive === false? 
+                                                            <span class="label label-danger">Not Active</span>
+                                                        : null
+                                                        }
+                                                    </td>
+                                                   <td class="right">
                                                         <a onClick={()=>this.editSupplier(s.id)}><i class="fa fa-edit"></i></a>
                                                         &nbsp;&nbsp;
                                                         <a data-toggle="modal" data-target="#deleteSupplier"  onClick={()=>this.onDeleteSupplier(s.id,s.supplierName)}><i class="fa fa-trash"></i></a>

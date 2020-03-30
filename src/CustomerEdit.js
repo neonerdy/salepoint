@@ -3,6 +3,9 @@ import Footer from './Footer';
 import config from './Config';
 import axios from 'axios';
 import './App.css';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
+
 
 class CustomerEdit extends Component
 {
@@ -32,6 +35,7 @@ class CustomerEdit extends Component
 
 
     getCustomerById = (id) => {
+        
         axios.get(config.serverUrl + '/api/customer/getbyid/' + id).then(response=> {
             this.setState({
                 id: response.data.id,
@@ -53,6 +57,11 @@ class CustomerEdit extends Component
         this.setState({
             [e.target.name]: e.target.value
         })
+    }
+
+
+    onActiveChanged = (e) => {
+        this.setState({isActive: e.target.checked})
     }
 
 
@@ -111,7 +120,8 @@ class CustomerEdit extends Component
                 province: this.state.province,
                 zipCode: this.state.zipCode,
                 phone: this.state.phone,
-                email: this.state.email
+                email: this.state.email,
+                isActive: this.state.isActive
             }
 
             axios.put(config.serverUrl + '/api/customer/update', customer).then(response=> {
@@ -208,6 +218,16 @@ class CustomerEdit extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
                                 </div>
                                  
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
+                                    <div class="col-md-7 col-sm-12">
+
+                                    <Switch
+                                        color="#1ab394"
+                                        checked={this.state.isActive}
+                                        onChange={this.onActiveChanged} />
+                                    </div>
+
+                                </div>
 
                                 <br/><br/>
 

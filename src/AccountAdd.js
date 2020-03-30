@@ -12,10 +12,12 @@ class AccountAdd extends Component
         super(props);
         this.state = {
             error: {},
+            accountTypes: ['Asset', 'Liabilities', 'Income', 'Expense', 'Capital'],
+            accountCode: '',
             accountName: '',
             accountType: '',
             balance: '',
-            notes: ''
+            description: ''
         }
     }
 
@@ -32,6 +34,12 @@ class AccountAdd extends Component
 
         let isValid = true;
         let error = {};
+
+        
+        if (this.state.accountCode === '') {
+            error.accountCode = 'is required';
+            isValid = false;
+        }
 
         if (this.state.accountName === '') {
             error.accountName = 'is required';
@@ -64,13 +72,14 @@ class AccountAdd extends Component
         if (isValid) {
 
             let account = {
+                accountCode: this.state.accountCode,
                 accountName: this.state.accountName,
                 accountType: this.state.accountType,
                 balance: this.state.balance
             }
 
             axios.post(config.serverUrl + '/api/account/save', account).then(response=> {
-                this.props.history.push('/expense');
+                this.props.history.push('/accounting');
             })
         }
     }
@@ -78,7 +87,7 @@ class AccountAdd extends Component
 
 
     cancelAdd = () => {
-        this.props.history.push('/expense');
+        this.props.history.push('/accounting');
     }
 
 
@@ -117,6 +126,14 @@ class AccountAdd extends Component
                       <br/>
                             <form>
 
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account Code</label>
+                                    <div class="col-md-7 col-sm-12 required">
+                                        <input type="text" class="form-control" name="accountCode" onChange={this.onValueChange}/>
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountCode}</span>
+                                </div>
+                                
+                                
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account Name</label>
                                     <div class="col-md-7 col-sm-12 required">
                                         <input type="text" class="form-control" name="accountName" onChange={this.onValueChange}/>
@@ -128,9 +145,9 @@ class AccountAdd extends Component
                                     <div class="col-md-7 col-sm-12 required">
                                         <select name="accountType" class="form-control" onChange={this.onValueChange}> 
                                             <option value="">Select Account Type</option>
-                                            <option value="Cash">Cash</option> 
-                                            <option value="Bank">Bank</option> 
-                                            <option value="Credit Card">Credit Card</option> 
+                                            {this.state.accountTypes.map(at=> 
+                                               <option value={at}>{at}</option> 
+                                            )}
                                         </select>    
 
                                     </div>
@@ -144,8 +161,8 @@ class AccountAdd extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.balance}</span>
                                 </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Notes</label>
-                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="notes" onChange={this.onValueChange}/></div>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
+                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="description" onChange={this.onValueChange}/></div>
                                 </div>
 
                                 <br/><br/>

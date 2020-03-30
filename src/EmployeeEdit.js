@@ -4,6 +4,8 @@ import Footer from './Footer';
 import axios from 'axios';
 import moment from 'moment';
 import config from './Config';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
 
 
 class EmployeeEdit extends Component
@@ -12,24 +14,20 @@ class EmployeeEdit extends Component
         
         super(props);
 
-        this.fileTxt = React.createRef();
+        this.joinDate = React.createRef()
 
         this.state = {
             error: {},
             jobTitles: [],
             id: '',
             employeeName: '',
-            photo: '',
             joinDate: '',
             address: '',
             city: '',
             phone: '',
             email: '',
             jobTitleId: '',
-            displayProgress: '',
-            uploadPercentage: '',
-            barPercentage: '',
-            files: ''
+            isActive: true
         }
     }
 
@@ -57,14 +55,13 @@ class EmployeeEdit extends Component
             this.setState({
                 id: response.data.id,
                 employeeName: response.data.employeeName,
-                photo: response.data.photo,
                 joinDate: moment(response.data.joinDate).format('MM/DD/YYYY'),
                 address: response.data.address,
                 city: response.data.city,
                 phone: response.data.phone,
                 email: response.data.email,
                 jobTitleId: response.data.jobTitleId,
-                photo: response.data.photo
+                isActive: response.data.isActive
             })
         })
     }
@@ -76,12 +73,10 @@ class EmployeeEdit extends Component
         })
     }
 
-    onFileChange = (e) => {
-        this.setState({
-            files: e.target.files
-        });
-    }
 
+    onActiveChanged = (e) => {
+        this.setState({isActive: e.target.checked})
+    }
 
 
 
@@ -95,21 +90,17 @@ class EmployeeEdit extends Component
             isValid = false;
         }
 
-        if (this.state.photo === '') {
-            error.employeeName = 'is required';
-            isValid = false;
-        }
-
-         
         if (this.state.jobTitleId === '') {
             error.jobTitleId = 'is required';
             isValid = false;
         }
-        
-        if (this.state.joinDate === '') {
+
+        if (this.joinDate.current.value === '') {
             error.joinDate = 'is required';
             isValid = false;
         }
+
+        
 
         if (this.state.address === '') {
             error.address = 'is required';
@@ -152,12 +143,13 @@ class EmployeeEdit extends Component
                 employeeName: this.state.employeeName,
                 photo: this.state.photo,
                 outletId: this.state.outletId,
-                joinDate: this.state.joinDate,
+                joinDate: this.joinDate.current.value,
                 address: this.state.address,
                 city: this.state.city,
                 phone: this.state.phone,
                 email: this.state.email,
-                jobTitleId: this.state.jobTitleId
+                jobTitleId: this.state.jobTitleId,
+                isActive: this.state.isActive
             }
 
             axios.put(config.serverUrl + '/api/employee/update', employee).then(response=> {
@@ -195,75 +187,6 @@ class EmployeeEdit extends Component
             <div id="page-wrapper" class="gray-bg">
 
                 
-            <div id="deleteEmployee" class="modal fade" role="dialog">
-                
-                <div class="modal-dialog">
-                    
-                    <div class="modal-content">
-
-                          <div class="modal-header">
-                            <h4>Delete Employee</h4>
-                          </div>
-                          <div class="modal-body">
-                          Are you sure want to delete '{this.state.employeeName}' ?
-                          </div>
-
-                          <div class="modal-footer">
-                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteEmployee(this.state.id)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
-                          </div>
-                        
-                      </div>
-                  </div>
-            </div>
-
-
-
-              {/* ATTACHMENT */}
-            
-              <div id="addAttachment" class="modal fade" role="dialog">
-                
-                <div class="modal-dialog" style={{width: '600px', height: '100px'}}>
-                    
-                    <div class="modal-content">
-
-                          <div class="modal-header">
-                            <h4>Upload Photo</h4>
-                          </div>
-
-                          <div class="modal-body">
-                         
-                          <div class="modal-body row">
-                                    
-                            <div class="col-md-12">
-                                <div id="divFile" class="form-group">
-                                    <input type="file" name="file" onChange={this.onFileChange} class="btn btn-default" style={{width:'380px'}} ref={this.fileTxt}/>  
-                                    <br/><br/>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-success active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style={{width: this.state.barPercentage}}></div>
-                                    </div>
-                                    {this.state.uploadPercentage}
-                                 </div>
-                                 <span style={errStyle}>{this.state.error.fileName}</span>
-                                </div>
-                                <div id="errorAddAttachment" class="form-group col-md-12"></div>     
-                            </div>
-
-                         
-                          </div>
-
-                          <div class="modal-footer">
-                             <button type="button" class="btn btn-default pull-left" onClick={this.doneUpload} data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success" id="btnUpload" onClick={this.uploadAttachment}>Upload</button>
-
-                          </div>
-                        
-                      </div>
-                  </div>
-            </div>
-
-
-                
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
                     <h2>Edit Employee </h2>
@@ -280,8 +203,7 @@ class EmployeeEdit extends Component
                       <div class="ibox-content">
 
                       <br/>
-                            <form>
-
+                        <form autoComplete="off">
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Employee Name</label>
                                     <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
                                         name="employeeName" onChange={this.onValueChange} value={this.state.employeeName}/>
@@ -289,17 +211,6 @@ class EmployeeEdit extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.employeeName}</span>
                                 </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Photo</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="photo" onChange={this.onValueChange} value={this.state.photo}/>
-                                    </div>
-                                    <div class="col-md-2 col-sm-1">
-                                        <span style={errStyle}>{this.state.error.photo}</span>
-                                        &nbsp;&nbsp; <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#addAttachment">Add Photo</a>
-                                    </div>
-                                </div>
-
-                          
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role</label>
                                     <div class="col-md-7 col-sm-12 required">
                                         <select class="form-control" name="jobTitleId" onChange={this.onValueChange} value={this.state.jobTitleId}>
@@ -313,15 +224,20 @@ class EmployeeEdit extends Component
                                 &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.jobTitleId}</span>
                                 </div>
 
+                              
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Join Date</label>
                                     <div class="input-group date col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" value="" name="joinDate" onChange={this.onValueChange} value={this.state.joinDate}/>
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                          <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">
+                                                <input type="text" name="joinDate" class="form-control" ref={this.joinDate} value={moment(this.state.joinDate).format("MM/DD/YYYY")}/>
+                                                <div class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </div>
+                                           </div>
                                     </div>
                                   &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.joinDate}</span>
                                 </div>
                                 
-
+                                
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Address</label>
                                     <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
@@ -352,6 +268,17 @@ class EmployeeEdit extends Component
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
                                 </div>
+
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
+                                    <div class="col-md-7 col-sm-12">
+
+                                    <Switch
+                                        color="#1ab394"
+                                        checked={this.state.isActive}
+                                        onChange={this.onActiveChanged} />
+                                    </div>
+
+                                </div>
                                  
 
                                 <br/><br/>
@@ -361,15 +288,10 @@ class EmployeeEdit extends Component
                                     <div class="text-right">
                                         <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
                                         <button type="button" onClick={this.updateEmployee} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <a data-toggle="modal" data-target="#deleteEmployee"><i class="fa fa-trash"></i></a>
                                     </div>
 
 
                             </form>
-
-
-
                       </div>
                       
 

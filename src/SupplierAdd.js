@@ -4,6 +4,8 @@ import Footer from './Footer';
 import config from './Config';
 import axios from 'axios';
 import './App.css';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
 
 
 class SupplierAdd extends Component
@@ -35,6 +37,10 @@ class SupplierAdd extends Component
         })
     }
 
+
+    onActiveChanged = (e) => {
+        this.setState({isActive: e.target.checked})
+    }
 
 
     validateCustomer = () => {
@@ -188,6 +194,18 @@ class SupplierAdd extends Component
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Contact Phone</label>
                                     <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="contactPhone" onChange={this.onValueChange}/></div>
                                 </div>
+
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
+                                    <div class="col-md-7 col-sm-12">
+
+                                    <Switch
+                                        color="#1ab394"
+                                        checked={this.state.isActive}
+                                        onChange={this.onActiveChanged} />
+                                    </div>
+
+                                </div>
+
                                  
                                 <br/><br/>
 

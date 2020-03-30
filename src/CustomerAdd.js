@@ -3,6 +3,10 @@ import Footer from './Footer';
 import config from './Config';
 import axios from 'axios';
 import './App.css';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
+
+
 
 class CustomerAdd extends Component
 {
@@ -30,6 +34,12 @@ class CustomerAdd extends Component
             [e.target.name]: e.target.value
         })
     }
+
+
+    onActiveChanged = (e) => {
+        this.setState({isActive: e.target.checked})
+    }
+
 
 
 
@@ -87,7 +97,8 @@ class CustomerAdd extends Component
                 province: this.state.province,
                 zipCode: this.state.zipCode,
                 phone: this.state.phone,
-                email: this.state.email
+                email: this.state.email,
+                isActive: this.state.isActive
             }
 
             axios.post(config.serverUrl + '/api/customer/save', customer).then(response=> {
@@ -180,6 +191,19 @@ class CustomerAdd extends Component
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
                                 </div>
+
+
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
+                                    <div class="col-md-7 col-sm-12">
+
+                                    <Switch
+                                        color="#1ab394"
+                                        checked={this.state.isActive}
+                                        onChange={this.onActiveChanged} />
+                                    </div>
+
+                                </div>
+
                                  
 
                                 <br/><br/>
@@ -190,7 +214,7 @@ class CustomerAdd extends Component
                                 <div class="text-right">
                                         <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>
                                         <button type="button" onClick={this.saveCustomer} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
-                                    </div>
+                                </div>
 
                                 
                                 

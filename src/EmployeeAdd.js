@@ -5,6 +5,8 @@ import Employee from './Employee';
 import axios from 'axios';
 import moment from 'moment';
 import config from './Config';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
 
 
 class EmployeeAdd extends Component
@@ -12,23 +14,19 @@ class EmployeeAdd extends Component
     constructor(props) {
         super(props);
 
-        this.fileTxt = React.createRef();
+        this.joinDate = React.createRef()
 
         this.state = {
             error: {},
             jobTitles: [],
             employeeName: '',
             jobTitleId: '',
-            photo: '',
             joinDate: '',
             address: '',
             city: '',
             phone: '',
             email: '',
-            displayProgress: '',
-            uploadPercentage: '',
-            barPercentage: '',
-            files: ''
+            isActive: true
         }
     }
 
@@ -47,20 +45,16 @@ class EmployeeAdd extends Component
     }
 
 
-
-
     onValueChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
-    onFileChange = (e) => {
-        this.setState({
-            files: e.target.files
-        });
-    }
 
+    onActiveChanged = (e) => {
+        this.setState({isActive: e.target.checked})
+    }
 
 
     validateEmployee = () => {
@@ -73,19 +67,13 @@ class EmployeeAdd extends Component
             isValid = false;
         }
 
-        if (this.state.photo === '') {
-            error.photo = 'is required';
-            isValid = false;
-        }
-
-       
         if (this.state.jobTitleId === '') {
-            error.jobTitleId = 'is required';
+            error.jobTitleId = 'is requred';
             isValid = false;
         }
 
         
-        if (this.state.joinDate === '') {
+        if (this.joinDate.current.value === '') {
             error.joinDate = 'is required';
             isValid = false;
         }
@@ -128,13 +116,13 @@ class EmployeeAdd extends Component
 
             let employee = {
                 employeeName: this.state.employeeName,
-                photo: this.state.photo,
-                joinDate: this.state.joinDate,
+                joinDate: this.joinDate.current.value,
                 address: this.state.address,
                 city: this.state.city,
                 phone: this.state.phone,
                 jobTitleId: this.state.jobTitleId,
-                email: this.state.email
+                email: this.state.email,
+                isActive: this.state.isActive
             }
 
             console.log(employee);
@@ -150,82 +138,6 @@ class EmployeeAdd extends Component
 
     cancelAdd = () => {
         this.props.history.push('/employee');
-    }
-
-
-
-    doneUpload =()=> {
-        
-        this.fileTxt.current.value = '';
-        this.setState({
-            error: {},
-            uploadPercentage: '',
-            barPercentage: '0%',
-            files: ''
-        })
-    }
-
-
-    validateUpload = () => {
-
-        let isValid = true;
-        let error = {};
-
-        if (this.state.files[0] == undefined) {
-            error.fileName = 'File name is required';
-            isValid = false;
-        }
-
-        this.setState({
-            error: error
-        })
-
-        return isValid;
-
-    }
-
-
-    uploadAttachment = () => {
-
-        let isValid = this.validateUpload();
-        
-        if (isValid)
-        {
-     
-            let formData = new FormData();
-            
-            formData.append('file', this.state.files[0]);
-
-            axios.post(config.serverUrl + "/api/file/uploadfile",
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                },
-                onUploadProgress: (progressEvent)=> {
-                    var percentDone = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
-                    this.setState({
-                        displayProgress: 'true',
-                        uploadPercentage: percentDone + "%",
-                        barPercentage: percentDone + "%"
-                    })
-                    
-                }
-            }
-            ).then(()=> {
-                    console.log('SUCCESS UPLOAD ATTACHMENT !!');
-                    this.setState({
-                        photo: this.state.files[0].name
-                    })
-            })
-            .catch(()=> {
-                console.log('UPLOAD ATTACHMENT FAILURE !!');
-            });
-        
-        }
-         
-
-
     }
 
 
@@ -253,59 +165,12 @@ class EmployeeAdd extends Component
         <div class="row">
             <div class="col-lg-12">
 
-
-            {/* ATTACHMENT */}
-            
-            <div id="addAttachment" class="modal fade" role="dialog">
-                
-                <div class="modal-dialog" style={{width: '600px', height: '100px'}}>
-                    
-                    <div class="modal-content">
-
-                          <div class="modal-header">
-                            <h4>Upload Photo</h4>
-                          </div>
-
-                          <div class="modal-body">
-                         
-                          <div class="modal-body row">
-                                    
-                            <div class="col-md-12">
-                                <div id="divFile" class="form-group">
-                                    <input type="file" name="file" onChange={this.onFileChange} class="btn btn-default" style={{width:'380px'}} ref={this.fileTxt}/>  
-                                    <br/><br/>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-success active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style={{width: this.state.barPercentage}}></div>
-                                    </div>
-                                    {this.state.uploadPercentage}
-                                 </div>
-                                 <span style={errStyle}>{this.state.error.fileName}</span>
-                                </div>
-                                <div id="errorAddAttachment" class="form-group col-md-12"></div>     
-                            </div>
-
-                         
-                          </div>
-
-                          <div class="modal-footer">
-                             <button type="button" class="btn btn-default pull-left" onClick={this.doneUpload} data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success" id="btnUpload" onClick={this.uploadAttachment}>Upload</button>
-
-                          </div>
-                        
-                      </div>
-                  </div>
-            </div>
-
-           
-           
                 <div class="ibox">
 
                       <div class="ibox-content">
 
                       <br/>
-                            <form>
-
+                        <form autoComplete="off">
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Employee Name</label>
                                     <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
                                         name="employeeName" onChange={this.onValueChange}/>
@@ -313,18 +178,6 @@ class EmployeeAdd extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.employeeName}</span>
                                 </div>
 
-                                
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Photo</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="photo" onChange={this.onValueChange} value={this.state.photo}/>
-                                    </div>
-                                    <div class="col-md-2 col-sm-1">
-                                        <span style={errStyle}>{this.state.error.photo}</span>
-                                        &nbsp;&nbsp; <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#addAttachment">Add Photo</a>
-                                    </div>
-                                </div>
-
-                                
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role</label>
                                     <div class="col-md-7 col-sm-12 required">
                                         <select class="form-control" name="jobTitleId" onChange={this.onValueChange}>
@@ -335,13 +188,18 @@ class EmployeeAdd extends Component
                                         </select>
 
                                 </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.role}</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.jobTitleId}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Join Date</label>
                                     <div class="input-group date col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="joinDate" onChange={this.onValueChange}/>
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                          <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">
+                                                <input type="text" name="joinDate" class="form-control" ref={this.joinDate}/>
+                                                <div class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </div>
+                                           </div>
+
                                     </div>
                                   &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.joinDate}</span>
                                 </div>
@@ -377,6 +235,19 @@ class EmployeeAdd extends Component
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
                                 </div>
+                                
+
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
+                                    <div class="col-md-7 col-sm-12">
+
+                                    <Switch
+                                        color="#1ab394"
+                                        checked={this.state.isActive}
+                                        onChange={this.onActiveChanged} />
+                                    </div>
+
+                                </div>
+
                                  
 
                                 <br/><br/>
@@ -389,12 +260,7 @@ class EmployeeAdd extends Component
                                         <button type="button" onClick={this.saveEmployee} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
                                     </div>
 
-                                
-                                
-
                             </form>
-
-
 
                       </div>
                       

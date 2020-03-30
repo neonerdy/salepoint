@@ -566,7 +566,7 @@ class MasterData extends Component
 
 
                         <div class="ibox-content">
-                        <h2>Expense Groups ({this.state.expenseGroups.length})</h2>
+                        <h2>Linked Accounts ({this.state.expenseGroups.length})</h2>
 
                         <Scrollbars style={{ height: 310 }}>
 

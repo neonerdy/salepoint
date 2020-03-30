@@ -4,6 +4,9 @@ import Footer from './Footer';
 import config from './Config';
 import axios from 'axios';
 import './App.css';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
+
 
 class ProductEdit extends Component
 {
@@ -11,15 +14,12 @@ class ProductEdit extends Component
         
         super(props);
 
-        this.fileTxt = React.createRef();
-
         this.state = {
             error: {},
             categories: [],
             id: '',
             productCode: '',
             productName: '',
-            picture: '',
             categoryId: '',
             brand: '',
             model: '',
@@ -28,10 +28,8 @@ class ProductEdit extends Component
             stock: '',
             unit: '',
             description: '',
-            displayProgress: '',
-            uploadPercentage: '',
-            barPercentage: '',
-            files: ''
+            isTrackingStock: true,
+            isDiscontinued: false
         }
     }
 
@@ -53,7 +51,6 @@ class ProductEdit extends Component
                 id: response.data.id,
                 productCode: response.data.productCode,
                 productName: response.data.productName,
-                picture: response.data.picture,
                 categoryId: response.data.categoryId,
                 brand: response.data.brand,
                 model: response.data.model,
@@ -61,7 +58,9 @@ class ProductEdit extends Component
                 salePrice: response.data.salePrice,
                 stock: response.data.stock,
                 unit: response.data.unit,
-                description: response.data.description
+                description: response.data.description,
+                isTrackingStock: response.data.isTrackingStock,
+                isDiscontinued: response.data.isDiscontinued
             })
         })
         
@@ -83,13 +82,16 @@ class ProductEdit extends Component
         })
     }
 
-    onFileChange = (e) => {
-        this.setState({
-            files: e.target.files
-        });
+
+    onTrackingStockChange = (e) =>  {
+        this.setState({isTrackingStock: e.target.checked})
+   
     }
 
-    
+    onDiscontinuedChanged = (e) => {
+        this.setState({isDiscontinued: e.target.checked})
+    }
+
 
     validateProduct = () => {
 
@@ -106,12 +108,6 @@ class ProductEdit extends Component
             isValid = false;
         }
 
-        if (this.state.picture === '') {
-            error.picture = 'is required';
-            isValid = false;
-        }
-
-        
         if (this.state.categoryId === '') {
             error.categoryId = 'is required';
             isValid = false;
@@ -165,7 +161,9 @@ class ProductEdit extends Component
                 salePrice: this.state.salePrice,
                 stock: this.state.stock,
                 unit: this.state.unit,
-                description: this.state.description
+                description: this.state.description,
+                isTrackingStock: this.state.isTrackingStock,
+                isDiscontinued: this.state.isDiscontinued
             }
 
             axios.put(config.serverUrl + '/api/product/update', product).then(response=> {
@@ -177,98 +175,13 @@ class ProductEdit extends Component
     }
 
 
-    deleteProduct = (id) => {
-        axios.delete(config.serverUrl + '/api/product/delete/' + id).then(response=> {
-            this.props.history.push('/product');
-        })
-    }
-
 
     cancelUpdate = () => {
         this.props.history.push('/product');
     }
 
 
-
-
-    doneUpload =()=> {
-        
-        this.fileTxt.current.value = '';
-        this.setState({
-            error: {},
-            uploadPercentage: '',
-            barPercentage: '0%',
-            files: ''
-        })
-    }
-
-
-    validateUpload = () => {
-
-        let isValid = true;
-        let error = {};
-
-        if (this.state.files[0] == undefined) {
-            error.fileName = 'File name is required';
-            isValid = false;
-        }
-
-        this.setState({
-            error: error
-        })
-
-        return isValid;
-
-    }
-
-
-
-
-    uploadPicture = () => {
-
-        let isValid = this.validateUpload();
-        
-        if (isValid)
-        {
-     
-            let formData = new FormData();
-            
-            formData.append('file', this.state.files[0]);
-
-            axios.post(config.serverUrl + "/api/file/uploadfile",
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                },
-                onUploadProgress: (progressEvent)=> {
-                    var percentDone = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
-                    this.setState({
-                        displayProgress: 'true',
-                        uploadPercentage: percentDone + "%",
-                        barPercentage: percentDone + "%"
-                    })
-                    
-                }
-            }
-            ).then(()=> {
-                    console.log('SUCCESS UPLOAD ATTACHMENT !!');
-                    this.setState({
-                        picture: this.state.files[0].name
-                    })
-            })
-            .catch(()=> {
-                console.log('UPLOAD ATTACHMENT FAILURE !!');
-            });
-        
-        }
-         
-    }
-
-
-
-
-
+    
     render() {
 
 
@@ -279,80 +192,8 @@ class ProductEdit extends Component
         return(
             <div id="page-wrapper" class="gray-bg">
 
-
-            {/* DELETE */}
-
-            <div id="deleteProduct" class="modal fade" role="dialog">
-                
-                <div class="modal-dialog">
-                    
-                    <div class="modal-content">
-
-                          <div class="modal-header">
-                            <h4>Delete Product</h4>
-                          </div>
-                          <div class="modal-body">
-                          Are you sure want to delete '{this.state.productName}' ?
-                          </div>
-
-                          <div class="modal-footer">
-                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteProduct(this.state.id)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
-                          </div>
-                        
-                      </div>
-                  </div>
-            </div>
-
-
-               {/* ADD PICTURE */}
-            
-               <div id="addPicture" class="modal fade" role="dialog">
-                
-                <div class="modal-dialog" style={{width: '600px', height: '100px'}}>
-                    
-                    <div class="modal-content">
-
-                          <div class="modal-header">
-                            <h4>Upload Picture</h4>
-                          </div>
-
-                          <div class="modal-body">
-                         
-                          <div class="modal-body row">
-                                    
-                            <div class="col-md-12">
-                                <div id="divFile" class="form-group">
-                                    <input type="file" name="file" onChange={this.onFileChange} class="btn btn-default" style={{width:'380px'}} ref={this.fileTxt}/>  
-                                    <br/><br/>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-success active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style={{width: this.state.barPercentage}}></div>
-                                    </div>
-                                    {this.state.uploadPercentage}
-                                 </div>
-                                 <span style={errStyle}>{this.state.error.fileName}</span>
-                                </div>
-                                <div id="errorAddAttachment" class="form-group col-md-12"></div>     
-                            </div>
-
-                         
-                          </div>
-
-                          <div class="modal-footer">
-                             <button type="button" class="btn btn-default pull-left" onClick={this.doneUpload} data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success" id="btnUpload" onClick={this.uploadPicture}>Upload</button>
-
-                          </div>
-                        
-                      </div>
-                  </div>
-            </div>
-
-
-                
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
-
                     <h2>Edit Product </h2>
                 </div>
             </div>
@@ -383,18 +224,8 @@ class ProductEdit extends Component
                                 </div>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.productName}</span>
                                 </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Picture</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="picture" onChange={this.onValueChange} value={this.state.picture} value={this.state.picture}/>
-                                    </div>
-                                    <div class="col-md-2 col-sm-1">
-                                        <span style={errStyle}>{this.state.error.picture}</span>
-                                        &nbsp;&nbsp; <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#addPicture">Add Picture</a>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Category</label>
+                            
+                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Category</label>
                                     
                                     <div class="col-md-7 col-sm-12 required">
                                         <select class="form-control" name="categoryId" onChange={this.onValueChange} value={this.state.categoryId}> 
@@ -449,9 +280,30 @@ class ProductEdit extends Component
                                     <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="description" onChange={this.onValueChange} value={this.state.description}/></div>
                                 </div>
 
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Stock Tracking</label>
+                                    <div class="col-md-7 col-sm-12">
+
+                                    <Switch
+                                        color="#1ab394"
+                                        checked={this.state.isTrackingStock}
+                                        onChange={this.onTrackingStockChange} />
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Discontinued</label>
+                                    <div class="col-md-7 col-sm-12">
+
+                                    <Switch
+                                        color="#1ab394"
+                                        checked={this.state.isDiscontinued}
+                                        onChange={this.onDiscontinuedChanged} />
+                                    </div>
+
+                                </div>
 
 
-                                <br/><br/>
+                                <br/>
 
                                 <div class="hr-line-dashed"></div>
                             
@@ -459,8 +311,6 @@ class ProductEdit extends Component
                                 <div class="text-right">
                                         <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
                                         <button type="button" onClick={this.updateProduct} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <a data-toggle="modal" data-target="#deleteProduct"><i class="fa fa-trash"></i></a>
                                 </div>
 
 

@@ -4,6 +4,8 @@ import Footer from './Footer';
 import config from './Config';
 import axios from 'axios';
 import './App.css';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
 
 
 class SupplierEdit extends Component
@@ -48,7 +50,8 @@ class SupplierEdit extends Component
                 phone: response.data.phone,
                 email: response.data.email,
                 contactPerson: response.data.contactPerson,
-                contactPhone: response.data.contactPhone
+                contactPhone: response.data.contactPhone,
+                isActive: response.data.isActive
             })
         })
     } 
@@ -60,6 +63,11 @@ class SupplierEdit extends Component
         this.setState({
             [e.target.name]: e.target.value
         })
+    }
+
+
+    onActiveChanged = (e) => {
+        this.setState({isActive: e.target.checked})
     }
 
 
@@ -219,6 +227,17 @@ class SupplierEdit extends Component
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Contact Phone</label>
                                     <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
                                         name="contactPhone" onChange={this.onValueChange} value={this.state.contactPhone}/></div>
+                                </div>
+
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
+                                    <div class="col-md-7 col-sm-12">
+
+                                    <Switch
+                                        color="#1ab394"
+                                        checked={this.state.isActive}
+                                        onChange={this.onActiveChanged} />
+                                    </div>
+
                                 </div>
                                  
                                 <br/><br/>

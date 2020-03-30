@@ -8,6 +8,7 @@ import config from './Config';
 import moment from 'moment';
 import ExpenseChart from './ExpenseChart';
 import Expense from './Expense';
+import {Link} from 'react-router-dom';
 
 
 class ExpenseList extends Component
@@ -16,11 +17,9 @@ class ExpenseList extends Component
     constructor(props) {
         super(props);
         this.state = {
-            outlets: [],
             initialExpenses: [],
             expenses: [],
             accounts: [],
-            categories: [],
             expenseMonth: ''
             
         }
@@ -29,10 +28,8 @@ class ExpenseList extends Component
 
     componentDidMount() {
         
-        this.getOutlets();
-        this.getAccounts();
-        this.getCategories();
         this.getExpenses();
+        this.getAssetAccounts();
 
         this.setState({
             expenseTitle: this.convertMonth(moment(new Date()).format('MM')) + ' ' + moment(new Date()).format('YYYY')
@@ -41,15 +38,6 @@ class ExpenseList extends Component
     }
 
 
-    getOutlets = () => {
-
-        axios.get(config.serverUrl + '/api/outlet/getall').then(response=> {
-            this.setState({
-                outlets: response.data
-            })
-        })
-
-    }
 
 
     getExpenses = () => {
@@ -65,25 +53,15 @@ class ExpenseList extends Component
         })
     }
 
-
-    getAccounts = () =>  {
-
-        axios.get(config.serverUrl + '/api/account/getall').then(response=> {
+    getAssetAccounts = () => {
+        axios.get(config.serverUrl + '/api/account/getasset').then(response=> {
             this.setState({
                 accounts: response.data
             })
+
         })
     }
 
-
-    getCategories = () => {
-
-        axios.get(config.serverUrl + '/api/expensecategory/getall').then(response=> {
-            this.setState({
-                categories: response.data
-            })
-        })
-    }
 
 
     addExpense = () => {
@@ -98,18 +76,7 @@ class ExpenseList extends Component
         this.props.history.push('/add-account');
     }
 
-    editAccount = (id) => {
-        this.props.history.push('/edit-account/' + id);
-    }
-
-    addCategory = () => {
-        this.props.history.push('/add-expense-category');
-    }
-
-    editCategory = (id) => {
-        this.props.history.push('/edit-expense-category/' + id);
-    }
-
+   
     convertMonth = (day) => {
         
         let monthString = '';
@@ -174,7 +141,7 @@ class ExpenseList extends Component
             .includes(e.target.value.toLowerCase()) || 
              expense.date.toLowerCase().includes(e.target.value) ||
              expense.accountName.toLowerCase().includes(e.target.value.toLowerCase()) ||
-             expense.categoryGroup.toLowerCase().includes(e.target.value.toLowerCase()));
+             expense.ledgerCode.toLowerCase().includes(e.target.value.toLowerCase()));
              
         if (e.target.value === '')
         {
@@ -214,16 +181,6 @@ class ExpenseList extends Component
 
                                 <div class="btn-group">
 
-                                    <select name="outlet" class="form-control" onChange={this.onMonthChange}> 
-                                        <option value="">Select Outlet</option>
-                                        {this.state.outlets.map(o=> 
-                                            <option value={o.id}>{o.outletName}</option>
-
-                                        )}
-                                       
-                                    </select>
-                                    &nbsp;&nbsp;
-
                                     <select name="expenseMonth" class="form-control" onChange={this.onMonthChange}> 
                                         <option value="">Select Month</option>
                                         <option value="1">January</option>
@@ -243,14 +200,8 @@ class ExpenseList extends Component
                                     <button class="btn btn-default"><i class="fa fa-filter"></i></button>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     
+                                    <Link to="/add-expense" class="btn btn-success">Add New Expense </Link>
 
-                                    <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false">Add New</button>
-                                    <ul class="dropdown-menu" x-placement="bottom-start">
-                                        <li><a class="dropdown-item" href="#" onClick={this.addExpense}>Expense</a></li>
-                                        <li><a class="dropdown-item" href="#" onClick={this.addAccount}>Account</a></li>
-                                        <li><a class="dropdown-item" href="#" onClick={this.addCategory}>Category</a></li>
-                                        
-                                    </ul>
                                 </div>
 
                             </div>
@@ -266,16 +217,14 @@ class ExpenseList extends Component
 
                               <div class="ibox-content">
 
-                               <ul class="nav nav-tabs">
-                                    <li><a class="nav-link active show" data-toggle="tab" href="#tab-1"><i class="fa fa-files-o"></i> Expenses</a></li>
-                                    <li><a class="nav-link" data-toggle="tab" href="#tab-2"><i class="fa fa-dollar"></i>Accounts ({this.state.accounts.length})</a></li>
-                                    <li><a class="nav-link" data-toggle="tab" href="#tab-3"><i class="fa fa-bookmark-o"></i>Categories ({this.state.categories.length})</a></li>
-                             
+                              <ul class="nav nav-tabs">
+                                    <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Expense</a></li>
+                                    <li><a class="nav-link " data-toggle="tab" href="#tab-2">Account</a></li>
                                 </ul>
 
-                                <div class="tab-content">
+                           
+                                 <div class="tab-content">
                                     <div id="tab-1" class="tab-pane active show">
-
 
 
                                      <div class="row">
@@ -299,10 +248,11 @@ class ExpenseList extends Component
                                                                 <Expense 
                                                                     data = {e}
                                                                     date = {moment(e.date).format('MM/DD/YYYY')}
-                                                                    categoryGroup = {e.categoryGroup}
+                                                                    ledgerCode = {e.ledgerCode}
                                                                     categoryName = {e.categoryName}
                                                                     accountName = {e.accountName}
                                                                     amount = {e.amount}
+                                                                    status = {e.status}
                                                                     editExpense = {()=>this.editExpense(e.id)}
                                                                 />
                                                             )}
@@ -322,15 +272,16 @@ class ExpenseList extends Component
                         
                                         
                                     </div>
-                                
-                                    <div id="tab-2" class="tab-pane show">
 
+
+                                    <div id="tab-2" class="tab-pane show">
+                                                               
                                     <br/>
                                     <div class="row">
 
                                         {this.state.accounts.map(a=> 
                                             
-                                            <div class="col-lg-2" style={{cursor: 'pointer'}} onClick={()=>this.editAccount(a.id)}>
+                                            <div class="col-lg-2">
                                                 <div class="widget style1">
                                                     <div class="row">
                                                     <div>
@@ -346,52 +297,11 @@ class ExpenseList extends Component
                                             )}
                                 
       
-                                </div>
+                                         </div>
 
+                                    </div>
 
-
-                                </div>
-
-
-
-                                <div id="tab-3" class="tab-pane show">
-                                
-                                <br/>
-
-                                <div class="row">
-
-
-                                    {this.state.categories.map(c=> 
-                                        <div id={c.id} class="col-lg-2" style={{cursor: 'pointer'}} onClick={()=>this.editCategory(c.id)}>
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                   {c.categoryGroup.toUpperCase()}
-                                                </div>
-                                                <div class="panel-body">
-                                                <div>
-                                                    <span>{c.categoryName}</span>
-                                                    <h2 class="font-bold">{c.budget}</h2>
-                                                    <span>Budget</span>
-                                                </div>
-                                            
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    )}
-
-                               
-                             </div>
-
-
-                           </div>
-
-
-                           <div id="tab-4" class="tab-pane show">
-
-                            </div>
-
-                            
+                        
                             
                             
                             </div>

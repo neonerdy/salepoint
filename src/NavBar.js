@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 
 
 class NavBar extends Component
@@ -19,6 +19,13 @@ class NavBar extends Component
     }
 
 
+    getNavLinkClass = path => {
+        return this.props.history.location.pathname === path
+            ? "active"
+            : "";
+    };
+
+
 
     render() {
         return(
@@ -27,60 +34,82 @@ class NavBar extends Component
                     <div class="sidebar-collapse">
                         <ul class="nav metismenu" id="side-menu">
                             <li class="nav-header">
-                                {/*}
-                                <div class="dropdown profile-element">
-                                    <img alt="image" class="rounded-circle" src="img/profile_small.jpg"/>
-                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                        <span class="block m-t-xs font-bold">David Williams</span>
-                                        <span class="text-muted text-xs block">Art Director <b class="caret"></b></span>
-                                    </a>
-                                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                        <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-                                        <li><a class="dropdown-item" href="contacts.html">Contacts</a></li>
-                                        <li><a class="dropdown-item" href="mailbox.html">Mailbox</a></li>
-                                        <li class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="login.html">Logout</a></li>
-                                    </ul>
-                                </div>
-                                {*/}
                                 <div class="logo-element">
                                     CBS
                                 </div>
                             </li>
-                            <li>
+                            <li className={this.getNavLinkClass("/dashboard")}>
                                 <Link to="/dashboard"><i class="fa fa-desktop"></i> <span class="nav-label">Dashboards</span></Link>
                             </li>
                            
-                            <li>
-                                <Link to="/master-data"><i class="fa fa-puzzle-piece"></i> <span class="nav-label">Master Data</span></Link>
+                            <li className={this.getNavLinkClass("/master-data")}>
+                                <Link to="/master-data"><i class="fa fa-th-large"></i> <span class="nav-label">Master Data</span></Link>
                             </li>
                         
-                            <li>
-                                <Link to="/outlet"><i class="fa fa-th-large"></i> <span class="nav-label">Outlets</span></Link>
+                            <li className={this.getNavLinkClass("/employee")}>
+                                 <Link to="/employee"><i class="fa fa-star"></i> <span class="nav-label">Employees</span> </Link>
                             </li>
-                        
-                        
-                            <li>
-                            <Link to="/employee"><i class="fa fa-star"></i> <span class="nav-label">Employees</span> </Link>
-                            </li>
-                            <li>
+                            
+                            <li className={this.getNavLinkClass("/product")}>
                                 <Link to="/product"><i class="fa fa-dropbox"></i> <span class="nav-label">Products</span></Link>
                             </li>
-                            <li>
+
+                            <li className={this.getNavLinkClass("/partner")}>
                                 <Link to="/partner"><i class="fa fa-user"></i> <span class="nav-label">Partners</span></Link>
                             </li>
+
+                            <li className={this.getNavLinkClass("/purchase-order")}>
+                                <Link to="/purchase-order"><i class="fa fa-shopping-cart"></i><span class="nav-label"> Purchase Orders</span></Link>
+                            </li>
+
+                            <li className={this.getNavLinkClass("/sales-order")}>
+                                <Link to="/sales-order"><i class="fa  fa-briefcase"></i><span class="nav-label"> Sales Orders</span></Link>
+                            </li>
+                            
+
+                            <li className={this.getNavLinkClass("/purchase-invoice")}>
+                                <Link to="/purchase-invoice"><i class="fa fa-calendar-check-o"></i><span class="nav-label"> Purchase Invoice</span></Link>
+                            </li>
+
+                            <li className={this.getNavLinkClass("/sales-invoice")}>
+                                <Link to="/sales-invoice"><i class="fa fa-files-o"></i><span class="nav-label"> Sales Invoice</span></Link>
+                            </li>
                            
+                           
+                           {/*}
                             <li>
-                                <Link to="/sales"><i class="fa fa-shopping-cart"></i> <span class="nav-label">Sales</span></Link>
+                                <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">Orders</span><span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level collapse">
+                                      <li><Link to="/purchase-order">Purchase Order</Link></li>
+                                     <li><Link to="/sales-order">Sales Order</Link></li>
+                              </ul>
+                            </li>
+                            {*/}
+
+                            {/*}
+                            <li>
+                                <a href="#"><i class="fa fa-calendar-check-o"></i> <span class="nav-label">Invoices</span><span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level collapse">
+                                    <li><Link to="/purchase-invoice">Purchase Invoice</Link></li>
+                                    <li><Link to="/sales-invoice">Sales Invoice</Link></li>
+                              </ul>
+                            </li>
+                        {*/}
+
+
+                            <li className={this.getNavLinkClass("/payment")}>
+                                <Link to="/payment"><i class="fa fa-credit-card"></i> <span class="nav-label">Payments</span></Link>
+                            </li>
+                            
+                            <li className={this.getNavLinkClass("/expense")}>
+                                <Link to="/expense"><i class="fa fa-dollar"></i> <span class="nav-label">Expenses</span></Link>
                             </li>
 
-                            <li>
-                                <Link to="/purchase"><i class="fa fa-calendar-check-o"></i> <span class="nav-label">Purchases</span></Link>
+                            <li className={this.getNavLinkClass("/accounting")}>
+                                <Link to="/accounting"><i class="fa fa-puzzle-piece"></i> <span class="nav-label">Accounting</span></Link>
                             </li>
 
-                            <li>
-                                <Link to="/expense"><i class="fa fa-files-o"></i> <span class="nav-label">Expenses</span></Link>
-                            </li>
+
                             <li>
                                
                             </li>
@@ -103,4 +132,4 @@ class NavBar extends Component
 
 }
 
-export default NavBar;
+export default withRouter(NavBar);
