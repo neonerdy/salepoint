@@ -58,12 +58,8 @@ class NavBar extends Component
                                 <Link to="/partner"><i class="fa fa-user"></i> <span class="nav-label">Partners</span></Link>
                             </li>
 
-                            <li className={this.getNavLinkClass("/purchase-order")}>
-                                <Link to="/purchase-order"><i class="fa fa-shopping-cart"></i><span class="nav-label"> Purchase Orders</span></Link>
-                            </li>
-
                             <li className={this.getNavLinkClass("/sales-order")}>
-                                <Link to="/sales-order"><i class="fa  fa-briefcase"></i><span class="nav-label"> Sales Orders</span></Link>
+                                <Link to="/sales-order"><i class="fa  fa-briefcase"></i><span class="nav-label"> Point of Sale</span></Link>
                             </li>
                             
 
@@ -75,28 +71,7 @@ class NavBar extends Component
                                 <Link to="/sales-invoice"><i class="fa fa-files-o"></i><span class="nav-label"> Sales Invoice</span></Link>
                             </li>
                            
-                           
-                           {/*}
-                            <li>
-                                <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">Orders</span><span class="fa arrow"></span></a>
-                                <ul class="nav nav-second-level collapse">
-                                      <li><Link to="/purchase-order">Purchase Order</Link></li>
-                                     <li><Link to="/sales-order">Sales Order</Link></li>
-                              </ul>
-                            </li>
-                            {*/}
-
-                            {/*}
-                            <li>
-                                <a href="#"><i class="fa fa-calendar-check-o"></i> <span class="nav-label">Invoices</span><span class="fa arrow"></span></a>
-                                <ul class="nav nav-second-level collapse">
-                                    <li><Link to="/purchase-invoice">Purchase Invoice</Link></li>
-                                    <li><Link to="/sales-invoice">Sales Invoice</Link></li>
-                              </ul>
-                            </li>
-                        {*/}
-
-
+                   
                             <li className={this.getNavLinkClass("/payment")}>
                                 <Link to="/payment"><i class="fa fa-credit-card"></i> <span class="nav-label">Payments</span></Link>
                             </li>
@@ -105,10 +80,7 @@ class NavBar extends Component
                                 <Link to="/expense"><i class="fa fa-dollar"></i> <span class="nav-label">Expenses</span></Link>
                             </li>
 
-                            <li className={this.getNavLinkClass("/accounting")}>
-                                <Link to="/accounting"><i class="fa fa-puzzle-piece"></i> <span class="nav-label">Accounting</span></Link>
-                            </li>
-
+                   
 
                             <li>
                                
