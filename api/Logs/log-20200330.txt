@@ -13,3 +13,8 @@
 2020-03-30T21:08:08.9087961+07:00  [INF] Hosting environment: "Development" (c3307c92)
 2020-03-30T21:08:08.9088347+07:00  [INF] Content root path: "D:\Repos\Projects\tosca" (b5d60022)
 2020-03-30T21:08:12.7041573+07:00  [INF] Application is shutting down... (90f52c38)
+2020-03-30T22:10:49.4183816+07:00  [INF] Now listening on: "http://localhost:5007" (d826f4b8)
+2020-03-30T22:10:49.4248989+07:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2020-03-30T22:10:49.4250719+07:00  [INF] Hosting environment: "Development" (c3307c92)
+2020-03-30T22:10:49.4251138+07:00  [INF] Content root path: "D:\Repos\Projects\salepoint\api" (b5d60022)
+2020-03-30T22:10:57.4397914+07:00  [INF] Application is shutting down... (90f52c38)

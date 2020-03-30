@@ -21,7 +21,6 @@ import ExpenseEdit from './ExpenseEdit';
 import MasterData from './MasterData';
 import ProductCategoryAdd from './ProductCategoryAdd';
 import Dashboard from './Dashboard';
-import PurchaseOrderAdd from './PurchaseOrderAdd';
 import ProductEdit from './ProductEdit';
 import ProductCategoryEdit from './ProductCategoryEdit';
 import JobTitleAdd from './JobTitleAdd';
@@ -30,17 +29,11 @@ import UserAdd from './UserAdd';
 import UserEdit from './UserEdit';
 import PaymentTypeAdd from './PaymentTypeAdd';
 import PaymentTypeEdit from './PaymentTypeEdit';
-
 import SettingEdit from './SettingEdit';
-import PurchaseOrderEdit from './PurchaseOrderEdit';
-
 import Employee from './Employee';
 import Product from './Product';
 import Payment from './Payment';
-import Accounting from './Accounting';
-import GeneralLedgerAdd from './GeneralLedgerAdd';
 import SalesPaymentAdd from './SalesPaymentAdd';
-import PurchaseOrder from './PurchaseOrder';
 import SalesOrder from './SalesOrder';
 import SalesOrderAdd from './SalesOrderAdd';
 import SalesOrderEdit from './SalesOrderEdit';
@@ -52,7 +45,6 @@ import SalesInvoice from './SalesInvoice';
 import SalesInvoiceAdd from './SalesInvoiceAdd';
 import SalesInvoiceEdit from './SalesInvoiceEdit';
 import SalesPayment from './SalesPayment';
-import GeneralLedgerEdit from './GeneralLedgerEdit';
 
 
 
@@ -81,15 +73,12 @@ class App extends Component
                 <Route exact path="/product" component={Product}/>
                 <Route exact path="/partner" component={Partner}/>
                 <Route exact path="/sales-order" component={SalesOrder}/>
-                <Route exact path="/purchase-order" component={PurchaseOrder}/>
                 <Route exact path="/purchase-invoice" component={PurchaseInvoice}/>
                 <Route exact path="/sales-invoice" component={SalesInvoice}/>
                 <Route exact path="/purchase-payment/:id" component={PurchasePayment}/>
                 <Route exact path="/sales-payment/:id" component={SalesPayment}/>
                 <Route exact path="/expense" component={ExpenseList}/>
                 <Route exact path="/payment" component={Payment}/>
-                <Route exact path="/accounting" component={Accounting}/>
-              
              
                 <Route exact path="/add-product-category" component={ProductCategoryAdd}/>
                 <Route exact path="/add-job-title" component={JobTitleAdd}/>
@@ -99,13 +88,11 @@ class App extends Component
                 <Route exact path="/add-supplier" component={SupplierAdd}/>
                 <Route exact path="/add-product" component={AddProduct}/>
                 <Route exact path="/add-employee" component={EmployeeAdd}/>
-                <Route exact path="/add-purchase-order" component={PurchaseOrderAdd}/>
                 <Route exact path="/add-sales-order" component={SalesOrderAdd}/>
                 <Route exact path="/add-purchase-invoice" component={PurchaseInvoiceAdd}/>
                 <Route exact path="/add-sales-invoice" component={SalesInvoiceAdd}/>
                 <Route exact path="/add-expense" component={ExpenseAdd}/>
                 <Route exact path="/add-account" component={AccountAdd}/>
-                <Route exact path="/add-general-ledger" component={GeneralLedgerAdd}/>
                 <Route exact path="/add-sales-payment" component={SalesPaymentAdd}/>
 
                 <Route exact path="/edit-product-category/:id" component={ProductCategoryEdit}/>
@@ -117,13 +104,11 @@ class App extends Component
                 <Route exact path="/edit-customer/:id" component={CustomerEdit}/>
                 <Route exact path="/edit-employee/:id" component={EmployeeEdit}/>
                 <Route exact path="/edit-product/:id" component={ProductEdit}/>
-                <Route exact path="/edit-purchase-order/:id" component={PurchaseOrderEdit}/>
                 <Route exact path="/edit-purchase-invoice/:id" component={PurchaseInvoiceEdit}/>
                 <Route exact path="/edit-sales-invoice/:id" component={SalesInvoiceEdit}/>
                 <Route exact path="/edit-sales-order/:id" component={SalesOrderEdit}/>
                 <Route exact path="/edit-expense/:id" component={ExpenseEdit}/>
                 <Route exact path="/edit-account/:id" component={AccountEdit}/>
-                <Route exact path="/edit-general-ledger/:id" component={GeneralLedgerEdit}/>
                                 
 
               </Switch>

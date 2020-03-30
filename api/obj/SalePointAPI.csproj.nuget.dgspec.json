@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Repos\\Projects\\tosca\\SalePointAPI.csproj": {}
+    "D:\\Repos\\Projects\\salepoint\\api\\SalePointAPI.csproj": {}
   },
   "projects": {
-    "D:\\Repos\\Projects\\tosca\\SalePointAPI.csproj": {
+    "D:\\Repos\\Projects\\salepoint\\api\\SalePointAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Repos\\Projects\\tosca\\SalePointAPI.csproj",
+        "projectUniqueName": "D:\\Repos\\Projects\\salepoint\\api\\SalePointAPI.csproj",
         "projectName": "SalePointAPI",
-        "projectPath": "D:\\Repos\\Projects\\tosca\\SalePointAPI.csproj",
+        "projectPath": "D:\\Repos\\Projects\\salepoint\\api\\SalePointAPI.csproj",
         "packagesPath": "C:\\Users\\Ariyanto\\.nuget\\packages\\",
-        "outputPath": "D:\\Repos\\Projects\\tosca\\obj\\",
+        "outputPath": "D:\\Repos\\Projects\\salepoint\\api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
