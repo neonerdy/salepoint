@@ -5,15 +5,14 @@ import axios from 'axios';
 import config from '../Shared/Config';
 
 
-class JobTitleEdit extends Component
+class UnitEdit extends Component
 {
 
     constructor(props) {
         super(props);
         this.state = {
             error: {},
-            id: '',
-            jobTitleName: '',
+            unitName: '',
             description: ''
         }
     }
@@ -22,21 +21,20 @@ class JobTitleEdit extends Component
     componentDidMount() {
 
         let id = this.props.match.params.id;
-        this.getJobTitleById(id);
+        this.getUnitById(id);
     }
 
 
-    
-    getJobTitleById = (id) => {
-        axios.get(config.serverUrl + '/api/jobtitle/getbyid/' + id).then(response=> {
-            this.setState({
-                id: response.data.id,
-                jobTitleName: response.data.jobTitleName,
-                description: response.data.description
-            })
 
-            
-        })
+    getUnitById = (id) => {
+
+        axios.get(config.serverUrl + '/api/unit/getbyid/' + id).then(response=> {
+           this.setState({
+               id: response.data.id,
+               unitName: response.data.unitName,
+               description: response.data.description
+           }) 
+        }) 
     }
 
 
@@ -48,13 +46,13 @@ class JobTitleEdit extends Component
     }
 
 
-    validateJobTitle = () => {
+    validateUnit = () => {
 
         let isValid = true;
         let error = {};
 
-        if (this.state.jobTitleName === '') {
-            error.jobTitleName = 'is required';
+        if (this.state.unitName === '') {
+            error.unitName = 'is required';
             isValid = false;
         }
                
@@ -68,19 +66,19 @@ class JobTitleEdit extends Component
 
 
 
-    updateJobTitle = () => {
+    updateUnit = () => {
 
-        let isValid = this.validateJobTitle();
+        let isValid = this.validateUnit();
 
         if (isValid) {
 
-            let jobTitle = {
+            let unit = {
                 id: this.state.id,
-                titleName: this.state.titleName,
+                unitName: this.state.unitName,
                 description: this.state.description
             }
 
-            axios.put(config.serverUrl + '/api/jobtitle/update', jobTitle).then(response=> {
+            axios.put(config.serverUrl + '/api/unit/update', unit).then(response=> {
                 this.props.history.push('/master-data');
             })
         }
@@ -88,7 +86,7 @@ class JobTitleEdit extends Component
 
 
 
-    cancelUpdate = () => {
+    cancelAdd = () => {
         this.props.history.push('/master-data');
     }
 
@@ -106,7 +104,7 @@ class JobTitleEdit extends Component
                 
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
-                    <h2>Edit Job Title</h2>
+                    <h2>Edit Product Category</h2>
                 </div>
             </div>
 
@@ -122,11 +120,11 @@ class JobTitleEdit extends Component
                       <br/>
                             <form>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Job Title Name</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Category Name</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="jobTitleName" onChange={this.onValueChange} value={this.state.jobTitleName}/>
+                                        <input type="text" class="form-control" name="unitName" onChange={this.onValueChange} value={this.state.unitName}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.jobTitleName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.unitName}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
@@ -141,9 +139,9 @@ class JobTitleEdit extends Component
                             
 
                                 <div class="text-right">
-                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>&nbsp;
+                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>&nbsp;
 
-                                        <button type="button" onClick={this.updateJobTitle} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
+                                        <button type="button" onClick={this.updateUnit} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
                                 </div>
 
                              
@@ -157,7 +155,7 @@ class JobTitleEdit extends Component
 
                 </div>
 
-             
+            
             </div>
             
             
@@ -175,4 +173,4 @@ class JobTitleEdit extends Component
 }
 
 
-export default JobTitleEdit;
+export default UnitEdit;

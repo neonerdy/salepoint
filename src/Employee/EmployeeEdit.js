@@ -143,7 +143,7 @@ class EmployeeEdit extends Component
                 employeeName: this.state.employeeName,
                 photo: this.state.photo,
                 outletId: this.state.outletId,
-                joinDate: this.joinDate.current.value,
+                joinDate: new Date(this.joinDate.current.value),
                 address: this.state.address,
                 city: this.state.city,
                 phone: this.state.phone,
@@ -211,12 +211,12 @@ class EmployeeEdit extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.employeeName}</span>
                                 </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Job Title</label>
                                     <div class="col-md-7 col-sm-12 required">
                                         <select class="form-control" name="jobTitleId" onChange={this.onValueChange} value={this.state.jobTitleId}>
-                                            <option value="">Please Select Role</option>
+                                            <option value="">Please Select Job Title</option>
                                             {this.state.jobTitles.map(jt=> 
-                                                <option key={jt.id} value={jt.id}>{jt.titleName}</option> 
+                                                <option key={jt.id} value={jt.id}>{jt.jobTitleName}</option> 
                                             )}
                                         </select>
 

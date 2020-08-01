@@ -14,15 +14,6 @@ class EmployeeAdd extends Component
     constructor(props) {
         super(props);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var select2 = document.querySelectorAll('.js-example-basic-single');
-            
-        
-           });
-
-           
-
-
         this.joinDate = React.createRef()
 
         this.state = {
@@ -125,11 +116,11 @@ class EmployeeAdd extends Component
 
             let employee = {
                 employeeName: this.state.employeeName,
-                joinDate: this.joinDate.current.value,
+                jobTitleId: this.state.jobTitleId,
+                joinDate: new Date(this.joinDate.current.value),
                 address: this.state.address,
                 city: this.state.city,
                 phone: this.state.phone,
-                jobTitleId: this.state.jobTitleId,
                 email: this.state.email,
                 isActive: this.state.isActive
             }
@@ -187,12 +178,12 @@ class EmployeeAdd extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.employeeName}</span>
                                 </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Job Title</label>
                                     <div class="col-md-7 col-sm-12 required">
                                         <select class="form-control" name="jobTitleId" onChange={this.onValueChange}>
-                                           <option value="">Please Select Role</option>
+                                           <option value="">Please Select Job Title</option>
                                             {this.state.jobTitles.map(jt=> 
-                                                <option key={jt.id} value={jt.id}>{jt.titleName}</option> 
+                                                <option key={jt.id} value={jt.id}>{jt.jobTitleName}</option> 
                                             )}
                                         </select>
 
@@ -244,19 +235,6 @@ class EmployeeAdd extends Component
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
                                 </div>
-                                
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Roles</label>
-                                    <div class="col-md-7 col-sm-12 required">
-                                    <select class="js-example-basic-single" name="state">
-                                        <option value="AL">Alabama</option>
-                                        <option value="WY">Wyoming</option>
-                                        </select>
-
-                                    </div>
-                                </div>
-                                
-
 
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>

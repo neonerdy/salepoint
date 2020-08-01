@@ -49,6 +49,7 @@ namespace SalePointAPI
                 entity.ToTable("JobTitles");
                 entity.Property(e => e.ID).HasColumnName("ID");
                 entity.Property(e => e.JobTitleName).HasColumnName("JobTitleName");
+                entity.Property(e => e.Description).HasColumnName("Description");
             });
 
 
@@ -112,6 +113,7 @@ namespace SalePointAPI
                 entity.ToTable("Units");
                 entity.Property(e => e.ID).HasColumnName("ID");
                 entity.Property(e => e.UnitName).HasColumnName("UnitName");
+                entity.Property(e => e.Description).HasColumnName("Description");
             });
 
 

@@ -26,7 +26,7 @@ class Header extends Component
                     </li>
                     <li>
                         <span class="m-r-sm text-muted welcome-message">
-                            Administrator</span>
+                            Admin</span>
                     </li>
                   
                    

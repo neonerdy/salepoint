@@ -17,6 +17,9 @@ class MasterData extends Component
             categories: [],
             categoryId: '',
             categoryName: '',
+            units: [],
+            unitId: '',
+            unitName: '',
             jobTitles: [],
             jobTitleId: '', 
             titleName: '',
@@ -33,6 +36,7 @@ class MasterData extends Component
     componentDidMount() {
 
         this.getProductCategories();
+        this.getUnits();
         this.getJobTitles();
         this.getUsers();
         this.getPaymentTypes();
@@ -83,6 +87,45 @@ class MasterData extends Component
 
         axios.delete(config.serverUrl + '/api/productcategory/delete/' + id).then(response=> {
             this.getProductCategories();
+        })
+    }
+
+
+
+    /* UNIT */
+
+
+    getUnits = () => {
+
+        axios.get(config.serverUrl + '/api/unit/getall').then(response=> {
+            this.setState({
+                units: response.data
+            })
+        })
+    }
+
+
+    addUnit = () => {
+        this.props.history.push('/add-unit');
+    }
+
+
+    editUnit = (id) => {
+        this.props.history.push('/edit-unit/' + id)
+    }
+
+
+    onDeleteUnit = (unitId, unitName) => {
+        this.setState({
+            unitId: unitId,
+            unitName: unitName
+        })
+    }
+
+    deleteUnit = (id) => {
+
+        axios.delete(config.serverUrl + '/api/unit/delete/' + id).then(response=> {
+            this.getUnits();
         })
     }
 
@@ -226,6 +269,31 @@ class MasterData extends Component
               </div>
 
 
+              <div id="deleteUnit" class="modal fade" role="dialog">
+                
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                          <div class="modal-header">
+                            <h4>Delete Unit</h4>
+                          </div>
+                          <div class="modal-body">
+                          Are you sure want to delete '{this.state.unitName}' ?
+                          </div>
+
+                          <div class="modal-footer">
+                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
+                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteUnit(this.state.unitId)} 
+                                data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
+                          </div>
+                        
+                      </div>
+                  </div>
+              </div>
+
+
+
               <div id="deleteJobTitle" class="modal fade" role="dialog">
                 
                 <div class="modal-dialog">
@@ -310,6 +378,7 @@ class MasterData extends Component
                                 <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false">Add New</button>
                                 <ul class="dropdown-menu" x-placement="bottom-start">
                                     <li><a class="dropdown-item" onClick={this.addProductCategory}>Product Category</a></li>
+                                    <li><a class="dropdown-item" onClick={this.addUnit}>Unit</a></li>
                                     <li><a class="dropdown-item" onClick={this.addJobTitle}>Job Title</a></li>
                                     <li><a class="dropdown-item" onClick={this.addUser}>User</a></li>
                                     <li><a class="dropdown-item" onClick={this.addPaymentType}>Payment Type</a></li>
@@ -364,21 +433,20 @@ class MasterData extends Component
 
             <div class="col-lg-4">
 
-
                 <div class="ibox-content">
-                    <h2>Job Titles ({this.state.jobTitles.length})</h2>
+                    <h2>Units ({this.state.units.length})</h2>
                     
                     <Scrollbars style={{ height: 310 }}>
 
                     <ul class="todo-list m-t ui-sortable">
-                     
-                        {this.state.jobTitles.map(jt=> 
-                        <li key={jt.id}>
-                            <span class="m-l-xs">{jt.titleName}</span>
+                    
+                        {this.state.units.map(u=> 
+                        <li key={u.id}>
+                            <span class="m-l-xs">{u.unitName}</span>
                             <small class="float-right">
-                                <a onClick={()=>this.editJobTitle(jt.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
-                                 <a data-toggle="modal" data-target="#deleteJobTitle" 
-                                    onClick={()=>this.onDeleteJobTitle(jt.id, jt.titleName)}><i class="fa fa-trash"></i></a>
+                                <a onClick={()=>this.editUnit(u.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                                <a data-toggle="modal" data-target="#deleteUnit" 
+                                    onClick={()=>this.onDeleteUnit(u.id, u.unitName)}><i class="fa fa-trash"></i></a>
                                     &nbsp;&nbsp;
                             </small>
                         </li>
@@ -389,7 +457,38 @@ class MasterData extends Component
 
                 </div>
 
+            </div>
 
+
+
+
+
+            <div class="col-lg-4">
+
+
+                <div class="ibox-content">
+                    <h2>Job Titles ({this.state.jobTitles.length})</h2>
+                    
+                    <Scrollbars style={{ height: 310 }}>
+
+                    <ul class="todo-list m-t ui-sortable">
+                     
+                        {this.state.jobTitles.map(jt=> 
+                        <li key={jt.id}>
+                            <span class="m-l-xs">{jt.jobTitleName}</span>
+                            <small class="float-right">
+                                <a onClick={()=>this.editJobTitle(jt.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                                 <a data-toggle="modal" data-target="#deleteJobTitle" 
+                                    onClick={()=>this.onDeleteJobTitle(jt.id, jt.jobTitleName)}><i class="fa fa-trash"></i></a>
+                                    &nbsp;&nbsp;
+                            </small>
+                        </li>
+                        )}
+
+                    </ul>
+                    </Scrollbars>
+
+                </div>
                
             </div>
 

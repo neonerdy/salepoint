@@ -16,6 +16,7 @@ class ProductEdit extends Component
         this.state = {
             error: {},
             categories: [],
+            units: [],
             id: '',
             productCode: '',
             productName: '',
@@ -25,10 +26,11 @@ class ProductEdit extends Component
             purchasePrice: '',
             salePrice: '',
             stock: '',
-            unit: '',
+            unitId: '',
             description: '',
-            isTrackingStock: true,
-            isDiscontinued: false
+            IsStockTracking: false,
+            isDiscontinued: false,
+            createdDate: ''
         }
     }
 
@@ -38,6 +40,7 @@ class ProductEdit extends Component
         let id = this.props.match.params.id;
         
         this.getCategories();
+        this.getUnits();
         this.getProductById(id);
 
     }
@@ -56,11 +59,14 @@ class ProductEdit extends Component
                 purchasePrice: response.data.purchasePrice,
                 salePrice: response.data.salePrice,
                 stock: response.data.stock,
-                unit: response.data.unit,
+                unitId: response.data.unitId,
+                unitName: response.data.unitName,
                 description: response.data.description,
-                isTrackingStock: response.data.isTrackingStock,
-                isDiscontinued: response.data.isDiscontinued
+                IsStockTracking: response.data.isStockTracking,
+                isDiscontinued: response.data.isDiscontinued,
+                createdDate: response.data.createdDate
             })
+
         })
         
     }
@@ -75,6 +81,17 @@ class ProductEdit extends Component
     }
 
 
+    getUnits = () => {
+        
+        axios.get(config.serverUrl + '/api/unit/getall').then(response=> {
+            this.setState({
+                units: response.data
+            })
+        })
+    }
+
+
+
     onValueChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
@@ -82,8 +99,8 @@ class ProductEdit extends Component
     }
 
 
-    onTrackingStockChange = (e) =>  {
-        this.setState({isTrackingStock: e.target.checked})
+    onStockTrackingChange = (e) =>  {
+        this.setState({IsStockTracking: e.target.checked})
    
     }
 
@@ -127,8 +144,8 @@ class ProductEdit extends Component
             isValid = false;
         }
 
-        if (this.state.unit === '') {
-            error.unit = 'is required';
+        if (this.state.unitId === '') {
+            error.unitId = 'is required';
             isValid = false;
         }
 
@@ -156,13 +173,14 @@ class ProductEdit extends Component
                 categoryId: this.state.categoryId,
                 brand: this.state.brand,
                 model: this.state.model,
-                purchasePrice: this.state.purchasePrice,
-                salePrice: this.state.salePrice,
-                stock: this.state.stock,
-                unit: this.state.unit,
+                purchasePrice: parseFloat(this.state.purchasePrice),
+                salePrice: parseFloat(this.state.salePrice),
+                stock: parseInt(this.state.stock),
+                unitId: this.state.unitId,
                 description: this.state.description,
-                isTrackingStock: this.state.isTrackingStock,
-                isDiscontinued: this.state.isDiscontinued
+                IsStockTracking: this.state.IsStockTracking,
+                isDiscontinued: this.state.isDiscontinued,
+                createdDate: this.state.createdDate
             }
 
             axios.put(config.serverUrl + '/api/product/update', product).then(response=> {
@@ -268,11 +286,18 @@ class ProductEdit extends Component
                                 </div>
                                  
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Unit</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="unit" onChange={this.onValueChange} value={this.state.unit}/>
+                                    
+                                    <div class="col-md-7 col-sm-12 required">
+                                        <select class="form-control" name="unitId" onChange={this.onValueChange} value={this.state.unitId}>
+                                            <option value="">Select Unit</option>
+                                            {this.state.units.map(c=> 
+                                                <option value={c.id} key={c.id}>{c.unitName}</option>
+                                            )}
+                                        </select>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.unit}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.unitId}</span>
                                 </div>
+
 
                                 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
@@ -284,8 +309,8 @@ class ProductEdit extends Component
 
                                     <Switch
                                         color="#1ab394"
-                                        checked={this.state.isTrackingStock}
-                                        onChange={this.onTrackingStockChange} />
+                                        checked={this.state.IsStockTracking}
+                                        onChange={this.onStockTrackingChange} />
                                     </div>
 
                                 </div>

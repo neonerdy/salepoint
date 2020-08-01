@@ -17,6 +17,7 @@ class ProductAdd extends Component
         this.state = {
             error: {},
             categories: [],
+            units: [],
             productCode: '',
             productName: '',
             categoryId: '',
@@ -25,9 +26,9 @@ class ProductAdd extends Component
             purchasePrice: '',
             salePrice: '',
             stock: '',
-            unit: '',
+            unitId: '',
             description: '',
-            isTrackingStock: true,
+            IsStockTracking: true,
             isDiscontinued: false
         }
     }
@@ -35,6 +36,7 @@ class ProductAdd extends Component
 
     componentDidMount() {
         this.getCategories();
+        this.getUnits();
     }
 
     
@@ -48,14 +50,24 @@ class ProductAdd extends Component
     }
 
 
+    getUnits = () => {
+        
+        axios.get(config.serverUrl + '/api/unit/getall').then(response=> {
+            this.setState({
+                units: response.data
+            })
+        })
+    }
+
+
     onValueChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
-    onTrackingStockChange = (e) =>  {
-        this.setState({isTrackingStock: e.target.checked})
+    onStockTrackingChange = (e) =>  {
+        this.setState({IsStockTracking: e.target.checked})
    
     }
 
@@ -101,8 +113,8 @@ class ProductAdd extends Component
             isValid = false;
         }
 
-        if (this.state.unit === '') {
-            error.unit = 'is required';
+        if (this.state.unitId === '') {
+            error.unitId = 'is required';
             isValid = false;
         }
 
@@ -128,14 +140,16 @@ class ProductAdd extends Component
                 categoryId: this.state.categoryId,
                 brand: this.state.brand,
                 model: this.state.model,
-                purchasePrice: this.state.purchasePrice,
-                salePrice: this.state.salePrice,
-                stock: this.state.stock,
-                unit: this.state.unit,
+                purchasePrice: parseFloat(this.state.purchasePrice),
+                salePrice: parseFloat(this.state.salePrice),
+                stock: parseInt(this.state.stock),
+                unitId: this.state.unitId,
                 description: this.state.description,
-                isTrackingStock: this.state.isTrackingStock,
+                IsStockTracking: this.state.IsStockTracking,
                 isDiscontinued: this.state.isDiscontinued
             }
+
+            console.log(product);
 
             axios.post(config.serverUrl + '/api/product/save', product).then(response=> {
                 this.props.history.push('/product');
@@ -241,11 +255,19 @@ class ProductAdd extends Component
                                 </div>
                                  
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Unit</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="unit" onChange={this.onValueChange}/>
+                                    
+                                    <div class="col-md-7 col-sm-12 required">
+                                        <select class="form-control" name="unitId" onChange={this.onValueChange}>
+                                            <option value="">Select Unit</option>
+                                            {this.state.units.map(c=> 
+                                                <option value={c.id} key={c.id}>{c.unitName}</option>
+                                            )}
+                                        </select>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.unit}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.unitId}</span>
                                 </div>
+
+
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
                                     <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="description" onChange={this.onValueChange}/></div>
@@ -256,8 +278,8 @@ class ProductAdd extends Component
 
                                     <Switch
                                         color="#1ab394"
-                                        checked={this.state.isTrackingStock}
-                                        onChange={this.onTrackingStockChange} />
+                                        checked={this.state.IsStockTracking}
+                                        onChange={this.onStockTrackingChange} />
                                     </div>
 
                                 </div>

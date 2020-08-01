@@ -12,7 +12,7 @@ class JobTitleAdd extends Component
         super(props);
         this.state = {
             error: {},
-            titleName: '',
+            jobTitleName: '',
             description: ''
         }
     }
@@ -29,8 +29,8 @@ class JobTitleAdd extends Component
         let isValid = true;
         let error = {};
 
-        if (this.state.titleName === '') {
-            error.titleName = 'is required';
+        if (this.state.jobTitleName === '') {
+            error.jobTitleName = 'is required';
             isValid = false;
         }
                
@@ -51,7 +51,7 @@ class JobTitleAdd extends Component
         if (isValid) {
 
             let jobTitle = {
-                titleName: this.state.titleName,
+                jobTitleName: this.state.jobTitleName,
                 description: this.state.description
             }
 
@@ -97,11 +97,11 @@ class JobTitleAdd extends Component
                       <br/>
                             <form>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Title Name</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Job Title Name</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="titleName" onChange={this.onValueChange}/>
+                                        <input type="text" class="form-control" name="jobTitleName" onChange={this.onValueChange}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.titleName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.jobTitleName}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>

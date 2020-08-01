@@ -6,6 +6,7 @@ namespace SalePointAPI.Models
     {
         public Guid ID { get; set; }
         public string UnitName { get; set; }
+        public string Description { get; set; }
     }
 
 

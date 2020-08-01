@@ -32,6 +32,7 @@ namespace SalePointAPI.Controllers
             {
                 var products = await context.Products
                     .Include(p=>p.Category)
+                    .Include(p=>p.Unit)
                     .OrderBy(p=>p.ProductName)
                     .ToListAsync();
             
@@ -54,6 +55,7 @@ namespace SalePointAPI.Controllers
             {
                 var product = await context.Products
                     .Include(p=>p.Category)
+                    .Include(p=>p.Unit)
                     .Where(p=>p.ID == id)
                     .SingleOrDefaultAsync();
                 

@@ -28,7 +28,6 @@ class Employee extends Component
     }
 
 
-   
     getEmployees =()=> {
         axios.get(config.serverUrl + '/api/employee/getall').then(response=> {
             this.setState({
@@ -63,6 +62,24 @@ class Employee extends Component
             employeeId: employeeId,
             employeeName: employeeName
         })
+    }
+
+
+    searchEmployee = (e) => {
+
+        let filteredEmployee = this.state.initialEmployees.filter(e =>e.employeeName.toLowerCase().includes(e.target.value.toLowerCase()));
+            
+        if (e.target.value === '') {
+            this.setState( {
+                employees: this.state.initialEmployees
+            })
+        }
+        else {
+            this.setState( {
+                employees: filteredEmployee
+            })
+    
+        }
     }
 
 
@@ -107,9 +124,13 @@ class Employee extends Component
                         <div class="col-lg-4">
                             <div class="title-action">
 
-                            <div class="btn-group">
-                                <Link to="/add-employee" class="btn btn-success">Add New Employee </Link>
-                            </div>
+                                <div class="btn-group">
+                          
+                                    <input type="text" class="form-control" placeholder="Search" onChange={this.searchEmployee}/>
+                                    &nbsp;&nbsp;&nbsp;
+
+                                    <Link to="/add-employee" class="btn btn-success">Add New Employee </Link>
+                                </div>
 
                             </div>
                         </div>
@@ -141,7 +162,7 @@ class Employee extends Component
                                                 <th>City</th>
                                                 <th>Phone</th>
                                                 <th>E-Mail</th>
-                                                <th>Role</th>
+                                                <th>Job Title</th>
                                                 <th></th>
                                                 <th></th>
                                                 
@@ -158,7 +179,7 @@ class Employee extends Component
                                                     <td>{e.city}</td>
                                                     <td>{e.phone}</td>
                                                     <td>{e.email}</td>
-                                                    <td>{e.jobTitle.titleName}</td>
+                                                    <td>{e.jobTitle.jobTitleName}</td>
                                                     <td align="middle">
                                                     {e.isActive===false? 
                                                         <span class="label label-danger">Not Active</span>

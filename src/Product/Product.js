@@ -231,7 +231,7 @@ class Product extends Component
                                                  <td>{p.purchasePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                                  <td>{p.salePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                                  <td>{p.stock}</td>
-                                                 <td>{p.unit}</td>
+                                                 <td>{p.unit.unitName}</td>
                                                  <td align="middle">
                                                     {p.isDiscontinued===true? 
                                                         <span class="label label-danger">Discontinued</span>

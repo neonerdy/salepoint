@@ -18,11 +18,14 @@ import AccountAdd from './Expense/AccountAdd';
 import AccountEdit from './Expense/AccountEdit';
 import ExpenseAdd from './Expense/ExpenseAdd';
 import ExpenseEdit from './Expense/ExpenseEdit';
+
 import MasterData from './Master/MasterData';
 import ProductCategoryAdd from './Product/ProductCategoryAdd';
+import UnitAdd from './Product/UnitAdd';
 import Dashboard from './Dashboard/Dashboard';
 import ProductEdit from './Product/ProductEdit';
 import ProductCategoryEdit from './Product/ProductCategoryEdit';
+import UnitEdit from './Product/UnitEdit';
 import JobTitleAdd from './Employee/JobTitleAdd';
 import JobTitleEdit from './Employee/JobTitleEdit';
 import UserAdd from './Master/UserAdd';
@@ -81,6 +84,7 @@ class App extends Component
                 <Route exact path="/payment" component={Payment}/>
              
                 <Route exact path="/add-product-category" component={ProductCategoryAdd}/>
+                <Route exact path="/add-unit" component={UnitAdd}/>
                 <Route exact path="/add-job-title" component={JobTitleAdd}/>
                 <Route exact path="/add-user" component={UserAdd}/>
                 <Route exact path="/add-payment-type" component={PaymentTypeAdd}/>
@@ -96,6 +100,7 @@ class App extends Component
                 <Route exact path="/add-sales-payment" component={SalesPaymentAdd}/>
 
                 <Route exact path="/edit-product-category/:id" component={ProductCategoryEdit}/>
+                <Route exact path="/edit-unit/:id" component={UnitEdit}/>
                 <Route exact path="/edit-job-title/:id" component={JobTitleEdit}/>
                 <Route exact path="/edit-user/:id" component={UserEdit}/>
                 <Route exact path="/edit-payment-type/:id" component={PaymentTypeEdit}/>
