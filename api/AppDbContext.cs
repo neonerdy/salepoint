@@ -36,7 +36,7 @@ namespace SalePointAPI
        
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
-             optionBuilder.UseSqlServer("Server=LAPTOP-SS8BF023\\SQLEXPRESS;Database=SALEPOINT1;Trusted_Connection=True");
+             optionBuilder.UseSqlServer("Server=LAPTOP-SS8BF023\\SQLEXPRESS;Database=SALEPOINT;Trusted_Connection=True");
         }
        
 
@@ -127,7 +127,7 @@ namespace SalePointAPI
                 entity.Property(e => e.PurchasePrice).HasColumnName("PurchasePrice");
                 entity.Property(e => e.SalePrice).HasColumnName("SalePrice");
                 entity.Property(e => e.Stock).HasColumnName("Stock");
-                entity.Property(e => e.UnitId).HasColumnName("Unit");
+                entity.Property(e => e.UnitId).HasColumnName("UnitId");
                 entity.Property(e => e.Description).HasColumnName("Description");
                 entity.Property(e => e.IsStockTracking).HasColumnName("IsStockTracking");
                 entity.Property(e => e.IsDiscontinued).HasColumnName("IsDiscontinued");
@@ -339,7 +339,7 @@ namespace SalePointAPI
                 entity.Property(e => e.Password).HasColumnName("Password");
                 entity.Property(e => e.EmployeeId).HasColumnName("EmployeeId");
                 entity.Property(e => e.CreatedDate).HasColumnName("CreatedDate");
-                entity.Property(e => e.ModifiedDate).HasColumnName("ModifiedDates");
+                entity.Property(e => e.ModifiedDate).HasColumnName("ModifiedDate");
             });
 
 
