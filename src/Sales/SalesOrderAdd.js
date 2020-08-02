@@ -46,7 +46,9 @@ class SalesOrderAdd extends Component
         this.getCustomers();
         this.getSalesPersons();
         this.getProducts();
+
     }
+
 
     
     onValueChange = (e) => {
@@ -267,7 +269,7 @@ class SalesOrderAdd extends Component
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
 
-                    <h2>Add Sales Order</h2>
+                    <h2>Add New Order</h2>
                 </div>
             </div>
 

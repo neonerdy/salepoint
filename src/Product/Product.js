@@ -123,6 +123,9 @@ class Product extends Component
     }
 
 
+    addUnit = () => {
+        this.props.history.push('/add-unit');
+    }
   
 
     render() {
@@ -180,7 +183,7 @@ class Product extends Component
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><i class="fa fa-bookmark-o"></i>+</button>
                                 <ul class="dropdown-menu" x-placement="bottom-start">
                                 <li><a class="dropdown-item" onClick={this.addCategory}>Add Category</a></li>
-                                <li><a class="dropdown-item" href="#">Add Unit</a></li>
+                                <li><a class="dropdown-item" onClick={this.addUnit}>Add Unit</a></li>
                                 </ul>
                                 &nbsp;
                         

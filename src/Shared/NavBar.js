@@ -10,6 +10,11 @@ class NavBar extends Component
         super(props);
     }
 
+    
+    componentDidMount() {
+        this.getNavLinkClass("/dashboard")
+    }
+    
     onEmployeeClicked =()=> {
         this.props.history.push('/employee');
     }
@@ -55,11 +60,11 @@ class NavBar extends Component
                             </li>
 
                             <li className={this.getNavLinkClass("/customer")}>
-                                <Link to="/partner"> <i class="fa fa-id-card-o"></i> <span class="nav-label">Customers</span></Link>
+                                <Link to="/customer"> <i class="fa fa-id-card-o"></i> <span class="nav-label">Customers</span></Link>
                             </li>
 
                             <li className={this.getNavLinkClass("/supplier")}>
-                                <Link to="/partner"><i class="fa fa-user"></i> <span class="nav-label">Suppliers</span></Link>
+                                <Link to="/supplier"><i class="fa fa-user"></i> <span class="nav-label">Suppliers</span></Link>
                             </li>
 
                            

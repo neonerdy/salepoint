@@ -134,7 +134,7 @@ class SupplierEdit extends Component
             }
 
             axios.put(config.serverUrl + '/api/supplier/update', supplier).then(response=> {
-                this.props.history.push('/partner');
+                this.props.history.push('/supplier');
             })
 
         }
@@ -142,7 +142,7 @@ class SupplierEdit extends Component
     }
 
     cancelUpdate = () => {
-        this.props.history.push('/partner');
+        this.props.history.push('/supplier');
     }
 
 
@@ -269,7 +269,7 @@ class SupplierEdit extends Component
             
         </div>
 
-        
+        <br/><br/>
         <Footer/>
 
         </div>

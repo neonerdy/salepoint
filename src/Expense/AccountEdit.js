@@ -12,9 +12,8 @@ class AccountEdit extends Component
         super(props);
         this.state = {
             error: {},
-            accountTypes: ['Asset', 'Liabilities', 'Income', 'Expense', 'Capital'],
+            accountTypes: ['Cash', 'Bank', 'Credit Card'],
             id: '',
-            accountCode: '',
             accountName: '',
             accountType: '',
             balance: '',
@@ -34,7 +33,6 @@ class AccountEdit extends Component
         axios.get(config.serverUrl + '/api/account/getbyid/' + id).then(response=> {
             this.setState({
                 id: response.data.id,
-                accountCode: response.data.accountCode,
                 accountName: response.data.accountName,
                 accountType: response.data.accountType,
                 balance: response.data.balance,
@@ -56,12 +54,6 @@ class AccountEdit extends Component
 
         let isValid = true;
         let error = {};
-
-        
-        if (this.state.accountCode === '') {
-            error.accountCode = 'is required';
-            isValid = false;
-        }
 
         if (this.state.accountName === '') {
             error.accountName = 'is required';
@@ -95,15 +87,14 @@ class AccountEdit extends Component
 
             let account = {
                 id: this.state.id,
-                accountCode: this.state.accountCode,
                 accountName: this.state.accountName,
                 accountType: this.state.accountType,
-                balance: this.state.balance,
+                balance: parseFloat(this.state.balance),
                 description: this.state.description
             }
 
             axios.put(config.serverUrl + '/api/account/update', account).then(response=> {
-                this.props.history.push('/accounting');
+                this.props.history.push('/master-data');
             })
         }
     }
@@ -112,14 +103,14 @@ class AccountEdit extends Component
     deleteAccount = (id) => {
 
         axios.delete(config.serverUrl + '/api/account/delete/' + id).then(response=> {
-            this.props.history.push('/accounting');
+            this.props.history.push('/master-data');
         })
     }
 
 
 
     cancelUpdate = () => {
-        this.props.history.push('/accounting');
+        this.props.history.push('/master-data');
     }
 
 
@@ -159,13 +150,7 @@ class AccountEdit extends Component
                       <br/>
                             <form>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account Code</label>
-                                    <div class="col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="accountCode" onChange={this.onValueChange} value={this.state.accountCode}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountCode}</span>
-                                </div>
-
+                           
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account Name</label>
                                     <div class="col-md-7 col-sm-12 required">
                                         <input type="text" class="form-control" name="accountName" onChange={this.onValueChange} value={this.state.accountName}/>

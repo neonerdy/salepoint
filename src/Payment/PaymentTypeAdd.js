@@ -12,7 +12,7 @@ class PaymentTypeAdd extends Component
         super(props);
         this.state = {
             error: {},
-            paymentName: '',
+            paymentTypeName: '',
             description: ''
         }
     }
@@ -29,8 +29,8 @@ class PaymentTypeAdd extends Component
         let isValid = true;
         let error = {};
 
-        if (this.state.paymentName === '') {
-            error.paymentName = 'is required';
+        if (this.state.paymentTypeName === '') {
+            error.paymentTypeName = 'is required';
             isValid = false;
         }
                
@@ -51,7 +51,7 @@ class PaymentTypeAdd extends Component
         if (isValid) {
 
             let paymentType = {
-                paymentName: this.state.paymentName,
+                paymentTypeName: this.state.paymentTypeName,
                 description: this.state.description
             }
 
@@ -97,18 +97,17 @@ class PaymentTypeAdd extends Component
                       <br/>
                             <form>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Name</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Type Name</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="paymentName" onChange={this.onValueChange}/>
+                                        <input type="text" class="form-control" name="paymentTypeName" onChange={this.onValueChange}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.paymentName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.paymentTypeName}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
                                     <div class="col-md-7 col-sm-12">
                                         <input type="text" class="form-control" name="description" onChange={this.onValueChange}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.description}</span>
                                 </div>
                                 <br/><br/>
 

@@ -13,7 +13,7 @@ class PaymentTypeEdit extends Component
         this.state = {
             error: {},
             id: '',
-            paymentName: '',
+            paymentTypeName: '',
             description: ''
         }
     }
@@ -31,7 +31,7 @@ class PaymentTypeEdit extends Component
         axios.get(config.serverUrl + '/api/paymenttype/getbyid/' + id).then(response=> {
             this.setState({
                 id: response.data.id,
-                paymentName: response.data.paymentName,
+                paymentTypeName: response.data.paymentTypeName,
                 description: response.data.description
             })
         }) 
@@ -51,8 +51,8 @@ class PaymentTypeEdit extends Component
         let isValid = true;
         let error = {};
 
-        if (this.state.paymentName === '') {
-            error.paymentName = 'is required';
+        if (this.state.paymentTypeName === '') {
+            error.paymentTypeName = 'is required';
             isValid = false;
         }
                
@@ -74,7 +74,7 @@ class PaymentTypeEdit extends Component
 
             let paymentType = {
                 id: this.state.id,
-                paymentName: this.state.paymentName,
+                paymentTypeName: this.state.paymentTypeName,
                 description: this.state.description
             }
 
@@ -122,16 +122,15 @@ class PaymentTypeEdit extends Component
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Name</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="paymentName" onChange={this.onValueChange} value={this.state.paymentName}/>
+                                        <input type="text" class="form-control" name="paymentTypeName" onChange={this.onValueChange} value={this.state.paymentTypeName}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.paymentName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.paymentTypeName}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
                                     <div class="col-md-7 col-sm-12">
                                         <input type="text" class="form-control" name="description" onChange={this.onValueChange} value={this.state.description}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.description}</span>
                                 </div>
                                 <br/><br/>
 

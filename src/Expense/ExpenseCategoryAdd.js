@@ -5,17 +5,15 @@ import axios from 'axios';
 import config from '../Shared/Config';
 
 
-class AccountAdd extends Component
+class ExpenseCategoryAdd extends Component
 {
 
     constructor(props) {
         super(props);
         this.state = {
             error: {},
-            accountTypes: ['Cash', 'Bank', 'Credit Card'],
-            accountName: '',
-            accountType: '',
-            balance: '',
+            categoryName: '',
+            monthlyBudget: '',
             description: ''
         }
     }
@@ -29,24 +27,19 @@ class AccountAdd extends Component
 
 
 
-    validateAccount = () => {
+    validateExpenseCategory = () => {
 
         let isValid = true;
         let error = {};
 
         
-        if (this.state.accountName === '') {
-            error.accountName = 'is required';
+        if (this.state.categoryName === '') {
+            error.categoryName = 'is required';
             isValid = false;
         }
         
-        if (this.state.accountType === '') {
-            error.accountType = 'is required';
-            isValid = false;
-        }
-
-        if (this.state.balance === '') {
-            error.balance = 'is required';
+        if (this.state.monthlyBudget === '') {
+            error.monthlyBudget = 'is required';
             isValid = false;
         }
 
@@ -59,20 +52,19 @@ class AccountAdd extends Component
     }
 
 
-    saveAccount = () => {
+    saveExpenseCategory = () => {
 
-        let isValid = this.validateAccount();
+        let isValid = this.validateExpenseCategory();
 
         if (isValid) {
 
-            let account = {
-                accountName: this.state.accountName,
-                accountType: this.state.accountType,
+            let expenseCategory = {
+                categoryName: this.state.categoryName,
+                monthlyBudget: parseFloat(this.state.monthlyBudget),
                 description: this.state.description,
-                balance: parseFloat(this.state.balance)
             }
 
-            axios.post(config.serverUrl + '/api/account/save', account).then(response=> {
+            axios.post(config.serverUrl + '/api/expensecategory/save', expenseCategory).then(response=> {
                 this.props.history.push('/master-data');
             })
         }
@@ -98,8 +90,7 @@ class AccountAdd extends Component
                 
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
-
-                    <h2>Add Account </h2>
+                    <h2>Add Expense Category</h2>
                 </div>
                 <div class="col-lg-4">
                     <div class="title-action">
@@ -121,31 +112,18 @@ class AccountAdd extends Component
                             <form>
 
                                 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account Name</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Category Name</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="accountName" onChange={this.onValueChange}/>
+                                        <input type="text" class="form-control" name="categoryName" onChange={this.onValueChange}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.categoryName}</span>
                                 </div>
-                                
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account Type</label>
-                                    <div class="col-md-7 col-sm-12 required">
-                                        <select name="accountType" class="form-control" onChange={this.onValueChange}> 
-                                            <option value="">Select Account Type</option>
-                                            {this.state.accountTypes.map(at=> 
-                                               <option value={at}>{at}</option> 
-                                            )}
-                                        </select>    
-
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountType}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Balance</label>
+                          
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Monthly Budget</label>
                                     <div class="col-md-7 col-sm-12 required"><input type="number" class="form-control" 
-                                        name="balance" onChange={this.onValueChange}/>
+                                        name="monthlyBudget" onChange={this.onValueChange}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.balance}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.monthlyBudget}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
@@ -159,11 +137,9 @@ class AccountAdd extends Component
 
                                 <div class="text-right">
                                         <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>
-                                        <button type="button" onClick={this.saveAccount} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
+                                        <button type="button" onClick={this.saveExpenseCategory} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
                                     </div>
 
-                                
-                                
 
                             </form>
 
@@ -193,4 +169,4 @@ class AccountAdd extends Component
 }
 
 
-export default AccountAdd;
+export default ExpenseCategoryAdd;

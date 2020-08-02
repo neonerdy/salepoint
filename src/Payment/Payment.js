@@ -121,7 +121,7 @@ class Payment extends Component
                             <div class="title-action">
 
                             <div class="btn-group">
-                            <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false">Add New</button>
+                            <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false">Add New Payment</button>
                             <ul class="dropdown-menu" x-placement="bottom-start">
                                 <li><a class="dropdown-item" href="#" onClick={this.addSupplier}>Purchase Payment</a></li>
                                 <li><a class="dropdown-item" href="#" onClick={this.addSalesPayment}>Sales Payment</a></li>

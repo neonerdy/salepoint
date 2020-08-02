@@ -4,9 +4,10 @@ import EmployeeAdd from './Employee/EmployeeAdd';
 import EmployeeEdit from './Employee/EmployeeEdit';
 import ProductList from './Product/ProductList';
 import AddProduct from './Product/ProductAdd';
-import Partner from './Customer/Partner';
 import ExpenseList from './Expense/ExpenseList';
 import Header from './Shared/Header';
+
+import Customer from './Customer/Customer';
 import CustomerAdd from './Customer/CustomerAdd';
 import CustomerEdit from './Customer/CustomerEdit';
 import SupplierAdd from './Supplier/SupplierAdd';
@@ -48,6 +49,9 @@ import SalesInvoice from './Invoice/SalesInvoice';
 import SalesInvoiceAdd from './Invoice/SalesInvoiceAdd';
 import SalesInvoiceEdit from './Invoice/SalesInvoiceEdit';
 import SalesPayment from './Payment/SalesPayment';
+import Supplier from './Supplier/Supplier';
+import ExpenseCategoryAdd from './Expense/ExpenseCategoryAdd';
+import ExpenseCategoryEdit from './Expense/ExpenseCategoryEdit';
 
 
 
@@ -74,7 +78,8 @@ class App extends Component
                 <Route exact path="/master-data" component={MasterData}/>
                 <Route exact path="/employee" component={Employee}/>
                 <Route exact path="/product" component={Product}/>
-                <Route exact path="/partner" component={Partner}/>
+                <Route exact path="/customer" component={Customer}/>
+                <Route exact path="/supplier" component={Supplier}/>
                 <Route exact path="/sales-order" component={SalesOrder}/>
                 <Route exact path="/purchase-invoice" component={PurchaseInvoice}/>
                 <Route exact path="/sales-invoice" component={SalesInvoice}/>
@@ -88,6 +93,9 @@ class App extends Component
                 <Route exact path="/add-job-title" component={JobTitleAdd}/>
                 <Route exact path="/add-user" component={UserAdd}/>
                 <Route exact path="/add-payment-type" component={PaymentTypeAdd}/>
+                <Route exact path="/add-account" component={AccountAdd}/>
+                <Route exact path="/add-expense-category" component={ExpenseCategoryAdd}/>
+                
                 <Route exact path="/add-customer" component={CustomerAdd}/>
                 <Route exact path="/add-supplier" component={SupplierAdd}/>
                 <Route exact path="/add-product" component={AddProduct}/>
@@ -96,7 +104,6 @@ class App extends Component
                 <Route exact path="/add-purchase-invoice" component={PurchaseInvoiceAdd}/>
                 <Route exact path="/add-sales-invoice" component={SalesInvoiceAdd}/>
                 <Route exact path="/add-expense" component={ExpenseAdd}/>
-                <Route exact path="/add-account" component={AccountAdd}/>
                 <Route exact path="/add-sales-payment" component={SalesPaymentAdd}/>
 
                 <Route exact path="/edit-product-category/:id" component={ProductCategoryEdit}/>
@@ -104,6 +111,9 @@ class App extends Component
                 <Route exact path="/edit-job-title/:id" component={JobTitleEdit}/>
                 <Route exact path="/edit-user/:id" component={UserEdit}/>
                 <Route exact path="/edit-payment-type/:id" component={PaymentTypeEdit}/>
+                <Route exact path="/edit-account/:id" component={AccountEdit}/>
+                <Route exact path="/edit-expense-category/:id" component={ExpenseCategoryEdit}/>
+               
                 <Route exact path="/edit-setting/:id" component={SettingEdit}/>
                 <Route exact path="/edit-supplier/:id" component={SupplierEdit}/>
                 <Route exact path="/edit-customer/:id" component={CustomerEdit}/>
@@ -113,7 +123,6 @@ class App extends Component
                 <Route exact path="/edit-sales-invoice/:id" component={SalesInvoiceEdit}/>
                 <Route exact path="/edit-sales-order/:id" component={SalesOrderEdit}/>
                 <Route exact path="/edit-expense/:id" component={ExpenseEdit}/>
-                <Route exact path="/edit-account/:id" component={AccountEdit}/>
                                 
 
               </Switch>

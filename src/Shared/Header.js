@@ -26,14 +26,18 @@ class Header extends Component
                     </li>
                     <li>
                         <span class="m-r-sm text-muted welcome-message">
-                            Admin</span>
+                            Erika Kartawidjaja</span>
                     </li>
                   
-                   
-                    <li>
+                   <li>
+                        <i class="fa fa-gear"></i> &nbsp;
+                        <i class="fa fa-user-o"></i> 
+                   </li>
+                   <li>
                         <a href="login.html">
-                            <i class="fa fa-user"></i> Log out
+                            Log out
                         </a>
+
                     </li>
                    
 

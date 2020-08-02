@@ -118,10 +118,10 @@ class PurchaseInvoiceAdd extends Component
             purchaseInvoiceItem.purchaseInvoiceId = this.state.id;
             purchaseInvoiceItem.productId = productId; 
             purchaseInvoiceItem.productName = response.data.productName;
-            purchaseInvoiceItem.qty = this.state.qty;
-            purchaseInvoiceItem.price = response.data.salePrice;
-            purchaseInvoiceItem.taxPct = this.state.taxPct;
-            purchaseInvoiceItem.discountPct = this.state.discountPct;
+            purchaseInvoiceItem.qty = parseInt(this.state.qty);
+            purchaseInvoiceItem.price = parseFloat(response.data.salePrice);
+            purchaseInvoiceItem.taxPct = parseInt(this.state.taxPct);
+            purchaseInvoiceItem.discountPct = parseInt(this.state.discountPct);
             
           
             this.setState({
@@ -202,14 +202,14 @@ class PurchaseInvoiceAdd extends Component
                 id: this.state.id,
                 invoiceCode: this.state.invoiceCode,
                 supplierId: this.state.supplierId,
-                invoiceDate: this.invoiceDate.current.value,
-                dueDate: this.dueDate.current.value,
+                invoiceDate: new Date(this.invoiceDate.current.value),
+                dueDate: new Date(this.dueDate.current.value),
                 notes: this.state.notes,
-                amount: this.state.subTotal,
+                amount: parseFloat(this.state.subTotal),
                 amountPaid: 0,
-                tax: this.state.tax,
-                discount: this.state.discount,
-                total: this.state.total,
+                tax: parseFloat(this.state.tax),
+                discount: parseFloat(this.state.discount),
+                total: parseFloat(this.state.total),
                 status: 'New',                                
                 purchaseInvoiceItems: this.state.purchaseInvoiceItems
             }

@@ -80,7 +80,7 @@ class UnitAdd extends Component
                 
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
-                    <h2>Add Product Category</h2>
+                    <h2>Add Unit</h2>
                 </div>
             </div>
 

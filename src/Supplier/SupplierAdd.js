@@ -104,7 +104,7 @@ class SupplierAdd extends Component
             }
 
             axios.post(config.serverUrl + '/api/supplier/save', supplier).then(response=> {
-                this.props.history.push('/partner');
+                this.props.history.push('/supplier');
             })
 
         }
@@ -112,7 +112,7 @@ class SupplierAdd extends Component
     }
 
     cancelAdd = () => {
-        this.props.history.push('/partner');
+        this.props.history.push('/supplier');
     }
 
 

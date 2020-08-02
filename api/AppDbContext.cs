@@ -246,6 +246,7 @@ namespace SalePointAPI
                 entity.ToTable("PaymentTypes");
                 entity.Property(e => e.ID).HasColumnName("ID");
                 entity.Property(e => e.PaymentTypeName).HasColumnName("PaymentTypeName");
+                entity.Property(e => e.Description).HasColumnName("Description");
             });
 
 
@@ -314,8 +315,8 @@ namespace SalePointAPI
                 entity.ToTable("ExpenseCategories");
                 entity.Property(e => e.ID).HasColumnName("ID");
                 entity.Property(e => e.CategoryName).HasColumnName("CategoryName");
-                entity.Property(e => e.Budget).HasColumnName("Budget");
-                entity.Property(e => e.Notes).HasColumnName("Notes");
+                entity.Property(e => e.MonthlyBudget).HasColumnName("MonthlyBudget");
+                entity.Property(e => e.Description).HasColumnName("Description");
             });
 
 

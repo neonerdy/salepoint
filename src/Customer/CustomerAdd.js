@@ -102,7 +102,7 @@ class CustomerAdd extends Component
             }
 
             axios.post(config.serverUrl + '/api/customer/save', customer).then(response=> {
-                this.props.history.push('/partner');
+                this.props.history.push('/customer');
             })
 
         }
@@ -110,7 +110,7 @@ class CustomerAdd extends Component
     }
 
     cancelAdd = () => {
-        this.props.history.push('/partner');
+        this.props.history.push('/customer');
     }
 
 

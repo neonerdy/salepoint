@@ -274,6 +274,7 @@ class EmployeeAdd extends Component
             
         </div>
 
+         <br/> <br/>                                           
         
         <Footer/>
 

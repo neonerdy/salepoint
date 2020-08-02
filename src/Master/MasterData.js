@@ -14,15 +14,21 @@ class MasterData extends Component
         super(props);
         this.state = {
             error: {},
-            categories: [],
-            categoryId: '',
-            categoryName: '',
+            productCategories: [],
+            productCategoryId: '',
+            productCategoryName: '',
             units: [],
             unitId: '',
             unitName: '',
             jobTitles: [],
             jobTitleId: '', 
             titleName: '',
+            accounts: [],
+            accountId: '',
+            accountName: '',
+            expenseCategories: [],
+            expenseCategoryId: '',
+            expenseCategoryName: '',
             users: [],
             userId: '', 
             userName: '',
@@ -38,8 +44,10 @@ class MasterData extends Component
         this.getProductCategories();
         this.getUnits();
         this.getJobTitles();
-        this.getUsers();
+        //this.getUsers();
         this.getPaymentTypes();
+        this.getAccounts();
+        this.getExpenseCategories();
     }
 
 
@@ -59,7 +67,7 @@ class MasterData extends Component
 
         axios.get(config.serverUrl + '/api/productcategory/getall').then(response=> {
             this.setState({
-                categories: response.data
+                productCategories: response.data
             })
         })
     }
@@ -76,10 +84,10 @@ class MasterData extends Component
 
 
 
-    onDeleteProductCategory = (categoryId, categoryName) => {
+    onDeleteProductCategory = (productCategoryId, productCategoryName) => {
         this.setState({
-            categoryId: categoryId,
-            categoryName: categoryName
+            productCategoryId: productCategoryId,
+            productCategoryName: productCategoryName
         })
     }
 
@@ -235,6 +243,79 @@ class MasterData extends Component
 
 
 
+
+     /* ACCOUNT */
+
+
+     getAccounts = () => {
+        axios.get(config.serverUrl + '/api/account/getall').then(response=> {
+            this.setState({
+                accounts: response.data
+            })
+        })
+    }
+
+
+    addAccount = () => {
+        this.props.history.push('/add-account');
+    }
+
+    editAccount = (id) => {
+        this.props.history.push('/edit-account/' + id);
+    }
+
+    onDeleteAccount = (accountId, accountName) => {
+        this.setState({
+            accountId: accountId,
+            accountName: accountName
+        })
+    }
+
+    deleteAccount = (id) => {
+
+        axios.delete(config.serverUrl + '/api/account/delete/' + id).then(response=> {
+            this.getAccounts();
+        })
+    }
+
+
+
+      /* EXPENSE CATEGORY */
+
+
+    getExpenseCategories = () => {
+        axios.get(config.serverUrl + '/api/expensecategory/getall').then(response=> {
+            this.setState({
+                expenseCategories: response.data
+            })
+        })
+    }
+
+
+    addExpenseCategory = () => {
+        this.props.history.push('/add-expense-category');
+    }
+
+    editExpenseCategory = (id) => {
+        this.props.history.push('/edit-expense-category/' + id);
+    }
+
+    onDeleteExpenseCategory = (expenseCategoryId, expenseCategoryName) => {
+        this.setState({
+            expenseCategoryId: expenseCategoryId,
+            expenseCategoryName: expenseCategoryName
+        })
+    }
+
+    deleteExpenseCategory = (id) => {
+
+        axios.delete(config.serverUrl + '/api/expensecategory/delete/' + id).then(response=> {
+            this.getExpenseCategories();
+        })
+    }
+
+
+
     render() {
 
         let errStyle = {
@@ -256,12 +337,13 @@ class MasterData extends Component
                             <h4>Delete Product Category</h4>
                           </div>
                           <div class="modal-body">
-                          Are you sure want to delete '{this.state.categoryName}' ?
+                          Are you sure want to delete '{this.state.productCategoryName}' ?
                           </div>
 
                           <div class="modal-footer">
                             <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteProductCategory(this.state.categoryId)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
+                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteProductCategory(this.state.productCategoryId)} data-dismiss="modal">
+                                <label><i class="ti-check"></i></label> YES</button>
                           </div>
                         
                       </div>
@@ -317,6 +399,7 @@ class MasterData extends Component
                   </div>
               </div>
 
+            {/*}
 
               <div id="deleteUser" class="modal fade" role="dialog">
                 
@@ -340,7 +423,7 @@ class MasterData extends Component
                       </div>
                   </div>
               </div>
-
+            {*/}
 
               <div id="deletePaymentType" class="modal fade" role="dialog">
                 
@@ -366,6 +449,56 @@ class MasterData extends Component
               </div>
 
 
+              <div id="deleteAccount" class="modal fade" role="dialog">
+                
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                          <div class="modal-header">
+                            <h4>Delete Account</h4>
+                          </div>
+                          <div class="modal-body">
+                          Are you sure want to delete '{this.state.accountTypeName}' ?
+                          </div>
+
+                          <div class="modal-footer">
+                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
+                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteAccount(this.state.accountId)} data-dismiss="modal">
+                                <label><i class="ti-check"></i></label> YES</button>
+                          </div>
+                        
+                      </div>
+                  </div>
+              </div>
+
+
+
+              <div id="deleteExpenseCategory" class="modal fade" role="dialog">
+                
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                          <div class="modal-header">
+                            <h4>Delete Expense Category</h4>
+                          </div>
+                          <div class="modal-body">
+                          Are you sure want to delete '{this.state.expenseCategoryName}' ?
+                          </div>
+
+                          <div class="modal-footer">
+                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
+                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteExpenseCategory(this.state.expenseCategoryId)} data-dismiss="modal">
+                                <label><i class="ti-check"></i></label> YES</button>
+                          </div>
+                        
+                      </div>
+                  </div>
+              </div>
+
+
+
    
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
@@ -380,8 +513,10 @@ class MasterData extends Component
                                     <li><a class="dropdown-item" onClick={this.addProductCategory}>Product Category</a></li>
                                     <li><a class="dropdown-item" onClick={this.addUnit}>Unit</a></li>
                                     <li><a class="dropdown-item" onClick={this.addJobTitle}>Job Title</a></li>
-                                    <li><a class="dropdown-item" onClick={this.addUser}>User</a></li>
                                     <li><a class="dropdown-item" onClick={this.addPaymentType}>Payment Type</a></li>
+                                    <li><a class="dropdown-item" onClick={this.addAccount}>Account</a></li>
+                                    <li><a class="dropdown-item" onClick={this.addExpenseCategory}>Expense Category</a></li>
+                                    
                                 </ul>
                              </div>
                          </div>
@@ -398,14 +533,14 @@ class MasterData extends Component
 
 
                 <div class="ibox-content">
-                    <h2>Product Categories ({this.state.categories.length})</h2>
+                    <h2>Product Categories ({this.state.productCategories.length})</h2>
                     
                     
                     <Scrollbars style={{ height: 310 }}>
 
                     <ul class="todo-list m-t ui-sortable">
 
-                        {this.state.categories.map(c=> 
+                        {this.state.productCategories.map(c=> 
 
                             <li key = {c.id}>
                                 <span class="m-l-xs">{c.categoryName}</span>
@@ -414,7 +549,6 @@ class MasterData extends Component
                                     <a data-toggle="modal" data-target="#deleteProductCategory" 
                                     onClick={()=>this.onDeleteProductCategory(c.id, c.categoryName)}><i class="fa fa-trash"></i></a>
                                     &nbsp;&nbsp;
-
                                 </small>
                             </li>
                         
@@ -493,6 +627,104 @@ class MasterData extends Component
             </div>
 
 
+
+            <div class="col-lg-4">
+
+                <div class="ibox-content">
+                    <h2>Payment Types ({this.state.paymentTypes.length})</h2>
+                    
+                    <Scrollbars style={{ height: 310 }}>
+
+                    <ul class="todo-list m-t ui-sortable">
+                    
+                        {this.state.paymentTypes.map(pt=> 
+                        <li key={pt.id}>
+                            <span class="m-l-xs">{pt.paymentTypeName}</span>
+                            <small class="float-right">
+                            <a onClick={()=>this.editPaymentType(pt.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                            <a data-toggle="modal" data-target="#deletePaymentType" 
+                                onClick={()=>this.onDeletePaymentType(pt.id, pt.paymentTypeName)}><i class="fa fa-trash"></i></a>
+                                &nbsp;&nbsp;
+                            </small>
+
+                        </li>
+                        )}
+
+                        
+                    </ul>
+                    </Scrollbars>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-4">
+
+                <div class="ibox-content">
+                    <h2>Accounts ({this.state.accounts.length})</h2>
+                    
+                    <Scrollbars style={{ height: 310 }}>
+
+                    <ul class="todo-list m-t ui-sortable">
+                    
+                        {this.state.accounts.map(acc=> 
+                        <li key={acc.id}>
+                            <span class="m-l-xs">{acc.accountName}</span>
+                            <small class="float-right">
+                            <a onClick={()=>this.editAccount(acc.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                            <a data-toggle="modal" data-target="#deleteAccount" 
+                                onClick={()=>this.onDeleteAccount(acc.id, acc.accountName)}><i class="fa fa-trash"></i></a>
+                                &nbsp;&nbsp;
+                            </small>
+
+                        </li>
+                        )}
+
+                        
+                    </ul>
+                    </Scrollbars>
+
+                </div>
+
+                </div>
+
+
+
+              <div class="col-lg-4">
+
+                <div class="ibox-content">
+                    <h2>Expense Categories ({this.state.expenseCategories.length})</h2>
+                    
+                    <Scrollbars style={{ height: 310 }}>
+
+                    <ul class="todo-list m-t ui-sortable">
+                    
+                        {this.state.expenseCategories.map(ec=> 
+                        <li key={ec.id}>
+                            <span class="m-l-xs">{ec.categoryName}</span>
+                            <small class="float-right">
+                            <a onClick={()=>this.editExpenseCategory(ec.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                            <a data-toggle="modal" data-target="#deleteExpenseCategory" 
+                                onClick={()=>this.onDeleteExpenseCategory(ec.id, ec.categoryName)}><i class="fa fa-trash"></i></a>
+                                &nbsp;&nbsp;
+                            </small>
+                        </li>
+                        )}
+
+                        
+                    </ul>
+                    </Scrollbars>
+
+                </div>
+
+              </div>
+
+
+
+
+            {/*}                
+
             <div class="col-lg-4">
 
 
@@ -526,42 +758,11 @@ class MasterData extends Component
 
                 </div>
                 
+                       {*/}                   
 
 
 
-                <div class="col-lg-4">
-
-
-                    <div class="ibox-content">
-                        <h2>Payment Types ({this.state.paymentTypes.length})</h2>
-                        
-                        <Scrollbars style={{ height: 310 }}>
-
-                        <ul class="todo-list m-t ui-sortable">
-                        
-                            {this.state.paymentTypes.map(pt=> 
-                            <li key={pt.id}>
-                                <span class="m-l-xs">{pt.paymentName}</span>
-                                <small class="float-right">
-                                 <a onClick={()=>this.editPaymentType(pt.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
-                                 <a data-toggle="modal" data-target="#deletePaymentType" 
-                                    onClick={()=>this.onDeletePaymentType(pt.id, pt.paymentName)}><i class="fa fa-trash"></i></a>
-                                    &nbsp;&nbsp;
-                                </small>
-
-                            </li>
-                            )}
-
-                            
-                        </ul>
-                        </Scrollbars>
-
-                    </div>
-
-
-
-                    </div>
-
+               
 
 
 

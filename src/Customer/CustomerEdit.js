@@ -125,7 +125,7 @@ class CustomerEdit extends Component
             }
 
             axios.put(config.serverUrl + '/api/customer/update', customer).then(response=> {
-                this.props.history.push('/partner');
+                this.props.history.push('/customer');
             })
 
         }
@@ -133,7 +133,7 @@ class CustomerEdit extends Component
     }
 
     cancelUpdate = () => {
-        this.props.history.push('/partner');
+        this.props.history.push('/customer');
     }
 
 

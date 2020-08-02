@@ -104,7 +104,7 @@ class UnitEdit extends Component
                 
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
-                    <h2>Edit Product Category</h2>
+                    <h2>Edit Unit</h2>
                 </div>
             </div>
 

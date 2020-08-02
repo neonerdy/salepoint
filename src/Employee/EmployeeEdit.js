@@ -304,6 +304,8 @@ class EmployeeEdit extends Component
             
         </div>
 
+        <br/> <br/>                                           
+       
         
         <Footer/>
 

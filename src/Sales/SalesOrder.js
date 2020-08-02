@@ -5,6 +5,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import axios from 'axios';
 import config from '../Shared/Config';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 
 class SalesOrder extends Component
@@ -220,7 +221,7 @@ class SalesOrder extends Component
                    
                         <div class="row wrapper border-bottom white-bg page-heading">
                             <div class="col-lg-8">
-                                <h2>Sales Orders ({this.state.salesOrders.length})</h2>
+                                <h2>Point of Sale ({this.state.salesOrders.length})</h2>
                             
                             </div>
                             <div class="col-lg-4">
@@ -248,9 +249,8 @@ class SalesOrder extends Component
                                 
                                 </div>
 
-
-                                   &nbsp;&nbsp;
-                                    <a href="#" onClick={this.addSalesOrder} class="btn btn-success">Add New Sales Order</a>
+                                     &nbsp;&nbsp;
+                                    <Link to="/add-sales-order" class="btn btn-success">Add New Order</Link>
                                 </div>
                             </div>
                             
