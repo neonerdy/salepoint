@@ -12,12 +12,12 @@ class NavBar extends Component
 
     
     componentDidMount() {
-        this.getNavLinkClass("/dashboard")
+        this.props.history.push('/dashboard');
     }
     
     onEmployeeClicked =()=> {
         this.props.history.push('/employee');
-    }
+    }   
 
     onOutletClicked =()=> {
         this.props.history.push('/outlet');
@@ -81,10 +81,6 @@ class NavBar extends Component
                                 <Link to="/sales-invoice"><i class="fa fa-files-o"></i><span class="nav-label"> Sales Invoice</span></Link>
                             </li>
                            
-                   
-                            <li className={this.getNavLinkClass("/payment")}>
-                                <Link to="/payment"><i class="fa fa-credit-card"></i> <span class="nav-label">Payments</span></Link>
-                            </li>
                             
                             <li className={this.getNavLinkClass("/expense")}>
                                 <Link to="/expense"><i class="fa fa-dollar"></i> <span class="nav-label">Expenses</span></Link>

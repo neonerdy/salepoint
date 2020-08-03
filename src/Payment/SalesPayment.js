@@ -16,7 +16,6 @@ class SalesPayment extends Component
         this.state = {
             error: {},
             paymentTypes: [],
-            accounts: [],
             salesInvoiceId: '',
             invoiceCode: '',
             amount: '',
@@ -24,9 +23,7 @@ class SalesPayment extends Component
             totalPaid: '',
             totalAmountPaid: '',
             customerId: '',
-            id: uuid.v4(),
             paymentDate: '',
-            accountId: '',
             paymentTypeId: '',
             amountPaid: '',
             notes: ''
@@ -37,8 +34,6 @@ class SalesPayment extends Component
     componentDidMount() {
 
         this.getPaymentTypes();
-        this.getAccounts();
-
         let id = this.props.match.params.id;
         this.getSalesInvoiceById(id);
     }
@@ -80,16 +75,6 @@ class SalesPayment extends Component
     }
 
 
-    getAccounts = () => {
-
-        axios.get(config.serverUrl + '/api/account/getall').then(response=> {
-            this.setState({
-                accounts: response.data
-            })
-        })
-    }
-
-
     cancelPay = () => {
         this.props.history.push('/sales-invoice');
     }
@@ -107,11 +92,6 @@ class SalesPayment extends Component
 
         if (this.state.paymentTypeId === '') {
             error.paymentTypeId = 'is required';
-            isValid = false;
-        }
-
-        if (this.state.accountId === '') {
-            error.accountId = 'is required';
             isValid = false;
         }
 
@@ -136,28 +116,14 @@ class SalesPayment extends Component
 
         if (isValid) {
 
-            let salesPaymentItems = [];
-
-            let salesPaymentItem = {};
-            salesPaymentItem.id = uuid.v4();
-            salesPaymentItem.salesPaymentId = this.state.id;
-            salesPaymentItem.salesInvoiceId = this.state.salesInvoiceId;
-            salesPaymentItem.amountPaid = this.state.amountPaid;
-
-            salesPaymentItems.push(salesPaymentItem);
-
             let salesPayment = {
                 id: uuid.v4(),
-                customerId: this.state.customerId,
-                paymentDate: this.paymentDate.current.value,
-                accountId: this.state.accountId,
+                salesInvoiceId: this.state.salesInvoiceId,       
+                paymentDate: new Date(this.paymentDate.current.value),
                 paymentTypeId: this.state.paymentTypeId,
+                amountPaid: parseFloat(this.state.amountPaid),
                 notes: this.state.notes,
-                salesPaymentItems : salesPaymentItems
             }
-
-            console.log(salesPayment);
-
 
             axios.post(config.serverUrl + '/api/salespayment/save', salesPayment).then(response=> {
                 this.props.history.push('/sales-invoice');
@@ -239,7 +205,7 @@ class SalesPayment extends Component
                                     <select name="paymentTypeId" class="form-control" onChange={this.onValueChange}>
                                         <option value="">Select Payment Types</option>
                                         {this.state.paymentTypes.map(p=> 
-                                            <option value={p.id}>{p.paymentName}</option>    
+                                            <option value={p.id}>{p.paymentTypeName}</option>    
                                         )}
                                         </select>
                                 </div>
@@ -255,20 +221,6 @@ class SalesPayment extends Component
                             </div>
 
 
-                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>To Account</label>
-                                
-                                <div class="col-md-7 col-sm-12 required">
-                                    <select name="accountId" class="form-control" onChange={this.onValueChange}>
-                                        <option value="">Select Account</option>
-                                        {this.state.accounts.map(a=> 
-                                            <option key={a.id} value={a.id}>{a.accountName}</option>    
-                                        )}
-                                    </select>
-                                </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountId}</span>
-                            </div>
-
-
                             <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Notes</label>
                                 <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
                                     name="notes" onChange={this.onValueChange}/>
@@ -280,7 +232,7 @@ class SalesPayment extends Component
                             <div class="hr-line-dashed"></div>
                             <div class="text-right">
                                 <a class="btn btn-link text-left" href="#" onClick={this.cancelPay}>Cancel</a>
-                                <button type="button" onClick={this.payInvoice} class="btn btn-success"><i class="fa fa-check icon-white"></i> Pay</button>
+                                <button type="button" onClick={this.payInvoice} class="btn btn-success"><i class="fa fa-credit-card"></i>&nbsp;&nbsp;Pay</button>
                             </div>
 
 

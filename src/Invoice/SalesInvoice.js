@@ -15,6 +15,7 @@ class SalesInvoice extends Component
             error: {},
             salesInvoices: [],
             initialSalesInvoices: [],
+            salesPayments: [],
             id: '',
             invoiceCode: '',
             invoiceDate: '',
@@ -37,6 +38,19 @@ class SalesInvoice extends Component
    
         window.scrollTo(0, 0);
         this.getSalesInvoiceWithTopOne();
+    }
+
+
+
+    getSalesPayments = (id) => {
+      
+        axios.get(config.serverUrl + '/api/salespayment/getbyinvoiceid/' + id).then(response=> {
+            this.setState({
+                salesPayments: response.data
+            })
+
+            console.log(response.data);
+      })
     }
 
 
@@ -97,6 +111,9 @@ class SalesInvoice extends Component
 
         
         })
+
+
+        this.getSalesPayments(id);
 
 
     }
@@ -201,6 +218,11 @@ class SalesInvoice extends Component
 
         let invBorderStyle = {
             borderColor: color
+        }
+
+        let paymentHistoryStyle = {
+            borderColor: 'lightgray',
+            backgroundColor: '#f3f3f4'
         }
 
         let errStyle = {
@@ -439,9 +461,55 @@ class SalesInvoice extends Component
             </div>
 
 
+            {this.state.salesPayments.length > 0 ?                                  
+            <div class="col-lg-12">
+                <div class="wrapper wrapper-content animated fadeInRight">
 
+                <div class="ibox-title" style={paymentHistoryStyle}>
+                <h5>PAYMENT HISTORY</h5>
+                
+                </div>
+                  
+                     <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th width="12%">Payment Date</th>
+                                <th width="12%">Payment Type</th>
+                                <th width="15%">Amount Paid</th>
+                                <th width="46%">Notes</th>
+                                <th align="right"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.salesPayments.map(sp=> 
+
+                                <tr>
+                                    <td>{moment(sp.paymentDate).format('MM/DD/YYYY')}</td>
+                                    <td>{sp.paymentMethod}</td>
+                                    <td>{sp.amountPaid}</td>
+                                    <td></td>
+                                    <td align="right"><i class="fa fa-trash"></i></td>
+                                </tr>
+                                 )}                              
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+
+                </div>
+
+            : null
+            }
                                
-                     </Scrollbars>
+              
+              
+              
+              
+              </Scrollbars>
 
 
                     

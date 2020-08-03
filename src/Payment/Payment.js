@@ -33,6 +33,8 @@ class Payment extends Component
             this.setState({
                 purchasePayments: response.data
             })
+
+            
         })
 
     }
@@ -44,6 +46,8 @@ class Payment extends Component
             this.setState({
                 salesPayments: response.data
             })
+
+            console.log(response.data);
             
         })
     }

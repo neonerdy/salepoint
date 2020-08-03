@@ -24,22 +24,22 @@ namespace SalePointAPI.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByInvoiceId(Guid id)
         {   
             try
             {
                 var salesPayments = await context.SalesPayments
-                    .Include(sp=>sp.Customer)
-                    .Include(sp=>sp.Account)
                     .Include(sp=>sp.PaymentType)
                     .Select(sp=>new {
                         sp.ID,
-                        customerName = sp.Customer.CustomerName,
+                        sp.SalesInvoiceId,
                         sp.PaymentDate,
-                        AccountName = sp.Account.AccountName,
-                        PaymentMethod = sp.PaymentType.PaymentTypeName
+                        PaymentMethod = sp.PaymentType.PaymentTypeName,
+                        AmountPaid = sp.AmountPaid,
+                        Notes = sp.Notes
                     })
+                    .Where(sp=>sp.SalesInvoiceId == id)
                     .OrderByDescending(pp=>pp.PaymentDate)
                     .ToListAsync();
             
@@ -62,9 +62,12 @@ namespace SalePointAPI.Controllers
             int result = 0;
             try
             {
+
+                salesPayment.ID = Guid.NewGuid();
                 context.SalesPayments.Add(salesPayment);
-                var invoice = await context.SalesInvoices.FindAsync(salesPayment.SalesPaymentItems[0].SalesInvoiceId);
-                invoice.AmountPaid = invoice.AmountPaid + salesPayment.SalesPaymentItems[0].AmountPaid;
+                
+                var invoice = await context.SalesInvoices.FindAsync(salesPayment.SalesInvoiceId);
+                invoice.AmountPaid = invoice.AmountPaid + salesPayment.AmountPaid;
 
                 if (invoice.AmountPaid < invoice.Total) {
                     invoice.Status = "Partial";

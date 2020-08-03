@@ -22,7 +22,6 @@ namespace SalePointAPI
         public DbSet<SalesInvoiceItem> SalesInvoiceItems { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<SalesPayment> SalesPayments { get; set; }
-        public DbSet<SalesPaymentItem> SalesPaymentItems { get; set; }
         public DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
         public DbSet<PurchaseInvoiceItem> PurchaseInvoiceItems { get; set; }
         public DbSet<PurchasePayment> PurchasePayments { get; set; }
@@ -256,23 +255,14 @@ namespace SalePointAPI
             {
                 entity.ToTable("SalesPayments");
                 entity.Property(e => e.ID).HasColumnName("ID");
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerId");
+                entity.Property(e => e.SalesInvoiceId).HasColumnName("SalesInvoiceId");
                 entity.Property(e => e.PaymentDate).HasColumnName("PaymentDate");
-                entity.Property(e => e.AccountId).HasColumnName("AccountId");
                 entity.Property(e => e.PaymentTypeId).HasColumnName("PaymentTypeId");
-                entity.Property(e => e.TotalAmountPaid).HasColumnName("TotalAmountPaid");
+                entity.Property(e => e.AmountPaid).HasColumnName("AmountPaid");
                 entity.Property(e => e.Notes).HasColumnName("Notes");
             });
 
 
-            modelBuilder.Entity<SalesPaymentItem>(entity => 
-            {
-                entity.ToTable("SalesPaymentItems");
-                entity.Property(e => e.ID).HasColumnName("ID");
-                entity.Property(e => e.SalesPaymentId).HasColumnName("SalesPaymentId");
-                entity.Property(e => e.SalesInvoiceId).HasColumnName("SalesInvoiceId");
-                entity.Property(e => e.AmountPaid).HasColumnName("AmountPaid");                
-            });
 
 
              modelBuilder.Entity<PurchasePayment>(entity => 
