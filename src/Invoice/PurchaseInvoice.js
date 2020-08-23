@@ -338,10 +338,12 @@ class PurchaseInvoice extends Component
                         
                         <Scrollbars  style={{ width: 1010, height: 800 }} autoHide
                         >
-                                     
+
                  <div class="col-lg-12">
+            
                 <div class="wrapper wrapper-content animated fadeInRight">
-                    
+
+
                 <div class="ibox-title" style={invBorderStyle}>
                     <h5>{this.state.status.toUpperCase()}</h5>
                     <div class="ibox-tools">
@@ -435,11 +437,10 @@ class PurchaseInvoice extends Component
                         </div>
                 </div>
             </div>
-
-
+                
 
                                
-                     </Scrollbars>
+             </Scrollbars>
 
 
                     
