@@ -9,6 +9,8 @@ namespace SalePointAPI
 {
     public class AppDbContext : DbContext
     {
+        
+        public DbSet<Company> CompanySetting { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
@@ -16,8 +18,8 @@ namespace SalePointAPI
         public DbSet<ProductCategory> ProductCategories { get; set; } 
         public DbSet<Unit> Units { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<SalesReceipt> SalesReceipts { get; set; }
-        public DbSet<SalesReceiptItem> SalesReceiptItems { get; set; }
+        public DbSet<PointOfSale> PointOfSales { get; set; }
+        public DbSet<PointOfSalesItem> PointOfSaleItems { get; set; }
         public DbSet<SalesInvoice> SalesInvoices { get; set; }
         public DbSet<SalesInvoiceItem> SalesInvoiceItems { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
@@ -25,7 +27,6 @@ namespace SalePointAPI
         public DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
         public DbSet<PurchaseInvoiceItem> PurchaseInvoiceItems { get; set; }
         public DbSet<PurchasePayment> PurchasePayments { get; set; }
-        public DbSet<PurchasePaymentItem> PurchasePaymentItems { get; set; }
         public DbSet<ExpenseCategory> ExpenseCategories { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Expense> Expenses { get; set; }
@@ -35,12 +36,25 @@ namespace SalePointAPI
        
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
-             optionBuilder.UseSqlServer("Server=LAPTOP-SS8BF023\\SQLEXPRESS;Database=SALEPOINT;Trusted_Connection=True");
+             optionBuilder.UseSqlServer("Server=ISID-ID-ARIYANT\\SQLEXPRESS2019;Database=SALEPOINT;Trusted_Connection=True");
         }
        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Company>(entity => 
+            {
+                entity.ToTable("Company");
+                entity.Property(e => e.ID).HasColumnName("ID");
+                entity.Property(e => e.CompanyName).HasColumnName("CompanyName");
+                entity.Property(e => e.Address).HasColumnName("Address");
+                entity.Property(e => e.City).HasColumnName("City");
+                entity.Property(e => e.Province).HasColumnName("Province");
+                entity.Property(e => e.ZipCode).HasColumnName("ZipCode");
+                entity.Property(e => e.Phone).HasColumnName("Phone");
+                entity.Property(e => e.Email).HasColumnName("Email");
+            });
 
 
             modelBuilder.Entity<JobTitle>(entity => 
@@ -139,9 +153,9 @@ namespace SalePointAPI
 
 
 
-            modelBuilder.Entity<SalesReceipt>(entity => 
+            modelBuilder.Entity<PointOfSale>(entity => 
             {
-                entity.ToTable("SalesReceipts");
+                entity.ToTable("PointOfSales");
                 entity.Property(e => e.ID).HasColumnName("ID");
                 entity.Property(e => e.SalesCode).HasColumnName("SalesCode");
                 entity.Property(e => e.SalesDate).HasColumnName("SalesDate");
@@ -159,11 +173,11 @@ namespace SalePointAPI
 
 
 
-            modelBuilder.Entity<SalesReceiptItem>(entity => 
+            modelBuilder.Entity<PointOfSalesItem>(entity => 
             {
-                entity.ToTable("SalesReceiptItems");
+                entity.ToTable("PointOfSaleItems");
                 entity.Property(e => e.ID).HasColumnName("ID");
-                entity.Property(e => e.SalesId).HasColumnName("SalesId");
+                entity.Property(e => e.PointOfSaleId).HasColumnName("PointOfSaleId");
                 entity.Property(e => e.ProductId).HasColumnName("ProductId");
                 entity.Property(e => e.Qty).HasColumnName("Qty");
                 entity.Property(e => e.Price).HasColumnName("Price");
@@ -269,26 +283,14 @@ namespace SalePointAPI
             {
                 entity.ToTable("PurchasePayments");
                 entity.Property(e => e.ID).HasColumnName("ID");
-                entity.Property(e => e.SupplierId).HasColumnName("SupplierId");
-                entity.Property(e => e.PaymentDate).HasColumnName("PaymentDate");
-                entity.Property(e => e.AccountId).HasColumnName("AccountId");
+                entity.Property(e => e.PurchaseInvoiceId).HasColumnName("PurchaseInvoiceId");
                 entity.Property(e => e.PaymentTypeId).HasColumnName("PaymentTypeId");
-                entity.Property(e => e.TotalAmountPaid).HasColumnName("TotalAmountPaid");
+                entity.Property(e => e.PaymentDate).HasColumnName("PaymentDate");
+                entity.Property(e => e.AmountPaid).HasColumnName("AmountPaid");
                 entity.Property(e => e.Notes).HasColumnName("Notes");
             });
 
 
-            modelBuilder.Entity<PurchasePaymentItem>(entity => 
-            {
-                entity.ToTable("PurchasePaymentItems");
-                entity.Property(e => e.ID).HasColumnName("ID");
-                entity.Property(e => e.PurchasePaymentId).HasColumnName("PurchasePaymentId");
-                entity.Property(e => e.PurchaseInvoiceId).HasColumnName("PurchaseInvoiceId");
-                entity.Property(e => e.AmountPaid).HasColumnName("AmountPaid");                
-            });
-
-            
-           
             modelBuilder.Entity<Account>(entity => 
             {
                 entity.ToTable("Accounts");

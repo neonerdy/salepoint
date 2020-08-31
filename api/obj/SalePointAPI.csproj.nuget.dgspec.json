@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Repos\\Projects\\salepoint\\api\\SalePointAPI.csproj": {}
+    "D:\\Project\\salepoint\\api\\SalePointAPI.csproj": {}
   },
   "projects": {
-    "D:\\Repos\\Projects\\salepoint\\api\\SalePointAPI.csproj": {
+    "D:\\Project\\salepoint\\api\\SalePointAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Repos\\Projects\\salepoint\\api\\SalePointAPI.csproj",
+        "projectUniqueName": "D:\\Project\\salepoint\\api\\SalePointAPI.csproj",
         "projectName": "SalePointAPI",
-        "projectPath": "D:\\Repos\\Projects\\salepoint\\api\\SalePointAPI.csproj",
-        "packagesPath": "C:\\Users\\Ariyanto\\.nuget\\packages\\",
-        "outputPath": "D:\\Repos\\Projects\\salepoint\\api\\obj\\",
+        "projectPath": "D:\\Project\\salepoint\\api\\SalePointAPI.csproj",
+        "packagesPath": "C:\\Users\\ISID-ID-ARIYANTO\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\salepoint\\api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Ariyanto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ISID-ID-ARIYANTO\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -25,6 +25,9 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\IdentityServer4\\packages": {},
+          "D:\\MUFG.SSO\\nuget": {},
+          "D:\\MUFG.SSO\\nuget2": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -68,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

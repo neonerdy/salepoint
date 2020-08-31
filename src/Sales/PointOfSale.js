@@ -8,21 +8,22 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 
-class SalesOrder extends Component
+class PointOfSale extends Component
 {
     constructor(props) {
         super(props);
         this.state = {
-            salesOrders: [],
-            initialSalesOrders: [],
+            sales: [],
+            initialSales: [],
+            company: {},
             id: '',
-            salesOrderCode: '',
-            orderDate: '',
+            salesCode: '',
+            salesDate: '',
             customerName: '',
             customerAddress: '',
             customerCity: '',
             customerPhone: '',
-            salesOrderItems: [],
+            salesItems: [],
             subTotal: 0,
             tax: 0,
             discount: 0,
@@ -35,60 +36,74 @@ class SalesOrder extends Component
     componentDidMount() {
    
         window.scrollTo(0, 0);
-        this.getSalesOrderWithTopOne();
+
+        this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
+        this.getSalesWithTopOne();
     }
 
 
-    getTopSalesOrders = () => {
+
+    getCompanyById = (id) => {
+       
+        axios.get(config.serverUrl + '/api/company/getById/' + id).then(response=> {
+            this.setState({
+                company: response.data
+            })
+        })
+    }
+
+
+    getTopSales = () => {
         
-        if (this.state.salesOrders.length > 0) {
-            this.getSalesOrderDetail(this.state.salesOrders[0].id);
+        if (this.state.sales.length > 0) {
+            this.getSalesDetail(this.state.sales[0].id);
         }
     }
 
-    getSalesOrderWithTopOne = () => {
+    getSalesWithTopOne = () => {
 
-        axios.get(config.serverUrl + '/api/salesorder/getall').then(response=> {
+        axios.get(config.serverUrl + '/api/pointofsale/getall').then(response=> {
             this.setState({
-                salesOrders: response.data,
-                initialSalesOrders: response.data
+                sales: response.data,
+                initialSales: response.data
             })
 
-            this.getTopSalesOrders();
+            this.getTopSales();
         })
     }
 
 
 
-    getSalesOrders = () => {
+    getSales = () => {
 
-        axios.get(config.serverUrl + '/api/salesorder/getall').then(response=> {
+        axios.get(config.serverUrl + '/api/pointofsale/getall').then(response=> {
             this.setState({
-                salesOrders: response.data,
-                initialSalesOrders: response.data
+                sales: response.data,
+                initialSales: response.data
             })
 
         })
     }
 
     
-    getSalesOrderDetail = (id) => {
+    getSalesDetail = (id) => {
 
-        axios.get(config.serverUrl + '/api/salesorder/getbyid/' + id).then(response=> {
+        axios.get(config.serverUrl + '/api/pointofsale/getbyid/' + id).then(response=> {
             this.setState({
                 id: response.data.id,
-                salesOrderCode: response.data.salesOrderCode,
-                orderDate: response.data.orderDate,
+                salesCode: response.data.salesCode,
+                salesDate: response.data.salesDate,
                 customerName: response.data.customerName,
                 customerAddress: response.data.customerAddress,
                 customerCity: response.data.customerCity,
                 customerPhone: response.data.customerPhone,
-                salesOrderItems: response.data.salesOrderItems,
+                cashierName: response.data.cashierName,
                 subTotal: response.data.amount,
                 tax: response.data.tax,
                 discount: response.data.discount,
                 total: response.data.total,
-                status: response.data.status
+                status: response.data.status,
+                salesItems: response.data.saleItems,
             })
 
         
@@ -99,20 +114,15 @@ class SalesOrder extends Component
 
 
 
-    addSalesOrder = () => {
-        this.props.history.push('/add-sales-order');
-    }
-
-    
-    editSalesOrder = (id) => {
-        this.props.history.push('/edit-sales-order/' + id);
+    editSales = (id) => {
+        this.props.history.push('/edit-pos/' + id);
     }
 
 
-    deleteSalesOrder = (id) => {
+    deleteSales = (id) => {
 
-        axios.delete(config.serverUrl + '/api/salesorder/delete/' + id).then(response=> {
-            this.getSalesOrderWithTopOne();
+        axios.delete(config.serverUrl + '/api/pointofsale/delete/' + id).then(response=> {
+            this.getSalesWithTopOne();
         })
     }
 
@@ -120,23 +130,19 @@ class SalesOrder extends Component
 
     updateStatus = (id, status) => {
 
-        axios.get(config.serverUrl + '/api/salesorder/updatestatus/' + id + '/' + status).then(response=> {
-            this.getSalesOrders();
-            this.getSalesOrderDetail(id);
+        axios.get(config.serverUrl + '/api/pointofsale/updatestatus/' + id + '/' + status).then(response=> {
+            this.getSales();
+            this.getSalesDetail(id);
         })
     }
 
 
     renderStatus = (status) => {
 
-        if (status ==='New') {
+        if (status ==='Paid') {
             return(
                <span class="label float-right label-primary">{status.toUpperCase()}</span> 
             )
-        } else if (status === 'Sent') {
-            return(
-                <span class="label float-right label-warning">{status.toUpperCase()}</span> 
-             )
         } else if (status === 'Canceled') {
             return(
                 <span class="label float-right label-danger">{status.toUpperCase()}</span> 
@@ -145,13 +151,37 @@ class SalesOrder extends Component
     }
 
 
-    onSearchSalesOrder = (e) => {
+    renderMenu = (status) => {
+
+       
+       if (status == 'Paid') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a onClick={()=>this.updateStatus(this.state.id,'Canceled')} class="dropdown-item">Cancel Sale</a></li>
+                </ul>
+              
+             )
+        }
+        else if (status == 'Canceled') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a data-toggle="modal" data-target="#deleteSales" class="dropdown-item">Delete</a></li>
+                </ul>
+             )
+        }
+
+
+    }
+
+
+
+    onSearchSales = (e) => {
 
 
         let x = e.target.value.toLowerCase();
       
-        let filteredSalesOrders = this.state.initialSalesOrders.filter(so => 
-            so.salesOrderCode.toLowerCase().includes(x) ||
+        let filteredSales = this.state.initialSales.filter(so => 
+            so.salesCode.toLowerCase().includes(x) ||
             so.customerName.toLowerCase().includes(x) ||
             so.status.toLowerCase().includes(x)
          );
@@ -159,12 +189,12 @@ class SalesOrder extends Component
         
         if (e.target.value === '') {
             this.setState( {
-                salesOrders: this.state.initialSalesOrders
+                sales: this.state.initialSales
             })
         }
         else {
             this.setState( {
-                salesOrders: filteredSalesOrders
+                sales: filteredSales
             })
     
         }
@@ -177,10 +207,8 @@ class SalesOrder extends Component
 
         let color='';
         
-        if (this.state.status === 'New') {
+        if (this.state.status === 'Paid') {
             color = '#1ab394';
-        } else if (this.state.status === 'Sent') {
-            color = '#f8ac59';
         } else if (this.state.status === 'Canceled') {
             color = '#ed5565';
         }
@@ -196,22 +224,22 @@ class SalesOrder extends Component
 
                      {/* DELETE */}
 
-                     <div id="deleteSalesOrder" class="modal fade" role="dialog">
+                     <div id="deleteSales" class="modal fade" role="dialog">
                             
                             <div class="modal-dialog">
                                 
                                 <div class="modal-content">
 
                                     <div class="modal-header">
-                                        <h4>Delete Sales Order</h4>
+                                        <h4>Delete Sales</h4>
                                     </div>
                                     <div class="modal-body">
-                                    Are you sure want to delete '{this.state.salesOrderCode}' ?
+                                    Are you sure want to delete '{this.state.salesCode}' ?
                                     </div>
 
                                     <div class="modal-footer">
                                         <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                                        <button class="btn btn-label btn-danger" onClick={()=>this.deleteSalesOrder(this.state.id)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
+                                        <button class="btn btn-label btn-danger" onClick={()=>this.deleteSales(this.state.id)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
                                     </div>
                                     
                                 </div>
@@ -221,14 +249,14 @@ class SalesOrder extends Component
                    
                         <div class="row wrapper border-bottom white-bg page-heading">
                             <div class="col-lg-8">
-                                <h2>Point of Sale ({this.state.salesOrders.length})</h2>
+                                <h2>Point of Sale ({this.state.sales.length})</h2>
                             
                             </div>
                             <div class="col-lg-4">
                                 <div class="title-action">
                                 <div class="btn-group">
                                 
-                                <select name="purchaseOrderMonth" class="form-control" onChange={this.onMonthChange}> 
+                                <select name="salesMonth" class="form-control" onChange={this.onMonthChange}> 
                                         <option value="">Select Month</option>
                                         <option value="1">January</option>
                                         <option value="2">February</option>
@@ -250,7 +278,8 @@ class SalesOrder extends Component
                                 </div>
 
                                      &nbsp;&nbsp;
-                                    <Link to="/add-sales-order" class="btn btn-success">Add New Order</Link>
+                                    <Link to="/add-pos" class="btn btn-success">Add New Sale</Link>
+
                                 </div>
                             </div>
                             
@@ -265,19 +294,18 @@ class SalesOrder extends Component
                             <div>
 
                                 <ul class="list-group elements-list">
-                                    <input type="text" class="form-control" onChange={this.onSearchSalesOrder}/>
+                                    <input type="text" class="form-control" onChange={this.onSearchSales}/>
                                     
-                                    {this.state.salesOrders.map(so=> 
+                                    {this.state.sales.map(s=> 
                                     
-                                        <li key={so.id} class="list-group-item">
-                                            <a class="nav-link" onClick={()=>this.getSalesOrderDetail(so.id)}>
-                                                <small class="float-right text-muted"><i class="fa fa-clock"></i>{moment(so.orderDate).format('MM/DD/YYYY')}</small>
-                                                <strong>{so.salesOrderCode}</strong>
+                                        <li key={s.id} class="list-group-item">
+                                            <a class="nav-link" onClick={()=>this.getSalesDetail(s.id)}>
+                                                <small class="float-right text-muted"><i class="fa fa-clock"></i>{moment(s.salesDate).format('MM/DD/YYYY HH:mm:ss')}</small>
+                                                <strong>{s.salesCode}</strong>
                                                 <div class="small m-t-xs">
-                                                    {so.customerName}
                                                     <p class="m-b-none">
-                                                    {this.renderStatus(so.status)}
-                                                    Total : {so.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                                    {this.renderStatus(s.status)}
+                                                    Total : {s.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                                                     </p>
                                                 </div>
                                             </a>
@@ -326,12 +354,7 @@ class SalesOrder extends Component
                     <h5>{this.state.status.toUpperCase()}</h5>
                     <div class="ibox-tools">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-ellipsis-h"></i></a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a onClick={()=>this.editSalesOrder(this.state.id)} class="dropdown-item">Edit</a></li>
-                                <li><a data-toggle="modal" data-target="#deleteSalesOrder" class="dropdown-item">Delete</a></li>
-                                <li><a onClick={()=>this.updateStatus(this.state.id,'Sent')} class="dropdown-item">Send Sales Order</a></li>
-                                <li><a onClick={()=>this.updateStatus(this.state.id,'Canceled')} class="dropdown-item">Cancel Sales Order</a></li>
-                            </ul>
+                            {this.renderMenu(this.state.status)}
                     </div>                          
                 </div>
 
@@ -341,16 +364,16 @@ class SalesOrder extends Component
                                 <div class="col-sm-6">
                                     <h5>From:</h5>
                                     <address>
-                                        <strong>{this.state.customerName}</strong><br/>
-                                        {this.state.customerAddress} <br/>
-                                        {this.state.customerCity} <br/>
-                                        {this.state.customerPhone}
+                                        <strong>{this.state.company.companyName}</strong><br/>
+                                        {this.state.company.address} <br/>
+                                        {this.state.company.city} <br/>
+                                        {this.state.company.phone}
                                     </address>
                                 </div>
 
                                 <div class="col-sm-6 text-right">
-                                    <h4>Sales Order No : </h4>
-                                    <h4 class="text-navy">{this.state.salesOrderCode}</h4>
+                                    <h4>Sale No : </h4>
+                                    <h4 class="text-navy">{this.state.salesCode}</h4>
                                     <span>To:</span>
                                     <address>
                                         <strong>{this.state.customerName}</strong><br/>
@@ -359,7 +382,7 @@ class SalesOrder extends Component
                                         {this.state.customerPhone}
                                     </address>
                                     <p>
-                                        <span><strong>Order Date :</strong> {moment(this.state.orderDate).format('YYYY/MM/DD')}</span><br/>
+                                        <span><strong>Sale Date :</strong> {moment(this.state.salesDate).format('YYYY/MM/DD')}</span><br/>
                                     </p>
                                 </div>
                             </div>
@@ -377,7 +400,7 @@ class SalesOrder extends Component
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {this.state.salesOrderItems.map(si=> 
+                                    {this.state.salesItems.map(si=> 
                                     <tr key={si.id}>
                                         <td>{si.productName}</td>
                                         <td>{si.qty}</td>
@@ -446,4 +469,4 @@ class SalesOrder extends Component
 }
 
 
-export default SalesOrder;
+export default PointOfSale;

@@ -1,7 +1,6 @@
 
 import React, {Component} from 'react';
 import Footer from '../Shared/Footer';
-import Employee from '../Employee/Employee';
 import axios from 'axios';
 import moment from 'moment';
 import config from '../Shared/Config';
@@ -14,31 +13,34 @@ class Setting extends Component
 
         this.state = {
             error: {},
-            id: '',
             companyName: '',
-            companyAddress: '',
-            companyCity: '',
-            companyPhone: '',
-            companyEmail: ''
+            address: '',
+            city: '',
+            province: '',
+            zipCode: '',
+            phone: '',
+            email: ''
         }
     }
 
 
     componentDidMount() {
-    
+        this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
     }
 
 
     getSettingById = (id) => {
 
-        axios.get(server.config + "/api/setting/getbyid/" + id).then(response=> {
+        axios.get(config.serverUrl + "/api/company/getbyid/" + id).then(response=> {
             this.setState({
                 id: response.data.id,
                 companyName: response.data.companyName,
-                companyAddress: response.data.companyAddress,
-                companyCity: response.data.companyCity,
-                companyPhone: response.data.companyPhone,
-                companyEmail: response.data.companyEmail
+                address: response.data.address,
+                city: response.data.city,
+                province: response.data.province,
+                zipCode: response.data.zipCode,
+                phone: response.data.phone,
+                email: response.data.email
             })
 
         }) 
@@ -59,12 +61,24 @@ class Setting extends Component
         let isValid = true;
         let error = {};
 
-        if (this.state.employeeName === '') {
-            error.employeeName = 'is required';
+        if (this.state.companyName === '') {
+            error.companyName = 'is required';
+            isValid = false;
+        }
+        if (this.state.address === '') {
+            error.address = 'is required';
+            isValid = false;
+        }
+        if (this.state.city === '') {
+            error.city = 'is required';
+            isValid = false;
+        }
+        if (this.state.phone === '') {
+            error.phone = 'is required';
             isValid = false;
         }
 
-        
+
         this.setState({
             error: error 
         })
@@ -84,11 +98,18 @@ class Setting extends Component
         if (isValid) {
 
             let setting = {
-                employeeName: this.state.employeeName,
+                id: this.state.id,
+                companyName: this.state.companyName,
+                address: this.state.address,
+                city: this.state.city,
+                province: this.state.province,
+                zipCode: this.state.zipCode,
+                phone: this.state.phone,
+                email: this.state.email
             }
 
-            axios.put(config.serverUrl + '/api/setting/update', setting).then(response=> {
-                this.props.history.push('/dashboard');
+            axios.put(config.serverUrl + '/api/company/update', setting).then(response=> {
+                this.props.history.push('/master-data');
             })
 
         }
@@ -97,7 +118,7 @@ class Setting extends Component
     }
 
     cancelUpdate = () => {
-        this.props.history.push('/setting');
+        this.props.history.push('/dashboard');
     }
 
 
@@ -114,7 +135,7 @@ class Setting extends Component
                 
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
-                    <h2>Add Employee </h2>
+                    <h2>Company Setting </h2>
                 </div>
             </div>
 
@@ -130,78 +151,56 @@ class Setting extends Component
                       <br/>
                             <form>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Employee Name</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Company Name</label>
                                     <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="employeeName" onChange={this.onValueChange}/>
+                                        name="companyName" onChange={this.onValueChange} value={this.state.companyName}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.employeeName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.companyName}</span>
                                 </div>
-
-                                
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Photo</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="photo" onChange={this.onValueChange} value={this.state.photo}/>
-                                    </div>
-                                    <div class="col-md-2 col-sm-1">
-                                        <span style={errStyle}>{this.state.error.photo}</span>
-                                        &nbsp;&nbsp; <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#addAttachment">Add Photo</a>
-                                    </div>
-                                </div>
-
-                                
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role</label>
-                                    <div class="col-md-7 col-sm-12 required">
-                                        <select class="form-control" name="jobTitleId" onChange={this.onValueChange}>
-                                           <option value="">Please Select Role</option>
-                                            {this.state.jobTitles.map(jt=> 
-                                                <option key={jt.id} value={jt.id}>{jt.titleName}</option> 
-                                            )}
-                                        </select>
-
-                                </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.role}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Join Date</label>
-                                    <div class="input-group date col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="joinDate" onChange={this.onValueChange}/>
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    </div>
-                                  &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.joinDate}</span>
-                                </div>
-                                
-
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Address</label>
                                     <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="address" onChange={this.onValueChange}/>
+                                        name="address" onChange={this.onValueChange} value={this.state.address}/>
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.address}</span>
                                 </div>
 
-
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>City</label>
                                     <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="city" onChange={this.onValueChange}/>
+                                        name="city" onChange={this.onValueChange} value={this.state.city}/>
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.city}</span>
                                 </div>
 
-                            
+
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Province</label>
+                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
+                                        name="province" onChange={this.onValueChange} value={this.state.province}/>
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.province}</span>
+                                </div>
+
+
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Zip Code</label>
+                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
+                                        name="zipCode" onChange={this.onValueChange} value={this.state.zipCode}/>
+                                    </div>
+                                </div>
+
+
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Phone</label>
                                     <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="phone" onChange={this.onValueChange}/>
+                                        name="phone" onChange={this.onValueChange} value={this.state.phone}/>
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.phone}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>E-Mail</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="email" onChange={this.onValueChange}/>
+                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
+                                        name="email" onChange={this.onValueChange} value={this.state.email}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
                                 </div>
-                                 
+                                
 
                                 <br/><br/>
 
@@ -209,11 +208,9 @@ class Setting extends Component
                             
 
                                 <div class="text-right">
-                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
-                                        <button type="button" onClick={} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
-                                    </div>
-
-                                
+                                     <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
+                                     <button type="button" onClick={this.updateSetting} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
+                                </div>
                                 
 
                             </form>

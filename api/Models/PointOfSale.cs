@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace SalePointAPI.Models
 {
 
-    public class SalesReceipt
+    public class PointOfSale
     {
         public Guid ID { get; set; }
         public string SalesCode { get; set; }
@@ -22,7 +22,7 @@ namespace SalePointAPI.Models
         public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
-        public List<SalesReceiptItem> SalesReceiptItems { get; set; }
+        public List<PointOfSalesItem> PointOfSaleItems { get; set; }
        
 
     }

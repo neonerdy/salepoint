@@ -1,12 +1,14 @@
 
 
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 
 
 class Header extends Component
 {
 
-
+ 
+ 
     render() {
 
         const topStyle = {
@@ -22,16 +24,18 @@ class Header extends Component
         
                 <ul class="nav navbar-top-links navbar-right">
 
-                    <li>
-                    </li>
-                    <li>
+                    '<li>
                         <span class="m-r-sm text-muted welcome-message">
                             Erika Kartawidjaja</span>
                     </li>
+
+                    <li class="dropdown">
+                            <Link to="/setting"><i class="fa fa-gear"></i></Link>
+                  </li>
+
                   
                    <li>
-                        <i class="fa fa-gear"></i> &nbsp;
-                        <i class="fa fa-user-o"></i> 
+                      <i class="fa fa-user-o"></i> 
                    </li>
                    <li>
                         <a href="login.html">

@@ -20,15 +20,13 @@ class PurchasePayment extends Component
             accounts: [],
             purchaseInvoiceId: '',
             invoiceCode: '',
+            supplierId: '',
             amount: 0,
             total: 0,
             totalPaid: 0,
             totalAmountPaid: 0,
-            supplierId: '',
             id: uuid.v4(),
-            supplierId: '',
             paymentDate: '',
-            accountId: '',
             paymentTypeId: '',
             amountPaid: '',
             notes: ''
@@ -39,8 +37,6 @@ class PurchasePayment extends Component
     componentDidMount() {
 
         this.getPaymentTypes();
-        this.getAccounts();
-
         let id = this.props.match.params.id;
         this.getPurchaseInvoiceById(id);
     }
@@ -82,16 +78,6 @@ class PurchasePayment extends Component
     }
 
 
-    getAccounts = () => {
-
-        axios.get(config.serverUrl + '/api/account/getall').then(response=> {
-            this.setState({
-                accounts: response.data
-            })
-        })
-    }
-
-
     cancelPay = () => {
         this.props.history.push('/purchase-invoice');
     }
@@ -112,11 +98,6 @@ class PurchasePayment extends Component
             isValid = false;
         }
 
-        if (this.state.accountId === '') {
-            error.accountId = 'is required';
-            isValid = false;
-        }
-
         if (this.state.amountPaid === '') {
             error.amountPaid = 'is required';
             isValid = false;
@@ -132,35 +113,21 @@ class PurchasePayment extends Component
     }
 
 
+
     payInvoice = () => {
 
         let isValid = this.validatePurchasePayment();
 
         if (isValid) {
 
-            let purchasePaymentItems = [];
-
-            let purchasePaymentItem = {};
-            purchasePaymentItem.id = uuid.v4();
-            purchasePaymentItem.purchasePaymentId = this.state.id;
-            purchasePaymentItem.purchaseInvoiceId = this.state.purchaseInvoiceId;
-            purchasePaymentItem.amountPaid = this.state.amountPaid;
-
-            purchasePaymentItems.push(purchasePaymentItem);
-
             let purchasePayment = {
                 id: uuid.v4(),
-                supplierId: this.state.supplierId,
-                paymentDate: this.paymentDate.current.value,
-                accountId: this.state.accountId,
+                purchaseInvoiceId: this.state.purchaseInvoiceId,       
+                paymentDate: new Date(this.paymentDate.current.value),
                 paymentTypeId: this.state.paymentTypeId,
-                totalAmountPaid: parseFloat(this.state.totalPaid) + parseFloat(this.state.amountPaid),
+                amountPaid: parseFloat(this.state.amountPaid),
                 notes: this.state.notes,
-                purchasePaymentItems : purchasePaymentItems
             }
-
-            console.log(purchasePayment);
-
 
             axios.post(config.serverUrl + '/api/purchasepayment/save', purchasePayment).then(response=> {
                 this.props.history.push('/purchase-invoice');
@@ -171,6 +138,10 @@ class PurchasePayment extends Component
     }
 
 
+
+
+
+    
 
 
     render() {
@@ -242,7 +213,7 @@ class PurchasePayment extends Component
                                     <select name="paymentTypeId" class="form-control" onChange={this.onValueChange}>
                                         <option value="">Select Payment Types</option>
                                         {this.state.paymentTypes.map(p=> 
-                                            <option value={p.id}>{p.paymentName}</option>    
+                                            <option value={p.id}>{p.paymentTypeName}</option>    
                                         )}
                                         </select>
                                 </div>
@@ -256,21 +227,6 @@ class PurchasePayment extends Component
                                 </div>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.amountPaid}</span>
                             </div>
-
-
-                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>From Account</label>
-                                
-                                <div class="col-md-7 col-sm-12 required">
-                                    <select name="accountId" class="form-control" onChange={this.onValueChange}>
-                                        <option value="">Select Account</option>
-                                        {this.state.accounts.map(a=> 
-                                            <option key={a.id} value={a.id}>{a.accountName}</option>    
-                                        )}
-                                    </select>
-                                </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountId}</span>
-                            </div>
-
 
                             <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Notes</label>
                                 <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 

@@ -41,10 +41,10 @@ namespace SalePointAPI.Controllers
                         e.CategoryId,
                         e.AccountId,
                         CategoryName = e.Category.CategoryName,
+                        MonthlyBudget = e.Category.MonthlyBudget,
                         AccountName = e.Account.AccountName,
                         e.Amount,
                         e.Description,
-                        e.Status,
                         e.CreatedDate,
                         e.ModifiedDate
                     })
@@ -80,7 +80,6 @@ namespace SalePointAPI.Controllers
                         e.AccountId,
                         e.Amount,
                         e.Description,
-                        e.Status,
                         e.CreatedDate,
                         e.ModifiedDate
                     })

@@ -11,8 +11,10 @@ class Expense extends Component
 
     renderOverBudget = (expense) => {
 
-        if (expense.amount > expense.categoryBudget) {
-            let overBudget = expense.amount - expense.categoryBudget;
+        if (expense.amount > expense.monthlyBudget) {
+            
+            let overBudget = expense.amount - expense.monthlyBudget;
+        
             return(
                 <div>
                     <span class="label label-danger">Over Budget</span>
@@ -23,20 +25,6 @@ class Expense extends Component
         }
         
 
-    }
-
-
-    renderStatus = (status) => {
-      
-        if (status === 'New') {
-            return(
-                <span class="label label-warning">{status.toUpperCase()}</span>
-            )
-        } else if (status === 'Posted') {
-            return(
-                <span class="label label-primary">{status.toUpperCase()}</span>
-            )
-        }
     }
 
 
@@ -55,7 +43,7 @@ class Expense extends Component
                 <div class="col content no-top-border">
                     <p class="m-b-xs">{this.props.categoryName} From {this.props.accountName}</p>
                     <p>{this.props.amount}</p>
-                    <p> {this.renderStatus(this.props.status)}</p>
+                    <p> {this.renderOverBudget(this.props.data)}</p>
 
                 </div>
             </div>

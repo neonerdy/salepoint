@@ -24,23 +24,22 @@ namespace SalePointAPI.Controllers
         }
 
 
-          [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByInvoiceId(Guid id)
         {   
             try
             {
                 var purchasePayments = await context.PurchasePayments
-                    .Include(pp=>pp.Supplier)
-                    .Include(pp=>pp.Account)
                     .Include(pp=>pp.PaymentType)
-                    .Select(pp=>new {
-                        pp.ID,
-                        SupplierName = pp.Supplier.SupplierName,
-                        pp.PaymentDate,
-                        AccountName = pp.Account.AccountName,
-                        PaymentMethod = pp.PaymentType.PaymentTypeName,
-                        pp.TotalAmountPaid
+                    .Select(sp=>new {
+                        sp.ID,
+                        sp.PurchaseInvoiceId,
+                        sp.PaymentDate,
+                        PaymentMethod = sp.PaymentType.PaymentTypeName,
+                        AmountPaid = sp.AmountPaid,
+                        Notes = sp.Notes
                     })
+                    .Where(sp=>sp.PurchaseInvoiceId == id)
                     .OrderByDescending(pp=>pp.PaymentDate)
                     .ToListAsync();
             
@@ -48,13 +47,14 @@ namespace SalePointAPI.Controllers
             }
             catch(Exception ex)
             {
-                logger.LogError(ex.ToString());
+                logger.LogError(ex.ToString());        
             }
 
             return Ok();
-        }
-        
 
+        }
+
+       
 
 
         [HttpPost]
@@ -63,9 +63,12 @@ namespace SalePointAPI.Controllers
             int result = 0;
             try
             {
+
+                purchasePayment.ID = Guid.NewGuid();
                 context.PurchasePayments.Add(purchasePayment);
-                var invoice = await context.PurchaseInvoices.FindAsync(purchasePayment.PurchasePaymentItems[0].PurchaseInvoiceId);
-                invoice.AmountPaid = invoice.AmountPaid + purchasePayment.PurchasePaymentItems[0].AmountPaid;
+                
+                var invoice = await context.PurchaseInvoices.FindAsync(purchasePayment.PurchaseInvoiceId);
+                invoice.AmountPaid = invoice.AmountPaid + purchasePayment.AmountPaid;
 
                 if (invoice.AmountPaid < invoice.Total) {
                     invoice.Status = "Partial";
@@ -77,6 +80,7 @@ namespace SalePointAPI.Controllers
 
                 context.Update(invoice);
                 result = await context.SaveChangesAsync();
+
             }
             catch(Exception ex)
             {

@@ -48,13 +48,11 @@ class ExpenseList extends Component
                 initialExpenses: response.data
             })
 
-            console.log(response.data);
-
         })
     }
 
     getAssetAccounts = () => {
-        axios.get(config.serverUrl + '/api/account/getasset').then(response=> {
+        axios.get(config.serverUrl + '/api/account/getall').then(response=> {
             this.setState({
                 accounts: response.data
             })
@@ -243,16 +241,14 @@ class ExpenseList extends Component
 
                                                     <Scrollbars style={{ height: 600 }}>
 
-                                                        <div class="ibox-content inspinia-timeline">
+                                                    <div class="ibox-content inspinia-timeline">
                                                             {this.state.expenses.map(e=> 
                                                                 <Expense 
                                                                     data = {e}
                                                                     date = {moment(e.date).format('MM/DD/YYYY')}
-                                                                    ledgerCode = {e.ledgerCode}
                                                                     categoryName = {e.categoryName}
                                                                     accountName = {e.accountName}
                                                                     amount = {e.amount}
-                                                                    status = {e.status}
                                                                     editExpense = {()=>this.editExpense(e.id)}
                                                                 />
                                                             )}
@@ -286,7 +282,7 @@ class ExpenseList extends Component
                                                     <div class="row">
                                                     <div>
                                                         <span>
-                                                            {a.accountName}</span>
+                                                            <h4>{a.accountName}</h4></span>
                                                         <h2 class="font-bold">{a.balance}</h2>
                                                         <span>Balance</span>
                                                     </div>

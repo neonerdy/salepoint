@@ -37,10 +37,8 @@ import SettingEdit from './Master/SettingEdit';
 import Employee from './Employee/Employee';
 import Product from './Product/Product';
 import Payment from './Payment/Payment';
-import SalesPaymentAdd from './Payment/SalesPaymentAdd';
-import SalesOrder from './Sales/SalesOrder';
-import SalesOrderAdd from './Sales/SalesOrderAdd';
-import SalesOrderEdit from './Sales/SalesOrderEdit';
+import PointOfSale from './Sales/PointOfSale';
+import PointOfSaleAdd from './Sales/PointOfSaleAdd';
 import PurchaseInvoice from './Invoice/PurchaseInvoice';
 import PurchaseInvoiceAdd from './Invoice/PurchaseInvoiceAdd';
 import PurchasePayment from './Payment/PurchasePayment';
@@ -52,6 +50,8 @@ import SalesPayment from './Payment/SalesPayment';
 import Supplier from './Supplier/Supplier';
 import ExpenseCategoryAdd from './Expense/ExpenseCategoryAdd';
 import ExpenseCategoryEdit from './Expense/ExpenseCategoryEdit';
+import Setting from './Master/Setting';
+
 
 
 
@@ -74,13 +74,15 @@ class App extends Component
 
               <Switch>
                 <Route exact path="/" component={Dashboard}/>
+
+                <Route exact path="/setting" component={Setting}/>
                 <Route exact path="/dashboard" component={Dashboard}/>
                 <Route exact path="/master-data" component={MasterData}/>
                 <Route exact path="/employee" component={Employee}/>
                 <Route exact path="/product" component={Product}/>
                 <Route exact path="/customer" component={Customer}/>
                 <Route exact path="/supplier" component={Supplier}/>
-                <Route exact path="/sales-order" component={SalesOrder}/>
+                <Route exact path="/pos" component={PointOfSale}/>
                 <Route exact path="/purchase-invoice" component={PurchaseInvoice}/>
                 <Route exact path="/sales-invoice" component={SalesInvoice}/>
                 <Route exact path="/purchase-payment/:id" component={PurchasePayment}/>
@@ -100,11 +102,10 @@ class App extends Component
                 <Route exact path="/add-supplier" component={SupplierAdd}/>
                 <Route exact path="/add-product" component={AddProduct}/>
                 <Route exact path="/add-employee" component={EmployeeAdd}/>
-                <Route exact path="/add-sales-order" component={SalesOrderAdd}/>
+                <Route exact path="/add-pos" component={PointOfSaleAdd}/>
                 <Route exact path="/add-purchase-invoice" component={PurchaseInvoiceAdd}/>
                 <Route exact path="/add-sales-invoice" component={SalesInvoiceAdd}/>
                 <Route exact path="/add-expense" component={ExpenseAdd}/>
-                <Route exact path="/add-sales-payment" component={SalesPaymentAdd}/>
 
                 <Route exact path="/edit-product-category/:id" component={ProductCategoryEdit}/>
                 <Route exact path="/edit-unit/:id" component={UnitEdit}/>
@@ -121,7 +122,6 @@ class App extends Component
                 <Route exact path="/edit-product/:id" component={ProductEdit}/>
                 <Route exact path="/edit-purchase-invoice/:id" component={PurchaseInvoiceEdit}/>
                 <Route exact path="/edit-sales-invoice/:id" component={SalesInvoiceEdit}/>
-                <Route exact path="/edit-sales-order/:id" component={SalesOrderEdit}/>
                 <Route exact path="/edit-expense/:id" component={ExpenseEdit}/>
                                 
 

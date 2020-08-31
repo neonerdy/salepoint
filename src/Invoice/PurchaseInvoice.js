@@ -13,8 +13,10 @@ class PurchaseInvoice extends Component
         super(props);
         this.state = {
             error: {},
+            company: {},
             purchaseInvoices: [],
             initialPurchaseInvoices: [],
+            purchasePayments: [],
             id: '',
             invoiceCode: '',
             invoiceDate: '',
@@ -36,7 +38,10 @@ class PurchaseInvoice extends Component
     componentDidMount() {
    
         window.scrollTo(0, 0);
+        
+        this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
         this.getPurchaseInvoiceWithTopOne();
+        
     }
 
 
@@ -56,6 +61,30 @@ class PurchaseInvoice extends Component
             })
 
             this.getTopPurchaseInvoices();
+        })
+    }
+
+
+
+    getPurchasePayments = (id) => {
+      
+        axios.get(config.serverUrl + '/api/purchasepayment/getbyinvoiceid/' + id).then(response=> {
+            this.setState({
+                purchasePayments: response.data
+            })
+      })
+    }
+
+
+
+
+    getCompanyById = (id) => {
+       
+        axios.get(config.serverUrl + '/api/company/getById/' + id).then(response=> {
+            this.setState({
+                company: response.data
+            })
+
         })
     }
 
@@ -96,6 +125,7 @@ class PurchaseInvoice extends Component
         
         })
 
+        this.getPurchasePayments(id);
 
     }
 
@@ -151,6 +181,46 @@ class PurchaseInvoice extends Component
     }
 
 
+    renderMenu = (status) => {
+
+        if (status == 'New') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a onClick={()=>this.editPurchaseInvoice(this.state.id)} class="dropdown-item">Edit</a></li>
+                    <li><a data-toggle="modal" data-target="#deletePurchaseInvoice" class="dropdown-item">Delete</a></li>
+                    <li><a onClick={()=>this.payInvoice(this.state.id)}>Pay Invoice</a></li>
+                    <li><a onClick={()=>this.updateStatus(this.state.id,'Canceled')} class="dropdown-item">Cancel Invoice</a></li>
+                </ul>
+            )
+        }
+        else if (status == 'Partial') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a onClick={()=>this.payInvoice(this.state.id)}>Pay Invoice</a></li>
+                    <li><a onClick={()=>this.updateStatus(this.state.id,'Canceled')} class="dropdown-item">Cancel Invoice</a></li>
+                </ul>
+              
+             )
+        }
+        else if (status == 'Paid') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                </ul>
+             )
+        }
+        else if (status == 'Canceled') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a data-toggle="modal" data-target="#deletePurchaseInvoice" class="dropdown-item">Delete</a></li>
+                </ul>
+             )
+        }
+
+
+    }
+
+
+
     onSearchPurchaseInvoice = (e) => {
 
 
@@ -183,6 +253,7 @@ class PurchaseInvoice extends Component
 
 
 
+
     render() {
 
         let color='';
@@ -201,6 +272,12 @@ class PurchaseInvoice extends Component
             borderColor: color
         }
 
+        let paymentHistoryStyle = {
+            borderColor: 'lightgray',
+            backgroundColor: '#f3f3f4'
+        }
+
+        
         let errStyle = {
             color: 'darkred'
         }
@@ -310,6 +387,9 @@ class PurchaseInvoice extends Component
 
                             </div>
 
+                            
+                                
+
                             </Scrollbars>
 
 
@@ -348,12 +428,7 @@ class PurchaseInvoice extends Component
                     <h5>{this.state.status.toUpperCase()}</h5>
                     <div class="ibox-tools">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-ellipsis-h"></i></a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a onClick={()=>this.editPurchaseInvoice(this.state.id)} class="dropdown-item">Edit</a></li>
-                                <li><a data-toggle="modal" data-target="#deletePurchaseInvoice" class="dropdown-item">Delete</a></li>
-                                <li><a onClick={()=>this.payInvoice(this.state.id)}>Pay Invoice</a></li>
-                                <li><a onClick={()=>this.updateStatus(this.state.id,'Canceled')} class="dropdown-item">Cancel Invoice</a></li>
-                            </ul>
+                            {this.renderMenu(this.state.status)}
                     </div>                          
                 </div>
 
@@ -375,10 +450,10 @@ class PurchaseInvoice extends Component
                                     <h4 class="text-navy">{this.state.invoiceCode}</h4>
                                     <span>To:</span>
                                     <address>
-                                        <strong>{this.state.supplierName}</strong><br/>
-                                        {this.state.supplierAddress} <br/>
-                                        {this.state.supplierCity} <br/>
-                                        {this.state.supplierPhone}
+                                        <strong>{this.state.company.companyName}</strong><br/>
+                                        {this.state.company.address} <br/>
+                                        {this.state.company.city} <br/>
+                                        {this.state.company.phone}
                                     </address>
                                     <p>
                                         <span><strong>Invoice Date :</strong> {moment(this.state.invoiceDate).format('YYYY/MM/DD')}</span><br/>
@@ -437,6 +512,53 @@ class PurchaseInvoice extends Component
                         </div>
                 </div>
             </div>
+
+
+            {this.state.purchasePayments.length > 0 ?                                  
+                            <div class="col-lg-12">
+                                <div class="wrapper wrapper-content animated fadeInRight">
+
+                                <div class="ibox-title" style={paymentHistoryStyle}>
+                                <h5>PAYMENT HISTORY</h5>
+                                
+                                </div>
+                                
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th width="12%">Payment Date</th>
+                                                <th width="12%">Payment Type</th>
+                                                <th width="15%">Amount Paid</th>
+                                                <th width="46%">Notes</th>
+                                                <th align="right"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {this.state.purchasePayments.map(pp=> 
+
+                                                <tr>
+                                                    <td>{moment(pp.paymentDate).format('MM/DD/YYYY')}</td>
+                                                    <td>{pp.paymentMethod}</td>
+                                                    <td>{pp.amountPaid}</td>
+                                                    <td></td>
+                                                    <td align="right"><i class="fa fa-trash"></i></td>
+                                                </tr>
+                                                )}                              
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </div>
+
+                                </div>
+
+                            : null
+                            }
+
+
                 
 
                                

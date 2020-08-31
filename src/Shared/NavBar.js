@@ -69,7 +69,7 @@ class NavBar extends Component
 
                            
                             <li className={this.getNavLinkClass("/sales-order")}>
-                                <Link to="/sales-order"><i class="fa fa-television"></i><span class="nav-label"> Point of Sale</span></Link>
+                                <Link to="/pos"><i class="fa fa-television"></i><span class="nav-label"> Point of Sale</span></Link>
                             </li>
                             
 

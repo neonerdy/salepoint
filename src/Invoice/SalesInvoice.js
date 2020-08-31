@@ -13,6 +13,7 @@ class SalesInvoice extends Component
         super(props);
         this.state = {
             error: {},
+            company: {},
             salesInvoices: [],
             initialSalesInvoices: [],
             salesPayments: [],
@@ -37,9 +38,20 @@ class SalesInvoice extends Component
     componentDidMount() {
    
         window.scrollTo(0, 0);
+        this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
         this.getSalesInvoiceWithTopOne();
     }
 
+
+
+    getCompanyById = (id) => {
+       
+        axios.get(config.serverUrl + '/api/company/getById/' + id).then(response=> {
+            this.setState({
+                company: response.data
+            })
+        })
+    }
 
 
     getSalesPayments = (id) => {
@@ -48,8 +60,6 @@ class SalesInvoice extends Component
             this.setState({
                 salesPayments: response.data
             })
-
-            console.log(response.data);
       })
     }
 
@@ -168,6 +178,48 @@ class SalesInvoice extends Component
             )
         }
     }
+
+
+    renderMenu = (status) => {
+
+        if (status == 'New') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a onClick={()=>this.editSalesInvoice(this.state.id)} class="dropdown-item">Edit</a></li>
+                    <li><a data-toggle="modal" data-target="#deletePurchaseInvoice" class="dropdown-item">Delete</a></li>
+                    <li><a onClick={()=>this.payInvoice(this.state.id)}>Pay Invoice</a></li>
+                    <li><a onClick={()=>this.updateStatus(this.state.id,'Canceled')} class="dropdown-item">Cancel Invoice</a></li>
+                </ul>
+            )
+        }
+        else if (status == 'Partial') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a onClick={()=>this.payInvoice(this.state.id)}>Pay Invoice</a></li>
+                    <li><a onClick={()=>this.updateStatus(this.state.id,'Canceled')} class="dropdown-item">Cancel Invoice</a></li>
+                </ul>
+              
+             )
+        }
+        else if (status == 'Paid') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                </ul>
+             )
+        }
+        else if (status == 'Canceled') {
+            return(
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a data-toggle="modal" data-target="#deletePurchaseInvoice" class="dropdown-item">Delete</a></li>
+                </ul>
+             )
+        }
+
+
+    }
+
+
+
 
 
     onSearchSalesInvoice = (e) => {
@@ -370,12 +422,7 @@ class SalesInvoice extends Component
                     <h5>{this.state.status.toUpperCase()}</h5>
                     <div class="ibox-tools">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-ellipsis-h"></i></a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a onClick={()=>this.editSalesInvoice(this.state.id)} class="dropdown-item">Edit</a></li>
-                                <li><a data-toggle="modal" data-target="#deleteSalesInvoice" class="dropdown-item">Delete</a></li>
-                                <li><a onClick={()=>this.payInvoice(this.state.id)}>Pay Invoice</a></li>
-                                <li><a onClick={()=>this.updateStatus(this.state.id,'Canceled')} class="dropdown-item">Cancel Invoice</a></li>
-                            </ul>
+                            {this.renderMenu(this.state.status)}
                     </div>                          
                 </div>
 
@@ -385,10 +432,10 @@ class SalesInvoice extends Component
                                 <div class="col-sm-6">
                                     <h5>From:</h5>
                                     <address>
-                                        <strong>{this.state.customerName}</strong><br/>
-                                        {this.state.customerAddress} <br/>
-                                        {this.state.customerCity} <br/>
-                                        {this.state.customerPhone}
+                                        <strong>{this.state.company.companyName}</strong><br/>
+                                        {this.state.company.address} <br/>
+                                        {this.state.company.city} <br/>
+                                        {this.state.company.phone}
                                     </address>
                                 </div>
 

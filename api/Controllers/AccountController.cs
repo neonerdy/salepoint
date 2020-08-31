@@ -29,7 +29,10 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var accounts = await context.Accounts.ToListAsync();
+                var accounts = await context.Accounts
+                    .OrderBy(a=>a.AccountName)
+                    .ToListAsync();
+                
                 return Ok(accounts);
             }
             catch(Exception ex)

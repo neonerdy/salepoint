@@ -29,7 +29,10 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var expenseCategories = await context.ExpenseCategories.ToListAsync();
+                var expenseCategories = await context.ExpenseCategories
+                    .OrderBy(ec=>ec.CategoryName)
+                    .ToListAsync();
+                
                 return Ok(expenseCategories);
             }
             catch(Exception ex)
