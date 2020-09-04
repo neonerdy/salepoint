@@ -43,8 +43,8 @@ class Dashboard extends Component
                                 <div class="row">
                                 
                                     <div class="col-8">
-                                        <span> TOTAL INVOICE </span>
-                                        <h2 class="font-bold">6</h2>
+                                        <span> PURCHASES </span>
+                                        <h2 class="font-bold">6,200</h2>
                                     </div>
                                 </div>
                         </div>

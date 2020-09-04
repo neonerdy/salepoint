@@ -248,16 +248,16 @@ class PointOfSale extends Component
 
                    
                         <div class="row wrapper border-bottom white-bg page-heading">
-                            <div class="col-lg-8">
+                            <div class="col-lg-4">
                                 <h2>Point of Sale ({this.state.sales.length})</h2>
                             
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-8">
                                 <div class="title-action">
                                 <div class="btn-group">
                                 
-                                <select name="salesMonth" class="form-control" onChange={this.onMonthChange}> 
-                                        <option value="">Select Month</option>
+                                 <select name="salesMonth" class="form-control" onChange={this.onMonthChange}> 
+                                        <option value="">Month</option>
                                         <option value="1">January</option>
                                         <option value="2">February</option>
                                         <option value="3">March</option>
@@ -271,8 +271,16 @@ class PointOfSale extends Component
                                         <option value="11">November</option>
                                         <option value="12">December</option>
                                     </select>
+                                    &nbsp;
+                                    <select name="salesYear" class="form-control"> 
+                                        <option value="">Year</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                    </select>
+
                                     &nbsp;&nbsp;
                                     <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                                    <button class="btn btn-default"><i class="fa fa-print"></i></button>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                 
                                 </div>
@@ -300,7 +308,7 @@ class PointOfSale extends Component
                                     
                                         <li key={s.id} class="list-group-item">
                                             <a class="nav-link" onClick={()=>this.getSalesDetail(s.id)}>
-                                                <small class="float-right text-muted"><i class="fa fa-clock"></i>{moment(s.salesDate).format('MM/DD/YYYY HH:mm:ss')}</small>
+                                                <small class="float-right text-muted"><i class="fa fa-clock"></i>{moment(s.salesDate).format('MM/DD/YYYY')}</small>
                                                 <strong>{s.salesCode}</strong>
                                                 <div class="small m-t-xs">
                                                     <p class="m-b-none">

@@ -340,6 +340,7 @@ class PurchaseInvoice extends Component
                                     </select>
                                     &nbsp;&nbsp;
                                     <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                                    <button class="btn btn-default"><i class="fa fa-print"></i></button>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                 
                                 </div>
@@ -394,6 +395,7 @@ class PurchaseInvoice extends Component
 
 
                           </div>
+
 
 
 

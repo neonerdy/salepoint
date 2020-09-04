@@ -118,6 +118,7 @@ class Employee extends Component
 
 
                     <div class="row wrapper border-bottom white-bg page-heading">
+                       
                         <div class="col-lg-8">
                             <h2>Employees ({this.state.employees.length})</h2>
                         </div>

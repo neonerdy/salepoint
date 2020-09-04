@@ -104,8 +104,9 @@ class UserEdit extends Component
                 employeeId: this.state.employeeId
             }
 
+
             axios.put(config.serverUrl + '/api/user/update', user).then(response=> {
-                this.props.history.push('/master-data');
+                this.props.history.push('/user');
             })
         }
     }
@@ -113,7 +114,7 @@ class UserEdit extends Component
 
 
     cancelUpdate = () => {
-        this.props.history.push('/master-data');
+        this.props.history.push('/user');
     }
 
 

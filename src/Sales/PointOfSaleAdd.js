@@ -179,10 +179,6 @@ class PointOfSaleAdd extends Component
             isValid = false;
         }
 
-        if (this.salesDate.current.value === '') {
-            error.salesDate = 'is required';
-            isValid = false;
-        }
 
         if (this.state.cashierId === '') {
             error.cashierId = 'is required';
@@ -305,20 +301,6 @@ class PointOfSaleAdd extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.customerId}</span>
 
                                  </div>
-
-                                
-                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Sales Date</label>
-                                    <div class="input-group date col-md-7 col-sm-12 required">
-                                          <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">
-                                                <input type="text" class="form-control" ref={this.salesDate}/>
-                                                <div class="input-group-addon">
-                                                    <span class="fa fa-calendar"></span>
-                                                </div>
-                                           </div>
-
-                                    </div>
-                                  &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.salesDate}</span>
-                                </div>
 
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Cashier</label>

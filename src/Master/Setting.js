@@ -4,7 +4,8 @@ import Footer from '../Shared/Footer';
 import axios from 'axios';
 import moment from 'moment';
 import config from '../Shared/Config';
-
+import { Scrollbars } from 'react-custom-scrollbars';
+import { Link } from 'react-router-dom';
 
 class Setting extends Component
 {
@@ -19,7 +20,7 @@ class Setting extends Component
             province: '',
             zipCode: '',
             phone: '',
-            email: ''
+            email: '',
         }
     }
 
@@ -122,6 +123,20 @@ class Setting extends Component
     }
 
 
+    getUsers =()=> {
+        axios.get(config.serverUrl + '/api/user/getall').then(response=> {
+            this.setState({
+                users: response.data,
+            })
+     })
+    }
+
+
+    viewUser = () => {
+        this.props.history.push('/user');
+    }
+
+
 
     render() {
 
@@ -133,9 +148,34 @@ class Setting extends Component
         return(
             <div id="page-wrapper" class="gray-bg">
                 
+                <div id="deleteUser" class="modal fade" role="dialog">
+                
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                          <div class="modal-header">
+                            <h4>Delete User</h4>
+                          </div>
+                          <div class="modal-body">
+                          Are you sure want to delete '{this.state.userName}' ?
+                          </div>
+
+                          <div class="modal-footer">
+                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
+                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteUser(this.state.userId)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
+                          </div>
+                        
+                      </div>
+                  </div>
+              </div>
+
+
+
+
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
-                    <h2>Company Setting </h2>
+                    <h2>Setting </h2>
                 </div>
             </div>
 
@@ -147,76 +187,92 @@ class Setting extends Component
                 <div class="ibox">
 
                       <div class="ibox-content">
-
-                      <br/>
-                            <form>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Company Name</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="companyName" onChange={this.onValueChange} value={this.state.companyName}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.companyName}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Address</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="address" onChange={this.onValueChange} value={this.state.address}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.address}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>City</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="city" onChange={this.onValueChange} value={this.state.city}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.city}</span>
-                                </div>
-
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Province</label>
-                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
-                                        name="province" onChange={this.onValueChange} value={this.state.province}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.province}</span>
-                                </div>
-
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Zip Code</label>
-                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
-                                        name="zipCode" onChange={this.onValueChange} value={this.state.zipCode}/>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Phone</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="phone" onChange={this.onValueChange} value={this.state.phone}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.phone}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>E-Mail</label>
-                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
-                                        name="email" onChange={this.onValueChange} value={this.state.email}/>
-                                    </div>
-                                </div>
                                 
+                                <ul class="nav nav-tabs">
+                                    <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Company</a></li>
+                                    <li><a class="nav-link" data-toggle="tab" href="#tab-2" onClick={this.viewUser}>Users</a></li>
+                                </ul>
 
-                                <br/><br/>
+                                <div class="tab-content">
+                                    <div id="tab-1" class="tab-pane active show">
 
-                                <div class="hr-line-dashed"></div>
-                            
 
-                                <div class="text-right">
-                                     <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
-                                     <button type="button" onClick={this.updateSetting} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
+                                        <br/>
+                                        <form>
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Company Name</label>
+                                                <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                                    name="companyName" onChange={this.onValueChange} value={this.state.companyName}/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.companyName}</span>
+                                            </div>
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Address</label>
+                                                <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                                    name="address" onChange={this.onValueChange} value={this.state.address}/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.address}</span>
+                                            </div>
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>City</label>
+                                                <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                                    name="city" onChange={this.onValueChange} value={this.state.city}/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.city}</span>
+                                            </div>
+
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Province</label>
+                                                <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
+                                                    name="province" onChange={this.onValueChange} value={this.state.province}/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.province}</span>
+                                            </div>
+
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Zip Code</label>
+                                                <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
+                                                    name="zipCode" onChange={this.onValueChange} value={this.state.zipCode}/>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Phone</label>
+                                                <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                                    name="phone" onChange={this.onValueChange} value={this.state.phone}/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.phone}</span>
+                                            </div>
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>E-Mail</label>
+                                                <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
+                                                    name="email" onChange={this.onValueChange} value={this.state.email}/>
+                                                </div>
+                                            </div>
+                                            
+
+                                            <br/><br/>
+
+                                            <div class="hr-line-dashed"></div>
+                                        
+
+                                            <div class="text-right">
+                                                <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
+                                                <button type="button" onClick={this.updateSetting} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
+                                            </div>
+                                            
+
+                                        </form>
+
+                                    </div>
+
+                                    <div id="tab-2" class="tab-pane">
+                                         
+                              
+                                     </div>
+
+
                                 </div>
-                                
-
-                            </form>
-
-
-
                       </div>
                       
 
@@ -229,7 +285,10 @@ class Setting extends Component
             
         </div>
 
+        <br/>
+        <br/>
         
+
         <Footer/>
 
         </div>

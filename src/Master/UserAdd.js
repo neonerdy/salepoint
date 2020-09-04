@@ -87,7 +87,7 @@ class UserAdd extends Component
             }
 
             axios.post(config.serverUrl + '/api/user/save', user).then(response=> {
-                this.props.history.push('/master-data');
+                this.props.history.push('/user');
             })
         }
     }
@@ -95,7 +95,7 @@ class UserAdd extends Component
 
 
     cancelAdd = () => {
-        this.props.history.push('/master-data');
+        this.props.history.push('/user');
     }
 
 

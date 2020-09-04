@@ -86,12 +86,10 @@ class NavBar extends Component
                                 <Link to="/expense"><i class="fa fa-dollar"></i> <span class="nav-label">Expenses</span></Link>
                             </li>
 
-                   
-
-                            <li>
-                               
+                            <li className={this.getNavLinkClass("/product-rpt")}>
+                                <Link to="/product-rpt"><i class="fa fa-archive"></i> <span class="nav-label">Reports</span></Link>
                             </li>
-                            
+  
                             
                             
                             

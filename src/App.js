@@ -51,6 +51,8 @@ import Supplier from './Supplier/Supplier';
 import ExpenseCategoryAdd from './Expense/ExpenseCategoryAdd';
 import ExpenseCategoryEdit from './Expense/ExpenseCategoryEdit';
 import Setting from './Master/Setting';
+import User from './Master/User';
+import ProductRpt from './Report/ProductRpt';
 
 
 
@@ -89,6 +91,8 @@ class App extends Component
                 <Route exact path="/sales-payment/:id" component={SalesPayment}/>
                 <Route exact path="/expense" component={ExpenseList}/>
                 <Route exact path="/payment" component={Payment}/>
+                <Route exact path="/user" component={User}/>
+                
              
                 <Route exact path="/add-product-category" component={ProductCategoryAdd}/>
                 <Route exact path="/add-unit" component={UnitAdd}/>
@@ -123,6 +127,9 @@ class App extends Component
                 <Route exact path="/edit-purchase-invoice/:id" component={PurchaseInvoiceEdit}/>
                 <Route exact path="/edit-sales-invoice/:id" component={SalesInvoiceEdit}/>
                 <Route exact path="/edit-expense/:id" component={ExpenseEdit}/>
+
+
+                <Route exact path="/product-rpt" component={ProductRpt}/>
                                 
 
               </Switch>

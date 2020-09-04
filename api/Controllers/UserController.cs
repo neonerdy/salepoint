@@ -29,7 +29,8 @@ namespace SalePointAPI.Controllers
             try
             {
                 var users = await context.Users
-                    .Include(u=>u.Employee)
+                    .Include(u=>u.Employee).ThenInclude(u=>u.JobTitle)
+                    .OrderBy(u=>u.Employee.EmployeeName)
                     .ToListAsync();
                 
                 return Ok(users);
