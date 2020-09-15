@@ -68,7 +68,7 @@ class NavBar extends Component
                             </li>
 
                            
-                            <li className={this.getNavLinkClass("/sales-order")}>
+                            <li className={this.getNavLinkClass("/pos")}>
                                 <Link to="/pos"><i class="fa fa-television"></i><span class="nav-label"> Point of Sale</span></Link>
                             </li>
                             

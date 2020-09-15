@@ -53,6 +53,8 @@ import ExpenseCategoryEdit from './Expense/ExpenseCategoryEdit';
 import Setting from './Master/Setting';
 import User from './Master/User';
 import ProductRpt from './Report/ProductRpt';
+import EmployeeRpt from './Report/EmployeeRpt';
+import SalesInvoiceRpt from './Report/SalesInvoiceRpt';
 
 
 
@@ -130,8 +132,9 @@ class App extends Component
 
 
                 <Route exact path="/product-rpt" component={ProductRpt}/>
-                                
-
+                <Route exact path="/employee-rpt" component={EmployeeRpt}/>
+                <Route exact path="/sales-invoice-rpt" component={SalesInvoiceRpt}/>
+                
               </Switch>
             </div>
           </Fragment>

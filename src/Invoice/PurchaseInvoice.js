@@ -5,6 +5,8 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import axios from 'axios';
 import config from '../Shared/Config';
 import moment from 'moment';
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
 
 
 class PurchaseInvoice extends Component
@@ -15,7 +17,6 @@ class PurchaseInvoice extends Component
             error: {},
             company: {},
             purchaseInvoices: [],
-            initialPurchaseInvoices: [],
             purchasePayments: [],
             id: '',
             invoiceCode: '',
@@ -30,7 +31,9 @@ class PurchaseInvoice extends Component
             tax: 0,
             discount: 0,
             total: 0,
-            status: ''
+            status: '',
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
         }
         
     }
@@ -40,8 +43,13 @@ class PurchaseInvoice extends Component
         window.scrollTo(0, 0);
         
         this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
-        this.getPurchaseInvoiceWithTopOne();
-        
+        this.getPurchaseInvoiceWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
+    }
+
+
+      
+    handleDateCallback = (startDate, endDate) => {
+        this.setState({ startDate, endDate});
     }
 
 
@@ -52,12 +60,16 @@ class PurchaseInvoice extends Component
         }
     }
 
-    getPurchaseInvoiceWithTopOne = () => {
+    getPurchaseInvoiceWithTopOne = (startDate, endDate) => {
 
-        axios.get(config.serverUrl + '/api/purchaseinvoice/getall').then(response=> {
+        var dateRange = {
+            startDate: startDate,
+            endDate: endDate
+        }
+
+           axios.post(config.serverUrl + '/api/purchaseinvoice/getbydate', dateRange).then(response=> {
             this.setState({
                 purchaseInvoices: response.data,
-                initialPurchaseInvoices: response.data
             })
 
             this.getTopPurchaseInvoices();
@@ -90,16 +102,32 @@ class PurchaseInvoice extends Component
 
 
 
-    getPurchaseInvoices = () => {
+    getPurchaseInvoices = (startDate, endDate) => {
 
-        axios.get(config.serverUrl + '/api/purchaseinvoice/getall').then(response=> {
+        var dateRange = {
+            startDate: startDate,
+            endDate: endDate
+        }
+
+        axios.post(config.serverUrl + '/api/purchaseinvoice/getbydate', dateRange).then(response=> {
             this.setState({
                 purchaseInvoices: response.data,
-                initialPurchaseInvoices: response.data
             })
 
         })
     }
+
+
+    searchPurchaseInvoice = (code) => {
+      
+        axios.get(config.serverUrl + '/api/purchaseinvoice/getbycode/' + code).then(response=> {
+            this.setState({
+                purchaseInvoices: response.data,
+            })
+        })
+    }
+
+    
 
     
     getPurchaseInvoiceDetail = (id) => {
@@ -153,12 +181,17 @@ class PurchaseInvoice extends Component
     updateStatus = (id, status) => {
 
         axios.get(config.serverUrl + '/api/purchaseinvoice/updatestatus/' + id + '/' + status).then(response=> {
-            this.getPurchaseInvoices();
+            this.getPurchaseInvoices(this.state.startDate.toDate(), this.state.endDate.toDate());
             this.getPurchaseInvoiceDetail(id);
         })
     }
 
 
+    filterPurchaseInvoice = () => {
+        this.getPurchaseInvoiceWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
+    }
+
+    
     renderStatus = (status) => {
 
         if (status ==='New') {
@@ -223,27 +256,17 @@ class PurchaseInvoice extends Component
 
     onSearchPurchaseInvoice = (e) => {
 
-
-        let x = e.target.value.toLowerCase();
+        if (e.key === 'Enter') {
+            if (e.target.value === '') 
+            {
+                this.getPurchaseInvoiceWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());     
+            } 
+            else 
+            {
+                this.searchPurchaseInvoice(e.target.value.toLowerCase());
+            }
+        }
       
-        let filteredPurchaseInvoices = this.state.filteredPurchaseInvoices.filter(pi => 
-            pi.invoiceCode.toLowerCase().includes(x) ||
-            pi.supplierName.toLowerCase().includes(x) ||
-            pi.status.toLowerCase().includes(x)
-         );
-            
-        
-        if (e.target.value === '') {
-            this.setState( {
-                purchaseInvoices: this.state.initialPurchaseInvoices
-            })
-        }
-        else {
-            this.setState( {
-                purchaseInvoices: filteredPurchaseInvoices
-            })
-    
-        }
     }
 
 
@@ -256,6 +279,7 @@ class PurchaseInvoice extends Component
 
     render() {
 
+        let dateLabel = this.state.startDate.format('MMMM D, YYYY') + ' - ' + this.state.endDate.format('MMMM D, YYYY'); 
         let color='';
         
         if (this.state.status === 'New') {
@@ -315,34 +339,65 @@ class PurchaseInvoice extends Component
 
 
                     <div class="row wrapper border-bottom white-bg page-heading">
-                            <div class="col-lg-8">
+                            <div class="col-lg-4">
                                 <h2>Purchase Invoices ({this.state.purchaseInvoices.length})</h2>
                             
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-8">
                                 <div class="title-action">
                                 <div class="btn-group">
                                 
-                                <select name="purchaseInvoiceMonth" class="form-control" onChange={this.onMonthChange}> 
-                                        <option value="">Select Month</option>
-                                        <option value="1">January</option>
-                                        <option value="2">February</option>
-                                        <option value="3">March</option>
-                                        <option value="4">April</option>
-                                        <option value="5">May</option>
-                                        <option value="6">June</option>
-                                        <option value="7">July</option>
-                                        <option value="8">August</option>
-                                        <option value="9">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
-                                    </select>
+                                <DateRangePicker
+                                        initialSettings={{
+                                        startDate: this.state.startDate.toDate(),
+                                        endDate: this.state.endDate.toDate(),
+                                        ranges: {
+                                            Today: [moment().toDate(), moment().toDate()],
+                                            Yesterday: [
+                                            moment().subtract(1, 'days').toDate(),
+                                            moment().subtract(1, 'days').toDate(),
+                                            ],
+                                            'Last 7 Days': [
+                                            moment().subtract(6, 'days').toDate(),
+                                            moment().toDate(),
+                                            ],
+                                            'Last 30 Days': [
+                                            moment().subtract(29, 'days').toDate(),
+                                            moment().toDate(),
+                                            ],
+                                            'This Month': [
+                                            moment().startOf('month').toDate(),
+                                            moment().endOf('month').toDate(),
+                                            ],
+                                            'Last Month': [
+                                            moment().subtract(1, 'month').startOf('month').toDate(),
+                                            moment().subtract(1, 'month').endOf('month').toDate(),
+                                            ],
+                                        },
+                                        }}
+                                        onCallback={this.handleDateCallback}
+                                    >
+                                        <div
+                                        id="reportrange"
+                                       
+                                        style={{
+                                            background: '#fff',
+                                            cursor: 'pointer',
+                                            padding: '5px 10px',
+                                            border: '1px solid #ccc',
+                                            width: '100%',
+                                        }}
+                                        >
+                                        <i className="fa fa-calendar"></i>&nbsp;
+                                        <span>{dateLabel}</span> <i className="fa fa-caret-down"></i>
+                                        </div>
+                                    </DateRangePicker>
+                                   
                                     &nbsp;&nbsp;
-                                    <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                                    <button class="btn btn-default" onClick={this.filterPurchaseInvoice}><i class="fa fa-filter"></i></button>
                                     <button class="btn btn-default"><i class="fa fa-print"></i></button>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
-                                
+
                                 </div>
 
 
@@ -362,7 +417,7 @@ class PurchaseInvoice extends Component
                             <div>
 
                                 <ul class="list-group elements-list">
-                                    <input type="text" class="form-control" onChange={this.onSearchPurchaseInvoice}/>
+                                    <input type="text" class="form-control" onKeyPress={this.onSearchPurchaseInvoice}/>
                                     
                                     {this.state.purchaseInvoices.map(pi=> 
                                     

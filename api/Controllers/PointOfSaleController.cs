@@ -24,8 +24,8 @@ namespace SalePointAPI.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpPost()]
+        public async Task<IActionResult> GetByDate([FromBody] DateRangeViewModel dateRange)
         {   
             try
             {
@@ -35,12 +35,13 @@ namespace SalePointAPI.Controllers
                         pos.ID,
                         pos.SalesCode,
                         pos.SalesDate,
-                        CashierName = pos.Cashier.EmployeeName,
+                        CustomerName = pos.Customer.CustomerName,
                         pos.Total,
                         pos.Status,
                         pos.CreatedDate,
                     })
-                    .OrderByDescending(pos=>pos.CreatedDate)
+                    .Where(pos=>pos.SalesDate.Date >= dateRange.StartDate.Date && pos.SalesDate.Date <= dateRange.EndDate.Date)
+                    .OrderByDescending(pos=>pos.SalesDate)
                     .ToListAsync();
             
                 return Ok(pointOfSales);
@@ -52,6 +53,38 @@ namespace SalePointAPI.Controllers
 
             return Ok();
         }
+
+
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetByCode(string code)
+        {   
+            try
+            {
+                var pointOfSales = await context.PointOfSales
+                    .Include(pos=>pos.Cashier)
+                    .Select(pos=>new {
+                        pos.ID,
+                        pos.SalesCode,
+                        pos.SalesDate,
+                        CustomerName = pos.Customer.CustomerName,
+                        pos.Total,
+                        pos.Status,
+                        pos.CreatedDate,
+                    })
+                    .Where(pos=>pos.SalesCode.Contains(code))
+                    .OrderByDescending(pos=>pos.SalesDate)
+                    .ToListAsync();
+            
+                return Ok(pointOfSales);
+            }
+            catch(Exception ex) 
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+        }
+
 
 
        

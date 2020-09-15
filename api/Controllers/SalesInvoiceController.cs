@@ -24,18 +24,97 @@ namespace SalePointAPI.Controllers
         }
 
 
-         [HttpGet]
+        [HttpPost()]
+        public async Task<IActionResult> GetByDate([FromBody] DateRangeViewModel dateRange)
+        {   
+            try
+            {
+                 var salesInvoices = await context.SalesInvoices
+                    .Include(si=>si.Customer)
+                    .Include(si=>si.SalesPerson)
+                    .Select(si=>new {
+                        si.ID,
+                        si.InvoiceCode,
+                        CustomerName = si.Customer.CustomerName,
+                        SalesPerson = si.SalesPerson.EmployeeName,
+                        si.InvoiceDate,
+                        si.DueDate,
+                        si.Total,
+                        si.AmountPaid,
+                        si.Status,
+                        si.CreatedDate,
+                    })
+                    .Where(si=>si.InvoiceDate >= dateRange.StartDate.Date && si.InvoiceDate <= dateRange.EndDate.Date)
+                    .OrderByDescending(so=>so.CreatedDate)
+                    .ToListAsync();
+                
+
+                return Ok(salesInvoices);
+
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+
+        }
+
+
+
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetByCode(string code) 
+        {
+            try
+            {
+                var salesInvoices = await context.SalesInvoices
+                    .Include(si=>si.Customer)
+                    .Include(si=>si.SalesPerson)
+                    .Select(si=>new {
+                        si.ID,
+                        si.InvoiceCode,
+                        CustomerName = si.Customer.CustomerName,
+                        SalesPerson = si.SalesPerson.EmployeeName,
+                        si.InvoiceDate,
+                        si.DueDate,
+                        si.Total,
+                        si.AmountPaid,
+                        si.Status,
+                        si.CreatedDate,
+                    })
+                    .Where(si=>si.InvoiceCode.Contains(code))
+                    .OrderByDescending(so=>so.CreatedDate)
+                    .ToListAsync();
+      
+                return Ok(salesInvoices);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+        }
+
+
+
+
+        [HttpGet]
         public async Task<IActionResult> GetAll() 
         {
             try
             {
                 var salesInvoices = await context.SalesInvoices
                     .Include(si=>si.Customer)
+                    .Include(si=>si.SalesPerson)
                     .Select(si=>new {
                         si.ID,
                         si.InvoiceCode,
                         CustomerName = si.Customer.CustomerName,
+                        SalesPerson = si.SalesPerson.EmployeeName,
                         si.InvoiceDate,
+                        si.DueDate,
                         si.Total,
                         si.AmountPaid,
                         si.Status,

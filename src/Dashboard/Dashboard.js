@@ -7,17 +7,31 @@ import Footer from '../Shared/Footer';
 import axios from 'axios';
 import { Scrollbars } from 'react-custom-scrollbars';
 import config from '../Shared/Config';
-
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import moment from 'moment';
 
 class Dashboard extends Component
 {
     constructor(props) {
         super(props);
+        
+        this.state = {
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
+        }
     }
 
 
+    handleDateCallback = (startDate, endDate) => {
+        this.setState({ startDate, endDate});
+    }
+
     render()
     {
+
+        let dateLabel = this.state.startDate.format('MMMM D, YYYY') + ' - ' + this.state.endDate.format('MMMM D, YYYY'); 
+
 
         return (
 
@@ -25,11 +39,64 @@ class Dashboard extends Component
                 
             <div class="row wrapper border-bottom white-bg page-heading">
                 
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                     <h2>Dashboard</h2>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-8">
                     <div class="title-action">
+
+                    <div class="btn-group">
+
+                        <DateRangePicker
+                            initialSettings={{
+                            startDate: this.state.startDate.toDate(),
+                            endDate: this.state.endDate.toDate(),
+                            ranges: {
+                                Today: [moment().toDate(), moment().toDate()],
+                                Yesterday: [
+                                moment().subtract(1, 'days').toDate(),
+                                moment().subtract(1, 'days').toDate(),
+                                ],
+                                'Last 7 Days': [
+                                moment().subtract(6, 'days').toDate(),
+                                moment().toDate(),
+                                ],
+                                'Last 30 Days': [
+                                moment().subtract(29, 'days').toDate(),
+                                moment().toDate(),
+                                ],
+                                'This Month': [
+                                moment().startOf('month').toDate(),
+                                moment().endOf('month').toDate(),
+                                ],
+                                'Last Month': [
+                                moment().subtract(1, 'month').startOf('month').toDate(),
+                                moment().subtract(1, 'month').endOf('month').toDate(),
+                                ],
+                            },
+                            }}
+                            onCallback={this.handleDateCallback}
+                        >
+                            <div
+                            id="reportrange"
+                            
+                            style={{
+                                background: '#fff',
+                                cursor: 'pointer',
+                                padding: '5px 10px',
+                                border: '1px solid #ccc',
+                                width: '100%',
+                            }}
+                            >
+                            <i className="fa fa-calendar"></i>&nbsp;
+                            <span>{dateLabel}</span> <i className="fa fa-caret-down"></i>
+                            </div>
+                        </DateRangePicker>
+                    
+                        &nbsp;&nbsp;
+                        <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+
+                    </div>
                       
                     </div>
                 </div>

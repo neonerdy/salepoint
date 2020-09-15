@@ -12,6 +12,8 @@ class ProductRpt extends Component
     constructor(props) {
         super(props);
         this.state = {
+            company: {},
+            categoryName: 'All',
             categories: [],
             initialProducts: [],
             products: [],
@@ -23,10 +25,24 @@ class ProductRpt extends Component
 
     componentDidMount() {
         
+        window.scrollTo(0, 0);
+
+        this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
         this.getCategories();
         this.getProducts();
 
 
+    }
+
+
+    getCompanyById = (id) => {
+       
+        axios.get(config.serverUrl + '/api/company/getById/' + id).then(response=> {
+            this.setState({
+                company: response.data
+            })
+
+        })
     }
 
 
@@ -51,6 +67,15 @@ class ProductRpt extends Component
         })
     }
 
+
+    getCategoryById = (id) => {
+        axios.get(config.serverUrl + '/api/productcategory/getbyid/' + id).then(response=> {
+            this.setState({
+                categoryName: response.data.categoryName
+            })
+        })
+    }
+
     
     onValueChange = (e) => {
         this.setState({
@@ -58,6 +83,14 @@ class ProductRpt extends Component
         })
 
         this.filterProduct(e);
+
+        if (e.target.value != '') {
+            this.getCategoryById(e.target.value.toLowerCase());
+        }else {
+            this.setState({
+                categoryName: 'All'
+            })
+        }
     }
 
 
@@ -98,6 +131,11 @@ class ProductRpt extends Component
     }
 
 
+    showEmployee = () => {
+        this.props.history.push('/employee-rpt');
+    }
+
+
 
     render() {
 
@@ -108,47 +146,46 @@ class ProductRpt extends Component
 
 
                  <div class="row wrapper border-bottom white-bg page-heading">
-                     <div class="col-lg-4">
+                     <div class="col-lg-8">
                          <h2>Reports</h2>
                          <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 Product
                             </li>    
                             <li class="breadcrumb-item">
-                                 All
+                                 {this.state.categoryName}
                             </li>                        
                         </ol>
                         
 
                      </div>
-                     <div class="col-lg-8">
+                     <div class="col-lg-4">
                          <div class="title-action">
 
                          <div class="btn-group">
 
                                 <select class="form-control" onChange={this.onValueChange}>
-                                    <option value="">Select Product Category</option>
+                                    <option value="">Product Category</option>
                                     {this.state.categories.map(c=> 
                                         <option value={c.id}>{c.categoryName}</option>    
                                     )}
                                 </select>
                                 &nbsp;
                                 <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                                <button class="btn btn-default"><i class="fa fa-print"></i></button>
                                 &nbsp;&nbsp;&nbsp;
 
-                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">
-                                    <i class="fa fa-archive"></i></button>
+
+                                <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false"><i class="fa fa-archive"></i></button>
                                 <ul class="dropdown-menu" x-placement="bottom-start">
-                                   <li><a class="dropdown-item" >Employee</a></li>
-                                   <li><a class="dropdown-item" >Product</a></li>
-                                   <li><a class="dropdown-item" >Customer</a></li>
-                                   <li><a class="dropdown-item" >Supplier</a></li>
-                                   <li><a class="dropdown-item" >Point of Sale</a></li>
-                                   <li><a class="dropdown-item" >Sales Invoice</a></li>
-                                   <li><a class="dropdown-item" >Purchase Invoice</a></li>
-                                   <li><a class="dropdown-item" >Expense</a></li>
-                                   
-                             
+                                    <li><Link to="/employee-rpt" class="dropdown-item">Employee</Link></li>
+                                    <li><Link to="/product-rpt" class="dropdown-item">Product</Link></li>
+                                    <li><Link to="/customer-rpt" class="dropdown-item">Customer</Link></li>
+                                    <li><Link to="/supplier-rpt" class="dropdown-item">Supplier</Link></li>
+                                    <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale</Link></li>
+                                    <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice</Link></li>
+                                    <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice</Link></li>
+                                    <li><Link to="/expense-rpt" class="dropdown-item">Expense</Link></li>
                                 </ul>
                                 &nbsp;
                         
@@ -157,6 +194,79 @@ class ProductRpt extends Component
                          </div>
                      </div>
                  </div>
+
+                 <div class="wrapper wrapper-content animated fadeInRight">
+
+            <div class="row">
+            <div class="col-lg-12">
+
+                    <div class="ibox-content p-xl">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h2>Products ({this.state.products.length})</h2>
+                                    <span class="label label-primary">{this.state.categoryName}</span>
+                                 </div>
+
+                                <div class="col-sm-6 text-right">
+                                   
+                                    <address>
+                                        <strong>{this.state.company.companyName}</strong><br/>
+                                        {this.state.company.address}<br/>
+                                        {this.state.company.city}<br/>
+                                        <abbr title="Phone"></abbr> {this.state.company.phone}
+                                    </address>
+                                    
+                                </div>
+                            </div>
+
+                            <div>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Product Code</th>
+                                        <th>Category</th>
+                                        <th>Purchase Price</th>
+                                        <th>Sale Price</th>
+                                        <th>Stock</th>
+                                        <th>Unit</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {this.state.products.map(p=> 
+                                            
+                                            <tr key={p.id}>
+                                                 <td>{p.productName}</td>
+                                                 <td>{p.productCode}</td>
+                                                 <td>{p.category.categoryName}</td>
+                                                 <td>{p.purchasePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                 <td>{p.salePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                 <td>{p.stock}</td>
+                                                 <td>{p.unit.unitName}</td>
+                                                 <td align="middle">
+                                                    {p.isDiscontinued===true? 
+                                                        <span class="label label-danger">Discontinued</span>
+                                                    : null
+                                                    }
+                                                 </td>                                                  
+                                                                                           </tr>
+                                            
+                                         )} 
+                               
+                                    </tbody>
+                                </table>
+                            </div>
+
+                          
+
+                        
+                        </div>
+                </div>
+            </div>
+        </div>
+
+
 
 
                  

@@ -9,6 +9,9 @@ import moment from 'moment';
 import ExpenseChart from './ExpenseChart';
 import Expense from './Expense';
 import {Link} from 'react-router-dom';
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+
 
 
 class ExpenseList extends Component
@@ -17,41 +20,137 @@ class ExpenseList extends Component
     constructor(props) {
         super(props);
         this.state = {
-            initialExpenses: [],
             expenses: [],
             accounts: [],
-            expenseMonth: ''
-            
+            expenseMonth: '',
+            expenseData: [],
+            expenseColor: [],
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
         }
     }
 
 
     componentDidMount() {
-        
-        this.getExpenses();
-        this.getAssetAccounts();
+      
+        this.getExpenses(this.state.startDate.toDate(), this.state.endDate.toDate());
+        this.getExpenseChart(this.state.startDate.toDate(), this.state.endDate.toDate());
+
+        this.getAccounts();
 
         this.setState({
-            expenseTitle: this.convertMonth(moment(new Date()).format('MM')) + ' ' + moment(new Date()).format('YYYY')
+            expenseTitle: moment(this.state.startDate.toDate()).format('MM/DD/YYYY') + ' - ' 
+                + moment(this.state.endDate.toDate()).format('MM/DD/YYYY')
         })
 
+    }
+
+    getRandomColor = () => {
+
+        let graphColors = [];
+
+        for(let i=0;i<this.state.expenseData.length;i++) {
+
+            let randomR = Math.floor((Math.random() * 255));
+            let randomG = Math.floor((Math.random() * 255));
+            let randomB = Math.floor((Math.random() * 255));
+    
+            let graphBackground = "rgb(" 
+                    + randomR + ", " 
+                    + randomG + ", " 
+                    + randomB + ")";
+                
+            let hue = Math.floor(Math.random() * 360);
+            let pastel = 'hsl(' + hue + ', 100%, 80%)';
+
+            graphColors.push(graphBackground);
+        }
+
+        this.setState({
+            expenseColor: graphColors
+        })
+        
+    }
+
+
+
+    handleDateCallback = (startDate, endDate) => {
+        this.setState({ startDate, endDate});
+    }
+
+
+    filterExpense = () => {
+        this.getExpenses(this.state.startDate.toDate(), this.state.endDate.toDate());
+        this.getExpenseChart(this.state.startDate.toDate(), this.state.endDate.toDate());
+
+        this.setState({
+            expenseTitle: moment(this.state.startDate.toDate()).format('MM/DD/YYYY') + ' - ' 
+                + moment(this.state.endDate.toDate()).format('MM/DD/YYYY')
+        })
+
+    }
+
+    
+    
+
+
+    getExpenseChart  = (startDate, endDate) => {
+
+        var dateRange = {
+            startDate: startDate,
+            endDate: endDate
+        }
+
+        axios.post(config.serverUrl + '/api/expense/getmonthlychart', dateRange).then(response => {
+           
+            let totalExpenses = 0;
+
+            for(let i=0;i<response.data.length;i++) {
+                totalExpenses += parseFloat(response.data[i].amount);
+            }
+
+            let expenses=[];
+
+            for(let i=0;i<response.data.length;i++) {
+            
+                let percentage = ((response.data[i].amount/totalExpenses) * 100).toFixed(0);
+                let expense = {};
+            
+                expense.categoryName = response.data[i].categoryName + ' ( ' + percentage + '% )';
+                expense.total = parseFloat(response.data[i].amount);
+                
+                expenses.push(expense);
+            }
+            
+            this.setState({
+                expenseData: expenses
+            })
+
+            this.getRandomColor();
+
+        })       
     }
 
 
 
 
-    getExpenses = () => {
+    getExpenses = (startDate, endDate) => {
 
-        axios.get(config.serverUrl + '/api/expense/getall').then(response=> {
+        var dateRange = {
+            startDate: startDate,
+            endDate: endDate
+        }
+
+
+        axios.post(config.serverUrl + '/api/expense/getbydate', dateRange).then(response=> {
             this.setState({
                 expenses: response.data,
-                initialExpenses: response.data
             })
 
         })
     }
 
-    getAssetAccounts = () => {
+    getAccounts = () => {
         axios.get(config.serverUrl + '/api/account/getall').then(response=> {
             this.setState({
                 accounts: response.data
@@ -59,6 +158,19 @@ class ExpenseList extends Component
 
         })
     }
+
+
+    searchExpense = (q) => {
+
+        axios.get(config.serverUrl + '/api/expense/getbysearch/' + q).then(response=> {
+            this.setState({
+                expenses: response.data,
+            })
+
+        })
+
+    }
+
 
 
 
@@ -75,90 +187,34 @@ class ExpenseList extends Component
     }
 
    
-    convertMonth = (day) => {
-        
-        let monthString = '';
-        switch(day) {
-            case '1' : 
-                monthString = 'January';
-                break;
-            case '2' :
-                monthString = 'February';
-                break;
-            case '3' :
-                monthString = 'March';
-                break;
-            case '4' :
-                monthString = 'April';
-                break;
-            case '5' :
-                monthString = 'May';
-                break;
-            case '6' :
-                monthString = 'June';
-                break;
-            case '7' :
-                monthString = 'July';
-                break;
-            case '8' :
-                monthString = 'August';
-                break;
-            case '9' :
-                monthString = 'September';
-                break;
-            case '10' :
-                monthString = 'October';
-                break;
-            case '11' :
-                monthString = 'November';
-                break;
-            case '12' :
-                monthString = 'December';
-                break;
-            
-            default:
-
-        }
-
-        return monthString;
-    }
-
-
-    onMonthChange = (e) => {
-
-        if (e.target.value !== '') {
-            this.setState({
-                expenseTitle: this.convertMonth(e.target.value) + ' ' + moment(new Date()).format('YYYY')
-            })
-        }
-    }
-
+    
     onSearchChange = (e) => {
 
-        let filteredExpense = this.state.initialExpenses.filter(expense => expense.categoryName.toLowerCase()
-            .includes(e.target.value.toLowerCase()) || 
-             expense.date.toLowerCase().includes(e.target.value) ||
-             expense.accountName.toLowerCase().includes(e.target.value.toLowerCase()) ||
-             expense.ledgerCode.toLowerCase().includes(e.target.value.toLowerCase()));
-             
-        if (e.target.value === '')
-        {
-            this.setState( {
-                expenses: this.state.initialExpenses
-            })
+        if (e.key === 'Enter') {
+            if (e.target.value === '') 
+            {
+                this.getExpenses(this.state.startDate.toDate(), this.state.endDate.toDate());   
+                this.setState({
+                    expenseTitle: moment(this.state.startDate.toDate()).format('MM/DD/YYYY') + ' - ' 
+                        + moment(this.state.endDate.toDate()).format('MM/DD/YYYY')
+                })
+            } 
+            else 
+            {
+                this.searchExpense(e.target.value.toLowerCase());
+                this.setState({
+                    expenseTitle: 'Search'
+                })
+            }
         }
-        else {
-            this.setState( {
-                expenses: filteredExpense
-            })
-    
-        }
-        
+
     }
 
   
     render() {
 
+        let dateLabel = this.state.startDate.format('MMMM D, YYYY') + ' - ' + this.state.endDate.format('MMMM D, YYYY'); 
+     
         let totalExpenses = 0;
         this.state.expenses.map(e=> 
             totalExpenses += e.amount
@@ -170,32 +226,65 @@ class ExpenseList extends Component
 
 
                     <div class="row wrapper border-bottom white-bg page-heading">
-                        <div class="col-lg-8">
+                        <div class="col-lg-4">
 
                             <h2>Expenses </h2>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-8">
                             <div class="title-action">
 
                                 <div class="btn-group">
 
-                                    <select name="expenseMonth" class="form-control" onChange={this.onMonthChange}> 
-                                        <option value="">Select Month</option>
-                                        <option value="1">January</option>
-                                        <option value="2">February</option>
-                                        <option value="3">March</option>
-                                        <option value="4">April</option>
-                                        <option value="5">May</option>
-                                        <option value="6">June</option>
-                                        <option value="7">July</option>
-                                        <option value="8">August</option>
-                                        <option value="9">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
-                                    </select>
+                                  
+                                <DateRangePicker
+                                        initialSettings={{
+                                        startDate: this.state.startDate.toDate(),
+                                        endDate: this.state.endDate.toDate(),
+                                        ranges: {
+                                            Today: [moment().toDate(), moment().toDate()],
+                                            Yesterday: [
+                                            moment().subtract(1, 'days').toDate(),
+                                            moment().subtract(1, 'days').toDate(),
+                                            ],
+                                            'Last 7 Days': [
+                                            moment().subtract(6, 'days').toDate(),
+                                            moment().toDate(),
+                                            ],
+                                            'Last 30 Days': [
+                                            moment().subtract(29, 'days').toDate(),
+                                            moment().toDate(),
+                                            ],
+                                            'This Month': [
+                                            moment().startOf('month').toDate(),
+                                            moment().endOf('month').toDate(),
+                                            ],
+                                            'Last Month': [
+                                            moment().subtract(1, 'month').startOf('month').toDate(),
+                                            moment().subtract(1, 'month').endOf('month').toDate(),
+                                            ],
+                                        },
+                                        }}
+                                        onCallback={this.handleDateCallback}
+                                    >
+                                        <div
+                                        id="reportrange"
+                                       
+                                        style={{
+                                            background: '#fff',
+                                            cursor: 'pointer',
+                                            padding: '5px 10px',
+                                            border: '1px solid #ccc',
+                                            width: '100%',
+                                        }}
+                                        >
+                                        <i className="fa fa-calendar"></i>&nbsp;
+                                        <span>{dateLabel}</span> <i className="fa fa-caret-down"></i>
+                                        </div>
+                                    </DateRangePicker>
+                                   
                                     &nbsp;&nbsp;
-                                    <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                                    <button class="btn btn-default" onClick={this.filterExpense}><i class="fa fa-filter"></i></button>
+
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     
                                     <Link to="/add-expense" class="btn btn-success">Add New Expense </Link>
@@ -235,7 +324,7 @@ class ExpenseList extends Component
                                                         <h5>{this.state.expenseTitle}</h5>
                                                     </div>
                                                     <div class="ibox-content ibox-heading">
-                                                        <p><input type="text" class="form-control" placeholder="Search" onChange={this.onSearchChange}/></p>
+                                                        <p><input type="text" class="form-control" placeholder="Search" onKeyPress={this.onSearchChange}/></p>
                                                         <h3>{this.state.expenses.length} Expenses, Total : {totalExpenses}</h3>
                                                     </div>
 
@@ -263,7 +352,10 @@ class ExpenseList extends Component
 
 
 
-                                        <ExpenseChart/>
+                                        <ExpenseChart
+                                            expenseData = {this.state.expenseData}
+                                            expenseColor = {this.state.expenseColor}
+                                        />
                                      </div>
                         
                                         

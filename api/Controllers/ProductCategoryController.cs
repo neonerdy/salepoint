@@ -60,7 +60,7 @@ namespace SalePointAPI.Controllers
             return Ok();
         }
 
-
+        
 
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] ProductCategory productCategory)

@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "bootstrap-datepicker": "^1.9.0",
+    "bootstrap-daterangepicker": "^3.1.0",
     "chart.js": "^2.9.3",
     "chosen-js": "^1.8.7",
     "footable": "^2.0.6",
@@ -15,6 +16,7 @@
     "npm": "^6.13.4",
     "react": "^16.9.0",
     "react-accessible-accordion": "^3.0.1",
+    "react-bootstrap-daterangepicker": "^7.0.0",
     "react-bootstrap-select": "^0.14.0",
     "react-chartjs-2": "^2.8.0",
     "react-chosen": "^0.3.8",

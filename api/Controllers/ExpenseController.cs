@@ -23,6 +23,86 @@ namespace SalePointAPI.Controllers
             context = new AppDbContext();
         }
 
+
+        [HttpPost()]
+        public async Task<IActionResult> GetByDate([FromBody] DateRangeViewModel dateRange)
+        {   
+
+            try
+            {
+                 var month = DateTime.Now.Month;
+                var year = DateTime.Now.Year;
+
+                var expenses = await context.Expenses
+                    .Include(e=>e.Category)
+                    .Include(e=>e.Account)
+                    .Select(e=>new{
+                        e.ID,
+                        e.Date,
+                        e.CategoryId,
+                        e.AccountId,
+                        CategoryName = e.Category.CategoryName,
+                        MonthlyBudget = e.Category.MonthlyBudget,
+                        AccountName = e.Account.AccountName,
+                        e.Amount,
+                        e.Description,
+                        e.CreatedDate,
+                        e.ModifiedDate
+                    })
+                    .Where(e=>e.Date >= dateRange.StartDate.Date && e.Date <= dateRange.EndDate.Date)
+                    .OrderByDescending(s=>s.CreatedDate)
+                    .ToListAsync();
+                
+                return Ok(expenses);
+
+            }
+            catch(Exception ex) 
+            {
+                 logger.LogError(ex.ToString());
+            }
+
+             return Ok();
+            
+        }
+
+
+
+        [HttpGet("{search}")]
+        public async Task<IActionResult> GetBySearch(string search)
+        {
+            try
+            {
+                var expenses = await context.Expenses
+                    .Include(e=>e.Category)
+                    .Include(e=>e.Account)
+                    .Select(e=>new{
+                        e.ID,
+                        e.Date,
+                        e.CategoryId,
+                        e.AccountId,
+                        CategoryName = e.Category.CategoryName,
+                        MonthlyBudget = e.Category.MonthlyBudget,
+                        AccountName = e.Account.AccountName,
+                        e.Amount,
+                        e.Description,
+                        e.CreatedDate,
+                        e.ModifiedDate
+                    })
+                    .Where(e=>e.CategoryName.Contains(search) || e.AccountName.Contains(search))
+                    .OrderByDescending(s=>s.CreatedDate)
+                    .ToListAsync();
+                
+                return Ok(expenses);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+        }
+
+
         
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -97,16 +177,13 @@ namespace SalePointAPI.Controllers
 
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetMonthly()
+        [HttpPost]
+        public async Task<IActionResult> GetMonthlyChart([FromBody] DateRangeViewModel dateRange)
         {
             try
             {
-                var month = DateTime.Now.Month;
-                var year = DateTime.Now.Year;
-
                 var expenses = await context.Expenses.Include(e=>e.Category)
-                        .Where(e=>e.Date.Month == month && e.Date.Year == year)
+                        .Where(e=>e.Date >= dateRange.StartDate.Date && e.Date <= dateRange.EndDate.Date)
                         .GroupBy(e=>e.Category.CategoryName)
                         .Select(g=> new {
                             CategoryName = g.Key,

@@ -160,10 +160,10 @@ class Product extends Component
 
 
                  <div class="row wrapper border-bottom white-bg page-heading">
-                     <div class="col-lg-4">
+                     <div class="col-lg-6">
                          <h2>Products ({this.state.products.length})</h2>
                      </div>
-                     <div class="col-lg-8">
+                     <div class="col-lg-6">
                          <div class="title-action">
 
                          <div class="btn-group">

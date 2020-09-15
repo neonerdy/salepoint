@@ -6,6 +6,8 @@ import axios from 'axios';
 import config from '../Shared/Config';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
 
 
 class PointOfSale extends Component
@@ -14,7 +16,6 @@ class PointOfSale extends Component
         super(props);
         this.state = {
             sales: [],
-            initialSales: [],
             company: {},
             id: '',
             salesCode: '',
@@ -28,7 +29,9 @@ class PointOfSale extends Component
             tax: 0,
             discount: 0,
             total: 0,
-            status: ''
+            status: '',
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
         }
         
     }
@@ -38,7 +41,13 @@ class PointOfSale extends Component
         window.scrollTo(0, 0);
 
         this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
-        this.getSalesWithTopOne();
+        this.getSalesWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
+    }
+
+
+    
+    handleDateCallback = (startDate, endDate) => {
+        this.setState({ startDate, endDate});
     }
 
 
@@ -60,12 +69,16 @@ class PointOfSale extends Component
         }
     }
 
-    getSalesWithTopOne = () => {
+    getSalesWithTopOne = (startDate, endDate) => {
 
-        axios.get(config.serverUrl + '/api/pointofsale/getall').then(response=> {
+        var dateRange = {
+            startDate: startDate,
+            endDate: endDate
+        }
+
+        axios.post(config.serverUrl + '/api/pointofsale/getbydate', dateRange).then(response=> {
             this.setState({
                 sales: response.data,
-                initialSales: response.data
             })
 
             this.getTopSales();
@@ -73,13 +86,30 @@ class PointOfSale extends Component
     }
 
 
+    searchSales = (code) => {
 
-    getSales = () => {
-
-        axios.get(config.serverUrl + '/api/pointofsale/getall').then(response=> {
+        axios.get(config.serverUrl + '/api/pointofsale/getbycode/' + code).then(response=> {
             this.setState({
                 sales: response.data,
-                initialSales: response.data
+            })
+
+        })
+
+    }
+
+
+
+    getSales = (startDate, endDate) => {
+
+
+        var dateRange = {
+            startDate: startDate,
+            endDate: endDate
+        }
+
+        axios.post(config.serverUrl + '/api/pointofsale/getbydate', dateRange).then(response=> {
+            this.setState({
+                sales: response.data,
             })
 
         })
@@ -113,6 +143,9 @@ class PointOfSale extends Component
     }
 
 
+    filterSales = () => {
+        this.getSalesWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
+    }
 
     editSales = (id) => {
         this.props.history.push('/edit-pos/' + id);
@@ -131,7 +164,7 @@ class PointOfSale extends Component
     updateStatus = (id, status) => {
 
         axios.get(config.serverUrl + '/api/pointofsale/updatestatus/' + id + '/' + status).then(response=> {
-            this.getSales();
+            this.getSales(this.state.startDate.toDate(), this.state.endDate.toDate());
             this.getSalesDetail(id);
         })
     }
@@ -177,27 +210,19 @@ class PointOfSale extends Component
 
     onSearchSales = (e) => {
 
+        if (e.key === 'Enter') {
+            if (e.target.value === '') 
+            {
+                this.getSalesWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());     
+            } 
+            else 
+            {
+                this.searchSales(e.target.value.toLowerCase());
+            }
+        }
 
-        let x = e.target.value.toLowerCase();
-      
-        let filteredSales = this.state.initialSales.filter(so => 
-            so.salesCode.toLowerCase().includes(x) ||
-            so.customerName.toLowerCase().includes(x) ||
-            so.status.toLowerCase().includes(x)
-         );
-            
-        
-        if (e.target.value === '') {
-            this.setState( {
-                sales: this.state.initialSales
-            })
-        }
-        else {
-            this.setState( {
-                sales: filteredSales
-            })
-    
-        }
+
+
     }
 
 
@@ -205,6 +230,7 @@ class PointOfSale extends Component
 
     render() {
 
+        let dateLabel = this.state.startDate.format('MMMM D, YYYY') + ' - ' + this.state.endDate.format('MMMM D, YYYY'); 
         let color='';
         
         if (this.state.status === 'Paid') {
@@ -256,30 +282,54 @@ class PointOfSale extends Component
                                 <div class="title-action">
                                 <div class="btn-group">
                                 
-                                 <select name="salesMonth" class="form-control" onChange={this.onMonthChange}> 
-                                        <option value="">Month</option>
-                                        <option value="1">January</option>
-                                        <option value="2">February</option>
-                                        <option value="3">March</option>
-                                        <option value="4">April</option>
-                                        <option value="5">May</option>
-                                        <option value="6">June</option>
-                                        <option value="7">July</option>
-                                        <option value="8">August</option>
-                                        <option value="9">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
-                                    </select>
-                                    &nbsp;
-                                    <select name="salesYear" class="form-control"> 
-                                        <option value="">Year</option>
-                                        <option value="2019">2019</option>
-                                        <option value="2020">2020</option>
-                                    </select>
-
+                                <DateRangePicker
+                                        initialSettings={{
+                                        startDate: this.state.startDate.toDate(),
+                                        endDate: this.state.endDate.toDate(),
+                                        ranges: {
+                                            Today: [moment().toDate(), moment().toDate()],
+                                            Yesterday: [
+                                            moment().subtract(1, 'days').toDate(),
+                                            moment().subtract(1, 'days').toDate(),
+                                            ],
+                                            'Last 7 Days': [
+                                            moment().subtract(6, 'days').toDate(),
+                                            moment().toDate(),
+                                            ],
+                                            'Last 30 Days': [
+                                            moment().subtract(29, 'days').toDate(),
+                                            moment().toDate(),
+                                            ],
+                                            'This Month': [
+                                            moment().startOf('month').toDate(),
+                                            moment().endOf('month').toDate(),
+                                            ],
+                                            'Last Month': [
+                                            moment().subtract(1, 'month').startOf('month').toDate(),
+                                            moment().subtract(1, 'month').endOf('month').toDate(),
+                                            ],
+                                        },
+                                        }}
+                                        onCallback={this.handleDateCallback}
+                                    >
+                                        <div
+                                        id="reportrange"
+                                       
+                                        style={{
+                                            background: '#fff',
+                                            cursor: 'pointer',
+                                            padding: '5px 10px',
+                                            border: '1px solid #ccc',
+                                            width: '100%',
+                                        }}
+                                        >
+                                        <i className="fa fa-calendar"></i>&nbsp;
+                                        <span>{dateLabel}</span> <i className="fa fa-caret-down"></i>
+                                        </div>
+                                    </DateRangePicker>
+                                   
                                     &nbsp;&nbsp;
-                                    <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                                    <button class="btn btn-default" onClick={this.filterSales}><i class="fa fa-filter"></i></button>
                                     <button class="btn btn-default"><i class="fa fa-print"></i></button>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                 
@@ -302,7 +352,7 @@ class PointOfSale extends Component
                             <div>
 
                                 <ul class="list-group elements-list">
-                                    <input type="text" class="form-control" onChange={this.onSearchSales}/>
+                                    <input type="text" class="form-control" onKeyPress={this.onSearchSales}/>
                                     
                                     {this.state.sales.map(s=> 
                                     
@@ -311,6 +361,7 @@ class PointOfSale extends Component
                                                 <small class="float-right text-muted"><i class="fa fa-clock"></i>{moment(s.salesDate).format('MM/DD/YYYY')}</small>
                                                 <strong>{s.salesCode}</strong>
                                                 <div class="small m-t-xs">
+                                                     {s.customerName}
                                                     <p class="m-b-none">
                                                     {this.renderStatus(s.status)}
                                                     Total : {s.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}

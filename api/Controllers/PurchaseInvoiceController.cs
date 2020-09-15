@@ -24,8 +24,9 @@ namespace SalePointAPI.Controllers
         }
 
 
-         [HttpGet]
-        public async Task<IActionResult> GetAll()
+
+        [HttpPost()]
+        public async Task<IActionResult> GetByDate([FromBody] DateRangeViewModel dateRange)
         {   
             try
             {
@@ -41,6 +42,43 @@ namespace SalePointAPI.Controllers
                         pi.Status,
                         pi.CreatedDate,
                     })
+                    .Where(pi=>pi.InvoiceDate >= dateRange.StartDate.Date && pi.InvoiceDate <= dateRange.EndDate.Date)
+                    .OrderByDescending(pi=>pi.CreatedDate)
+                    .ToListAsync();
+            
+                return Ok(purchaseInvoices);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+
+        }
+
+
+
+
+
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetByCode(string code)
+        {   
+            try
+            {
+                var purchaseInvoices = await context.PurchaseInvoices
+                    .Include(pi=>pi.Supplier)
+                    .Select(pi=>new {
+                        pi.ID,
+                        pi.InvoiceCode,
+                        SupplierName = pi.Supplier.SupplierName,
+                        pi.InvoiceDate,
+                        pi.Total,
+                        pi.AmountPaid,
+                        pi.Status,
+                        pi.CreatedDate,
+                    })
+                    .Where(pi=>pi.InvoiceCode.Contains(code))
                     .OrderByDescending(pi=>pi.CreatedDate)
                     .ToListAsync();
             
