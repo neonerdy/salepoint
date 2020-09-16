@@ -25,7 +25,7 @@ namespace SalePointAPI.Controllers
         }
 
 
-         [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -33,6 +33,29 @@ namespace SalePointAPI.Controllers
                 var products = await context.Products
                     .Include(p=>p.Category)
                     .Include(p=>p.Unit)
+                    .OrderBy(p=>p.ProductName)
+                    .ToListAsync();
+            
+                return Ok(products);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+        }
+
+
+        [HttpGet("{search}")]
+        public async Task<IActionResult> GetBySearch(string search)
+        {
+            try
+            {
+                var products = await context.Products
+                    .Include(p=>p.Category)
+                    .Include(p=>p.Unit)
+                    .Where(p=>p.ProductCode.Contains(search) || p.ProductName.Contains(search))
                     .OrderBy(p=>p.ProductName)
                     .ToListAsync();
             

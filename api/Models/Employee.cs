@@ -7,8 +7,8 @@ namespace SalePointAPI.Models
     {
         public Guid ID { get; set; }
         public string EmployeeName { get; set; }
-        public Guid JobTitleId { get; set; }
-        public JobTitle JobTitle { get; set; }
+        public Guid RoleId { get; set; }
+        public Role Role { get; set; }
         public DateTime JoinDate { get; set; }
         public string Address { get; set; }
         public string City { get; set; }

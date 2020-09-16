@@ -61,8 +61,8 @@ class User extends Component
     }
 
 
-    viewCompany = () => {
-        this.props.history.push('/setting');
+    viewRoleAccess = () => {
+        this.props.history.push('/role-access');
     }
 
 
@@ -104,8 +104,19 @@ class User extends Component
 
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
-                    <h2>Setting </h2>
+                    <h2>Users</h2>
                 </div>
+                
+                <div class="col-lg-4"> 
+                    <div class="title-action">
+                        <div class="btn-group">
+                            <Link to="/add-user" class="btn btn-success">Add New User</Link>
+                        </div>
+
+                    </div>    
+                </div>
+
+
             </div>
 
         <br/>
@@ -118,19 +129,14 @@ class User extends Component
                       <div class="ibox-content">
                                 
                                 <ul class="nav nav-tabs">
-                                    <li><a class="nav-link" data-toggle="tab" href="#tab-1" onClick={this.viewCompany}>Company</a></li>
-                                    <li><a class="nav-link active show" data-toggle="tab" href="#tab-2">Users</a></li>
+                                    <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Users</a></li>
+                                    <li><a class="nav-link" data-toggle="tab" href="#tab-2" onClick={this.viewRoleAccess}>Role Access</a></li>
+                                    
                                 </ul>
 
                                 <div class="tab-content">
-                                    <div id="tab-1" class="tab-pane">
-
-                                    </div>
-
-                                    <div id="tab-2" class="tab-pane active show">
-                                        <div class="title-action">
-                                            <button type="button" class="btn btn-w-m btn-default" onClick={this.addUser}>Add New User &nbsp;<i class="fa fa-user-o"></i></button>
-                                         </div>
+                                  
+                                    <div id="tab-1" class="tab-pane active show">
                                          
                                             <ul class="todo-list m-t ui-sortable">
 
@@ -138,7 +144,7 @@ class User extends Component
 
                                                     <li key = {u.id}>
                                                         <span class="m-l-xs">{u.employee.employeeName}</span>
-                                                        <span class="label label-secondary">{u.employee.jobTitle.jobTitleName}</span>
+                                                        <span class="label label-secondary">{u.employee.role.roleName}</span>
                                                         
                                                         <small class="float-right">
                                                             <span>{moment(u.createdDate).format("MM/DD/YYYY HH:mm:ss")}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -154,6 +160,10 @@ class User extends Component
                                             </ul>
 
                                      </div>
+
+                                     <div id="tab-2" class="tab-pane">
+
+                                    </div>
 
 
                                 </div>

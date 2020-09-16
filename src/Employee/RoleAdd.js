@@ -5,14 +5,14 @@ import axios from 'axios';
 import config from '../Shared/Config';
 
 
-class JobTitleAdd extends Component
+class RoleAdd extends Component
 {
 
     constructor(props) {
         super(props);
         this.state = {
             error: {},
-            jobTitleName: '',
+            roleName: '',
             description: ''
         }
     }
@@ -24,13 +24,13 @@ class JobTitleAdd extends Component
     }
 
 
-    validateJobTitle = () => {
+    validateRole = () => {
 
         let isValid = true;
         let error = {};
 
-        if (this.state.jobTitleName === '') {
-            error.jobTitleName = 'is required';
+        if (this.state.roleName === '') {
+            error.roleName = 'is required';
             isValid = false;
         }
                
@@ -44,18 +44,18 @@ class JobTitleAdd extends Component
 
 
 
-    saveJobTitle = () => {
+    saveRole = () => {
 
-        let isValid = this.validateJobTitle();
+        let isValid = this.validateRole();
 
         if (isValid) {
 
-            let jobTitle = {
-                jobTitleName: this.state.jobTitleName,
+            let role = {
+                roleName: this.state.roleName,
                 description: this.state.description
             }
 
-            axios.post(config.serverUrl + '/api/jobtitle/save', jobTitle).then(response=> {
+            axios.post(config.serverUrl + '/api/role/save', role).then(response=> {
                 this.props.history.push('/master-data');
             })
         }
@@ -97,18 +97,17 @@ class JobTitleAdd extends Component
                       <br/>
                             <form>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Job Title Name</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role Name</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="jobTitleName" onChange={this.onValueChange}/>
+                                        <input type="text" class="form-control" name="roleName" onChange={this.onValueChange}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.jobTitleName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.roleName}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
                                     <div class="col-md-7 col-sm-12">
                                         <input type="text" class="form-control" name="description" onChange={this.onValueChange}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.description}</span>
                                 </div>
                                 <br/><br/>
 
@@ -118,7 +117,7 @@ class JobTitleAdd extends Component
                                 <div class="text-right">
                                         <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>&nbsp;
 
-                                        <button type="button" onClick={this.saveJobTitle} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
+                                        <button type="button" onClick={this.saveRole} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
                                 </div>
 
                              
@@ -150,4 +149,4 @@ class JobTitleAdd extends Component
 }
 
 
-export default JobTitleAdd;
+export default RoleAdd;

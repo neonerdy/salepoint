@@ -30,7 +30,32 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var suppliers = await context.Suppliers.ToListAsync();
+                var suppliers = await context.Suppliers
+                    .OrderBy(s=>s.SupplierName)
+                    .ToListAsync();
+                
+                return Ok(suppliers);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+        }
+
+
+
+        [HttpGet("{search}")]
+        public async Task<IActionResult> GetBySearch(string search)
+        {
+            try
+            {
+                var suppliers = await context.Suppliers
+                    .Where(s=>s.SupplierName.Contains(search) || s.Address.Contains(search) || s.City.Contains(search))
+                    .OrderBy(s=>s.SupplierName)
+                    .ToListAsync();
+                
                 return Ok(suppliers);
             }
             catch(Exception ex)
@@ -58,7 +83,6 @@ namespace SalePointAPI.Controllers
 
             return Ok();
         }
-
 
 
         [HttpPost]

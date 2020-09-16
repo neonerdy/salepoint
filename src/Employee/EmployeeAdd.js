@@ -18,9 +18,9 @@ class EmployeeAdd extends Component
 
         this.state = {
             error: {},
-            jobTitles: [],
+            roles: [],
             employeeName: '',
-            jobTitleId: '',
+            roleId: '',
             joinDate: '',
             address: '',
             city: '',
@@ -32,14 +32,14 @@ class EmployeeAdd extends Component
 
 
     componentDidMount() {
-        this.getJobTitles();
+        this.getRoles();
     }
 
 
-    getJobTitles = () => {
-        axios.get(config.serverUrl + '/api/jobtitle/getall').then(response=> {
+    getRoles = () => {
+        axios.get(config.serverUrl + '/api/role/getall').then(response=> {
             this.setState({
-                jobTitles: response.data
+                roles: response.data
             })
         })
     }
@@ -67,8 +67,8 @@ class EmployeeAdd extends Component
             isValid = false;
         }
 
-        if (this.state.jobTitleId === '') {
-            error.jobTitleId = 'is requred';
+        if (this.state.roleId === '') {
+            error.roleId = 'is requred';
             isValid = false;
         }
 
@@ -116,7 +116,7 @@ class EmployeeAdd extends Component
 
             let employee = {
                 employeeName: this.state.employeeName,
-                jobTitleId: this.state.jobTitleId,
+                roleId: this.state.roleId,
                 joinDate: new Date(this.joinDate.current.value),
                 address: this.state.address,
                 city: this.state.city,
@@ -124,8 +124,6 @@ class EmployeeAdd extends Component
                 email: this.state.email,
                 isActive: this.state.isActive
             }
-
-            console.log(employee);
 
             axios.post(config.serverUrl + '/api/employee/save', employee).then(response=> {
                 this.props.history.push('/employee');
@@ -178,17 +176,17 @@ class EmployeeAdd extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.employeeName}</span>
                                 </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Job Title</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <select class="form-control" name="jobTitleId" onChange={this.onValueChange}>
-                                           <option value="">Please Select Job Title</option>
-                                            {this.state.jobTitles.map(jt=> 
-                                                <option key={jt.id} value={jt.id}>{jt.jobTitleName}</option> 
+                                        <select class="form-control" name="roleId" onChange={this.onValueChange}>
+                                           <option value="">Please Select Role</option>
+                                            {this.state.roles.map(r=> 
+                                                <option key={r.id} value={r.id}>{r.roleName}</option> 
                                             )}
                                         </select>
 
                                 </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.jobTitleId}</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.roleId}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Join Date</label>

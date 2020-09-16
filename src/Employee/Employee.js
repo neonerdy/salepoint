@@ -16,7 +16,6 @@ class Employee extends Component
         this.state = {
             outlets: [],
             employees: [],
-            initialEmployees: [],
             employeeId: '' ,
             employeeName: ''
         }
@@ -32,11 +31,22 @@ class Employee extends Component
         axios.get(config.serverUrl + '/api/employee/getall').then(response=> {
             this.setState({
                 employees: response.data,
-                initialEmployees: response.data
             })
 
         })
     }
+
+    searchEmployees = (search)=> {
+        axios.get(config.serverUrl + '/api/employee/getbysearch/' + search).then(response=> {
+            this.setState({
+                employees: response.data,
+            })
+
+        })
+    }
+
+
+    
 
     addEmployee = () => {
         this.props.history.push('/add-employee');
@@ -65,21 +75,20 @@ class Employee extends Component
     }
 
 
-    searchEmployee = (e) => {
+    onSearchChanged = (e) => {
 
-        let filteredEmployee = this.state.initialEmployees.filter(e =>e.employeeName.toLowerCase().includes(e.target.value.toLowerCase()));
-            
-        if (e.target.value === '') {
-            this.setState( {
-                employees: this.state.initialEmployees
-            })
+        if (e.key === 'Enter') {
+            if (e.target.value === '') 
+            {
+                this.getEmployees();   
+            } 
+            else 
+            {
+                this.searchEmployees(e.target.value.toLowerCase());
+            }
         }
-        else {
-            this.setState( {
-                employees: filteredEmployee
-            })
     
-        }
+        
     }
 
 
@@ -127,7 +136,7 @@ class Employee extends Component
 
                                 <div class="btn-group">
                           
-                                    <input type="text" class="form-control" placeholder="Search" onChange={this.searchEmployee}/>
+                                    <input type="text" class="form-control" placeholder="Search" onKeyPress={this.onSearchChanged}/>
                                     &nbsp;&nbsp;&nbsp;
 
                                     <Link to="/add-employee" class="btn btn-success">Add New Employee </Link>
@@ -163,7 +172,7 @@ class Employee extends Component
                                                 <th>City</th>
                                                 <th>Phone</th>
                                                 <th>E-Mail</th>
-                                                <th>Job Title</th>
+                                                <th>Role</th>
                                                 <th></th>
                                                 <th></th>
                                                 
@@ -180,7 +189,7 @@ class Employee extends Component
                                                     <td>{e.city}</td>
                                                     <td>{e.phone}</td>
                                                     <td>{e.email}</td>
-                                                    <td>{e.jobTitle.jobTitleName}</td>
+                                                    <td>{e.role.roleName}</td>
                                                     <td align="middle">
                                                     {e.isActive===false? 
                                                         <span class="label label-danger">Not Active</span>

@@ -14,7 +14,7 @@ namespace SalePointAPI
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<JobTitle> JobTitles { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; } 
         public DbSet<Unit> Units { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -31,6 +31,7 @@ namespace SalePointAPI
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<RoleAccess> RoleAccesses{ get; set; }
         
 
        
@@ -57,11 +58,11 @@ namespace SalePointAPI
             });
 
 
-            modelBuilder.Entity<JobTitle>(entity => 
+            modelBuilder.Entity<Role>(entity => 
             {
-                entity.ToTable("JobTitles");
+                entity.ToTable("Roles");
                 entity.Property(e => e.ID).HasColumnName("ID");
-                entity.Property(e => e.JobTitleName).HasColumnName("JobTitleName");
+                entity.Property(e => e.RoleName).HasColumnName("RoleName");
                 entity.Property(e => e.Description).HasColumnName("Description");
             });
 
@@ -71,7 +72,7 @@ namespace SalePointAPI
                 entity.ToTable("Employees");
                 entity.Property(e => e.ID).HasColumnName("ID");
                 entity.Property(e => e.EmployeeName).HasColumnName("EmployeeName");
-                entity.Property(e => e.JobTitleId).HasColumnName("JobTitleId");
+                entity.Property(e => e.RoleId).HasColumnName("RoleId");
                 entity.Property(e => e.JoinDate).HasColumnName("JoinDate");
                 entity.Property(e => e.Address).HasColumnName("Address");
                 entity.Property(e => e.City).HasColumnName("City");
@@ -335,6 +336,27 @@ namespace SalePointAPI
                 entity.Property(e => e.EmployeeId).HasColumnName("EmployeeId");
                 entity.Property(e => e.CreatedDate).HasColumnName("CreatedDate");
                 entity.Property(e => e.ModifiedDate).HasColumnName("ModifiedDate");
+            });
+
+
+            modelBuilder.Entity<RoleAccess>(entity => 
+            {
+                entity.ToTable("RoleAccesses");
+                entity.Property(e => e.ID).HasColumnName("ID");
+                entity.Property(e => e.RoleId).HasColumnName("RoleId");
+                entity.Property(e => e.IsAllowDashboard).HasColumnName("IsAllowDashboard");
+                entity.Property(e => e.IsAllowMasterData).HasColumnName("IsAllowMasterData");
+                entity.Property(e => e.IsAllowEmployee).HasColumnName("IsAllowEmployee");
+                entity.Property(e => e.IsAllowProduct).HasColumnName("IsAllowProduct");
+                entity.Property(e => e.IsAllowCustomer).HasColumnName("IsAllowCustomer");
+                entity.Property(e => e.IsAllowSupplier).HasColumnName("IsAllowSupplier");
+                entity.Property(e => e.IsAllowPointOfSale).HasColumnName("IsAllowPointOfSale");
+                entity.Property(e => e.IsAllowPurchaseInvoice).HasColumnName("IsAllowPurchaseInvoice");
+                entity.Property(e => e.IsAllowSalesInvoice).HasColumnName("IsAllowSalesInvoice");
+                entity.Property(e => e.IsAllowExpense).HasColumnName("IsAllowExpense");
+                entity.Property(e => e.IsAllowReport).HasColumnName("IsAllowReport");
+                entity.Property(e => e.IsAllowUser).HasColumnName("IsAllowUser");
+          
             });
 
 

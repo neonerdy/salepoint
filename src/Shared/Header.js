@@ -32,7 +32,11 @@ class Header extends Component
                     <li class="dropdown">
                         <Link to="/setting"><i class="fa fa-gear"></i></Link>
                     </li>
-  
+
+                    <li class="dropdown">
+                        <Link to="/user"><i class="fa fa-user-o"></i></Link>
+                    </li>
+
                     <li>
                         <a href="login.html">
                             Log out

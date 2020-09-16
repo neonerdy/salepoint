@@ -31,6 +31,16 @@ class Supplier extends Component
         })
     }
 
+    
+    searchSuppliers = (search)=> {
+        axios.get(config.serverUrl + '/api/supplier/getbysearch/' + search).then(response=> {
+            this.setState({
+                suppliers: response.data,
+            })
+
+        })
+    }
+
   
     addSupplier = () => {
         this.props.history.push('/add-supplier');
@@ -46,11 +56,28 @@ class Supplier extends Component
         })
     }
     
-  onDeleteSupplier = (supplierId, supplierName) => {
+    
+    onDeleteSupplier = (supplierId, supplierName) => {
         this.setState({
             supplierId: supplierId,
             supplierName: supplierName
         })
+    }
+
+
+    onSearchChanged = (e) => {
+
+        if (e.key === 'Enter') {
+            if (e.target.value === '') 
+            {
+                this.getSuppliers();   
+            } 
+            else 
+            {
+                this.searchSuppliers(e.target.value.toLowerCase());
+            }
+        }
+       
     }
 
 
@@ -97,6 +124,8 @@ class Supplier extends Component
                             <div class="title-action">
 
                                 <div class="btn-group">
+                                    <input type="text" class="form-control" placeholder="Search" onKeyPress={this.onSearchChanged}/>
+                                    &nbsp;&nbsp;&nbsp;
                                      <Link to="/add-supplier" class="btn btn-success">Add New Supplier</Link>    
                                 </div>
 

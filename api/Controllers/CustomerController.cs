@@ -29,7 +29,10 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var customers = await context.Customers.ToListAsync();
+                var customers = await context.Customers
+                    .OrderBy(c=>c.CustomerName)    
+                    .ToListAsync();
+                
                 return Ok(customers);
             }
             catch(Exception ex) 
@@ -58,6 +61,28 @@ namespace SalePointAPI.Controllers
             return Ok();
         }
         
+
+
+        [HttpGet("{search}")]
+        public async Task<IActionResult> GetBySearch(string search)
+        {
+            try
+            {
+                var customers = await context.Customers
+                    .Where(c=>c.CustomerName.Contains(search) || c.Address.Contains(search) || c.City.Contains(search))
+                    .OrderBy(c=>c.CustomerName)
+                    .ToListAsync();
+                
+                return Ok(customers);
+            }
+            catch(Exception ex) 
+            {
+                 logger.LogError(ex.ToString());   
+            }
+
+           return Ok();
+        }
+
 
 
         [HttpPost]

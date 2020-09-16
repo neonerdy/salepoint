@@ -123,20 +123,6 @@ class Setting extends Component
     }
 
 
-    getUsers =()=> {
-        axios.get(config.serverUrl + '/api/user/getall').then(response=> {
-            this.setState({
-                users: response.data,
-            })
-     })
-    }
-
-
-    viewUser = () => {
-        this.props.history.push('/user');
-    }
-
-
 
     render() {
 
@@ -190,7 +176,6 @@ class Setting extends Component
                                 
                                 <ul class="nav nav-tabs">
                                     <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Company</a></li>
-                                    <li><a class="nav-link" data-toggle="tab" href="#tab-2" onClick={this.viewUser}>Users</a></li>
                                 </ul>
 
                                 <div class="tab-content">
@@ -257,7 +242,6 @@ class Setting extends Component
                                         
 
                                             <div class="text-right">
-                                                <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
                                                 <button type="button" onClick={this.updateSetting} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
                                             </div>
                                             
@@ -266,10 +250,7 @@ class Setting extends Component
 
                                     </div>
 
-                                    <div id="tab-2" class="tab-pane">
-                                         
-                              
-                                     </div>
+                                   
 
 
                                 </div>

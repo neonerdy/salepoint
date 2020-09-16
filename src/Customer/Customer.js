@@ -32,6 +32,16 @@ class Customer extends Component
         })
     }
 
+    
+    searchCustomers = (search)=> {
+        axios.get(config.serverUrl + '/api/customer/getbysearch/' + search).then(response=> {
+            this.setState({
+                customers: response.data,
+            })
+
+        })
+    }
+
 
     addCustomer = () => {
         this.props.history.push('/add-customer');
@@ -54,6 +64,24 @@ class Customer extends Component
             customerName: customerName
         })
     }
+
+
+    onSearchChanged = (e) => {
+
+        if (e.key === 'Enter') {
+            if (e.target.value === '') 
+            {
+                this.getCustomers();   
+            } 
+            else 
+            {
+                this.searchCustomers(e.target.value.toLowerCase());
+            }
+        }
+       
+    }
+
+
 
 
     render() {
@@ -97,6 +125,8 @@ class Customer extends Component
                             <div class="title-action">
 
                                <div class="btn-group">
+                                    <input type="text" class="form-control" placeholder="Search" onKeyPress={this.onSearchChanged}/>
+                                    &nbsp;&nbsp;&nbsp;
                                     <Link to="/add-customer" class="btn btn-success">Add New Customer</Link>
                                </div>
 

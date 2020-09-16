@@ -18,7 +18,7 @@ class EmployeeEdit extends Component
 
         this.state = {
             error: {},
-            jobTitles: [],
+            roles: [],
             id: '',
             employeeName: '',
             joinDate: '',
@@ -26,7 +26,7 @@ class EmployeeEdit extends Component
             city: '',
             phone: '',
             email: '',
-            jobTitleId: '',
+            roleId: '',
             isActive: true
         }
     }
@@ -35,15 +35,15 @@ class EmployeeEdit extends Component
 
         let id = this.props.match.params.id;
         this.getEmployeeById(id);
-        this.getJobTitles();
+        this.getRoles();
     }
 
 
-    getJobTitles = () => {
+    getRoles = () => {
 
-        axios.get(config.serverUrl + '/api/jobtitle/getall').then(response=> {
+        axios.get(config.serverUrl + '/api/role/getall').then(response=> {
             this.setState({
-                jobTitles: response.data
+                roles: response.data
             })
         })
     }
@@ -60,7 +60,7 @@ class EmployeeEdit extends Component
                 city: response.data.city,
                 phone: response.data.phone,
                 email: response.data.email,
-                jobTitleId: response.data.jobTitleId,
+                roleId: response.data.roleId,
                 isActive: response.data.isActive
             })
         })
@@ -90,8 +90,8 @@ class EmployeeEdit extends Component
             isValid = false;
         }
 
-        if (this.state.jobTitleId === '') {
-            error.jobTitleId = 'is required';
+        if (this.state.roleId === '') {
+            error.roleId = 'is required';
             isValid = false;
         }
 
@@ -148,7 +148,7 @@ class EmployeeEdit extends Component
                 city: this.state.city,
                 phone: this.state.phone,
                 email: this.state.email,
-                jobTitleId: this.state.jobTitleId,
+                roleId: this.state.roleId,
                 isActive: this.state.isActive
             }
 
@@ -211,17 +211,17 @@ class EmployeeEdit extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.employeeName}</span>
                                 </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Job Title</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role Name</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <select class="form-control" name="jobTitleId" onChange={this.onValueChange} value={this.state.jobTitleId}>
-                                            <option value="">Please Select Job Title</option>
-                                            {this.state.jobTitles.map(jt=> 
-                                                <option key={jt.id} value={jt.id}>{jt.jobTitleName}</option> 
+                                        <select class="form-control" name="roleId" onChange={this.onValueChange} value={this.state.roleId}>
+                                            <option value="">Please Select Role</option>
+                                            {this.state.roles.map(r=> 
+                                                <option key={r.id} value={r.id}>{r.roleName}</option> 
                                             )}
                                         </select>
 
                                 </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.jobTitleId}</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.roleId}</span>
                                 </div>
 
                               

@@ -4,21 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
 using Microsoft.EntityFrameworkCore;
 using SalePointAPI.Models;
-
 
 namespace SalePointAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
-    public class EmployeeController : ControllerBase
+    public class RoleAccessController : ControllerBase
     {
 
-        private readonly ILogger<EmployeeController> logger;
+        private readonly ILogger<RoleAccessController> logger;
         private AppDbContext context;
 
-        public EmployeeController(ILogger<EmployeeController> logger)
+        public RoleAccessController(ILogger<RoleAccessController> logger)
         {
             this.logger = logger;
             context = new AppDbContext();
@@ -30,33 +28,11 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var employees = await context.Employees
-                    .Include(e=>e.Role)
-                    .OrderBy(e=>e.EmployeeName)
+                var roles = await context.RoleAccesses
+                    .Include(ra=>ra.Role)
+                    .OrderBy(ra=>ra.Role.RoleName)
                     .ToListAsync();
-        
-                return Ok(employees);
-            }
-            catch(Exception ex) 
-            {
-                logger.LogError(ex.ToString());
-            }
-
-            return Ok();
-        }
-
-
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
-        {
-            try
-            {
-                var employee = await context.Employees
-                    .Where(e=>e.ID == id)
-                    .SingleOrDefaultAsync();
-            
-                return Ok(employee);
+                return Ok(roles);
             }
             catch(Exception ex)
             {
@@ -67,19 +43,13 @@ namespace SalePointAPI.Controllers
         }
 
 
-
-        [HttpGet("{search}")]
-        public async Task<IActionResult> GetBySearch(string search)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
             try
             {
-                var employees = await context.Employees
-                    .Include(e=>e.Role)
-                    .Where(e=>e.EmployeeName.Contains(search) || e.Address.Contains(search) || e.City.Contains(search))
-                    .OrderBy(e=>e.EmployeeName)
-                    .ToListAsync();
-        
-                return Ok(employees);
+                var role = await context.RoleAccesses.FindAsync(id);
+                return Ok(role);
             }
             catch(Exception ex) 
             {
@@ -90,15 +60,15 @@ namespace SalePointAPI.Controllers
         }
 
 
-        
+
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] Employee employee)
+        public async Task<IActionResult> Save([FromBody] RoleAccess roleAccess)
         {
             int result = 0;
             try
             {
-                employee.ID = Guid.NewGuid();
-                context.Add(employee);
+                roleAccess.ID = Guid.NewGuid();
+                context.RoleAccesses.Add(roleAccess);
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)
@@ -112,15 +82,15 @@ namespace SalePointAPI.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] Employee employee)
+        public async Task<IActionResult> Update([FromBody] RoleAccess roleAccess)
         {
             int result = 0;
             try
             {
-                context.Update(employee);
+                context.Update(roleAccess);
                 result = await context.SaveChangesAsync();
             }
-            catch(Exception ex) 
+            catch(Exception ex)
             {
                 logger.LogError(ex.ToString());
             }
@@ -130,19 +100,21 @@ namespace SalePointAPI.Controllers
 
 
 
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             int result = 0;
             try
             {
-                var employee = await context.Employees.FindAsync(id);
-                context.Remove(employee);
+                var role = await context.RoleAccesses.FindAsync(id);
+                context.Remove(role);
                 result = await context.SaveChangesAsync();
+
             }
             catch(Exception ex)
             {
-               logger.LogError(ex.ToString());
+                logger.LogError(ex.ToString());
             }
             
             return Ok(result);
@@ -150,9 +122,12 @@ namespace SalePointAPI.Controllers
 
 
 
+      
+
+    }
 
 
-  }
+    
 
 
 

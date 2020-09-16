@@ -43,6 +43,17 @@ class Product extends Component
     }
 
 
+    searchProducts = (search)=> {
+        axios.get(config.serverUrl + '/api/product/getbysearch/' + search).then(response=> {
+            this.setState({
+                products: response.data,
+            })
+
+        })
+    }
+
+
+
     getCategories = () => {
         axios.get(config.serverUrl + '/api/productcategory/getall').then(response=> {
             this.setState({
@@ -99,6 +110,7 @@ class Product extends Component
     }
 
 
+    /*
     searchProduct = (e) => {
 
 
@@ -116,6 +128,7 @@ class Product extends Component
     
         }
     }
+    */
 
 
     addCategory = () => {
@@ -126,6 +139,24 @@ class Product extends Component
     addUnit = () => {
         this.props.history.push('/add-unit');
     }
+
+
+    onSearchChanged = (e) => {
+
+        if (e.key === 'Enter') {
+            if (e.target.value === '') 
+            {
+                this.getProducts();   
+            } 
+            else 
+            {
+                this.searchProducts(e.target.value.toLowerCase());
+            }
+        }
+       
+    }
+
+
   
 
     render() {
@@ -168,7 +199,7 @@ class Product extends Component
 
                          <div class="btn-group">
 
-                                <input type="text" class="form-control" placeholder="Search" onChange={this.searchProduct}/>
+                                <input type="text" class="form-control" placeholder="Search" onKeyPress={this.onSearchChanged}/>
                                 &nbsp;&nbsp;&nbsp;
 
                                 <select class="form-control" onChange={this.onValueChange}>
@@ -213,8 +244,8 @@ class Product extends Component
                                       <table class="table table-hover table-striped">
                                        
                                         <thead>
-                                            <th>Product Name</th>
                                             <th>Product Code</th>
+                                            <th>Product Name</th>
                                             <th>Category</th>
                                             <th>Purchase Price</th>
                                             <th>Sale Price</th>
@@ -228,8 +259,8 @@ class Product extends Component
                                          {this.state.products.map(p=> 
                                             
                                             <tr key={p.id}>
-                                                 <td>{p.productName}</td>
                                                  <td>{p.productCode}</td>
+                                                 <td>{p.productName}</td>
                                                  <td>{p.category.categoryName}</td>
                                                  <td>{p.purchasePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                                  <td>{p.salePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>

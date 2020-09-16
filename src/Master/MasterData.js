@@ -20,8 +20,8 @@ class MasterData extends Component
             units: [],
             unitId: '',
             unitName: '',
-            jobTitles: [],
-            jobTitleId: '', 
+            roles: [],
+            roleId: '', 
             titleName: '',
             accounts: [],
             accountId: '',
@@ -43,7 +43,7 @@ class MasterData extends Component
 
         this.getProductCategories();
         this.getUnits();
-        this.getJobTitles();
+        this.getRoles();
         //this.getUsers();
         this.getPaymentTypes();
         this.getAccounts();
@@ -139,35 +139,35 @@ class MasterData extends Component
 
 
 
-    /* JOB TITLES */
+    /* ROLES */
 
-    getJobTitles = () => {
-        axios.get(config.serverUrl + '/api/jobtitle/getall').then(response=> {
+    getRoles = () => {
+        axios.get(config.serverUrl + '/api/role/getall').then(response=> {
             this.setState({
-                jobTitles: response.data
+                roles: response.data
             })
         })
     }
 
-    addJobTitle = () => {
-        this.props.history.push('/add-job-title');
+    addRole = () => {
+        this.props.history.push('/add-role');
     }
 
-    editJobTitle = (id) => {
-        this.props.history.push('/edit-job-title/' + id);
+    editRole = (id) => {
+        this.props.history.push('/edit-role/' + id);
     }
 
-    onDeleteJobTitle = (jobTitleId, titleName) => {
+    onDeleteRole = (roleId, roleName) => {
         this.setState({
-            jobTitleId: jobTitleId,
-            titleName: titleName
+            roleId: roleId,
+            roleName: roleName
         })
     }
 
-    deleteJobTitle = (id) => {
+    deleteRole = (id) => {
 
-        axios.delete(config.serverUrl + '/api/jobTitle/delete/' + id).then(response=> {
-            this.getJobTitles();
+        axios.delete(config.serverUrl + '/api/role/delete/' + id).then(response=> {
+            this.getRoles();
         })
     }
 
@@ -376,22 +376,22 @@ class MasterData extends Component
 
 
 
-              <div id="deleteJobTitle" class="modal fade" role="dialog">
+              <div id="deleteRole" class="modal fade" role="dialog">
                 
                 <div class="modal-dialog">
                     
                     <div class="modal-content">
 
                           <div class="modal-header">
-                            <h4>Delete Job Title</h4>
+                            <h4>Delete Role</h4>
                           </div>
                           <div class="modal-body">
-                          Are you sure want to delete '{this.state.titleName}' ?
+                          Are you sure want to delete '{this.state.roleName}' ?
                           </div>
 
                           <div class="modal-footer">
                             <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteJobTitle(this.state.jobTitleId)} data-dismiss="modal">
+                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteRole(this.state.roleId)} data-dismiss="modal">
                                 <label><i class="ti-check"></i></label> YES</button>
                           </div>
                         
@@ -508,11 +508,11 @@ class MasterData extends Component
                         <div class="title-action">
 
                             <div class="btn-group">
-                                <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false">Add New</button>
+                                <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false">Add New Data</button>
                                 <ul class="dropdown-menu" x-placement="bottom-start">
                                     <li><a class="dropdown-item" onClick={this.addProductCategory}>Product Category</a></li>
                                     <li><a class="dropdown-item" onClick={this.addUnit}>Unit</a></li>
-                                    <li><a class="dropdown-item" onClick={this.addJobTitle}>Job Title</a></li>
+                                    <li><a class="dropdown-item" onClick={this.addRole}>Role</a></li>
                                     <li><a class="dropdown-item" onClick={this.addPaymentType}>Payment Type</a></li>
                                     <li><a class="dropdown-item" onClick={this.addAccount}>Account</a></li>
                                     <li><a class="dropdown-item" onClick={this.addExpenseCategory}>Expense Category</a></li>
@@ -601,19 +601,19 @@ class MasterData extends Component
 
 
                 <div class="ibox-content">
-                    <h2>Job Titles ({this.state.jobTitles.length})</h2>
+                    <h2>Roles ({this.state.roles.length})</h2>
                     
                     <Scrollbars style={{ height: 310 }}>
 
                     <ul class="todo-list m-t ui-sortable">
                      
-                        {this.state.jobTitles.map(jt=> 
-                        <li key={jt.id}>
-                            <span class="m-l-xs">{jt.jobTitleName}</span>
+                        {this.state.roles.map(r=> 
+                        <li key={r.id}>
+                            <span class="m-l-xs">{r.roleName}</span>
                             <small class="float-right">
-                                <a onClick={()=>this.editJobTitle(jt.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
-                                 <a data-toggle="modal" data-target="#deleteJobTitle" 
-                                    onClick={()=>this.onDeleteJobTitle(jt.id, jt.jobTitleName)}><i class="fa fa-trash"></i></a>
+                                <a onClick={()=>this.editRole(r.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                                 <a data-toggle="modal" data-target="#deleteRole" 
+                                    onClick={()=>this.onDeleteRole(r.id, r.roleName)}><i class="fa fa-trash"></i></a>
                                     &nbsp;&nbsp;
                             </small>
                         </li>

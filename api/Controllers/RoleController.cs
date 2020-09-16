@@ -12,13 +12,13 @@ using SalePointAPI.Models;
 namespace SalePointAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
-    public class JobTitleController : ControllerBase
+    public class RoleController : ControllerBase
     {
 
-        private readonly ILogger<JobTitleController> logger;
+        private readonly ILogger<RoleController> logger;
         private AppDbContext context;
 
-        public JobTitleController(ILogger<JobTitleController> logger)
+        public RoleController(ILogger<RoleController> logger)
         {
             this.logger = logger;
             context = new AppDbContext();
@@ -30,8 +30,8 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var jobTitles = await context.JobTitles.ToListAsync();
-                return Ok(jobTitles);
+                var roles = await context.Roles.ToListAsync();
+                return Ok(roles);
             }
             catch(Exception ex)
             {
@@ -48,8 +48,8 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var jobTitle = await context.JobTitles.FindAsync(id);
-                return Ok(jobTitle);
+                var role = await context.Roles.FindAsync(id);
+                return Ok(role);
             }
             catch(Exception ex) 
             {
@@ -62,13 +62,13 @@ namespace SalePointAPI.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] JobTitle jobTitle)
+        public async Task<IActionResult> Save([FromBody] Role role)
         {
             int result = 0;
             try
             {
-                jobTitle.ID = Guid.NewGuid();
-                context.JobTitles.Add(jobTitle);
+                role.ID = Guid.NewGuid();
+                context.Roles.Add(role);
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)
@@ -82,12 +82,12 @@ namespace SalePointAPI.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] JobTitle jobTitle)
+        public async Task<IActionResult> Update([FromBody] Role role)
         {
             int result = 0;
             try
             {
-                context.Update(jobTitle);
+                context.Update(role);
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)
@@ -107,8 +107,8 @@ namespace SalePointAPI.Controllers
             int result = 0;
             try
             {
-                var jobTitle = await context.JobTitles.FindAsync(id);
-                context.Remove(jobTitle);
+                var role = await context.Roles.FindAsync(id);
+                context.Remove(role);
                 result = await context.SaveChangesAsync();
 
             }

@@ -146,7 +146,7 @@ class EmployeeRpt extends Component
                                                     <td>{e.city}</td>
                                                     <td>{e.phone}</td>
                                                     <td>{e.email}</td>
-                                                    <td>{e.jobTitle.jobTitleName}</td>
+                                                    <td>{e.role.roleName}</td>
                                                     <td align="middle">
                                                     {e.isActive===false? 
                                                         <span class="label label-danger">Not Active</span>
