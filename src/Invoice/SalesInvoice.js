@@ -15,7 +15,7 @@ class SalesInvoice extends Component
         super(props);
         this.state = {
             error: {},
-            company: {},
+            setting: {},
             salesInvoices: [],
             initialSalesInvoices: [],
             salesPayments: [],
@@ -42,7 +42,7 @@ class SalesInvoice extends Component
     componentDidMount() {
    
         window.scrollTo(0, 0);
-        this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
+        this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
         this.getSalesInvoiceWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
     }
 
@@ -53,11 +53,11 @@ class SalesInvoice extends Component
 
 
 
-    getCompanyById = (id) => {
+    getSettingById = (id) => {
        
-        axios.get(config.serverUrl + '/api/company/getById/' + id).then(response=> {
+        axios.get(config.serverUrl + '/api/setting/getById/' + id).then(response=> {
             this.setState({
-                company: response.data
+                setting: response.data
             })
         })
     }
@@ -488,10 +488,10 @@ class SalesInvoice extends Component
                                 <div class="col-sm-6">
                                     <h5>From:</h5>
                                     <address>
-                                        <strong>{this.state.company.companyName}</strong><br/>
-                                        {this.state.company.address} <br/>
-                                        {this.state.company.city} <br/>
-                                        {this.state.company.phone}
+                                        <strong>{this.state.setting.companyName}</strong><br/>
+                                        {this.state.setting.address} <br/>
+                                        {this.state.setting.city} <br/>
+                                        {this.state.setting.phone}
                                     </address>
                                 </div>
 

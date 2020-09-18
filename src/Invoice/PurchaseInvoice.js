@@ -15,7 +15,7 @@ class PurchaseInvoice extends Component
         super(props);
         this.state = {
             error: {},
-            company: {},
+            setting: {},
             purchaseInvoices: [],
             purchasePayments: [],
             id: '',
@@ -42,7 +42,7 @@ class PurchaseInvoice extends Component
    
         window.scrollTo(0, 0);
         
-        this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
+        this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
         this.getPurchaseInvoiceWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
     }
 
@@ -90,11 +90,11 @@ class PurchaseInvoice extends Component
 
 
 
-    getCompanyById = (id) => {
+    getSettingById = (id) => {
        
-        axios.get(config.serverUrl + '/api/company/getById/' + id).then(response=> {
+        axios.get(config.serverUrl + '/api/setting/getById/' + id).then(response=> {
             this.setState({
-                company: response.data
+                setting: response.data
             })
 
         })
@@ -507,10 +507,10 @@ class PurchaseInvoice extends Component
                                     <h4 class="text-navy">{this.state.invoiceCode}</h4>
                                     <span>To:</span>
                                     <address>
-                                        <strong>{this.state.company.companyName}</strong><br/>
-                                        {this.state.company.address} <br/>
-                                        {this.state.company.city} <br/>
-                                        {this.state.company.phone}
+                                        <strong>{this.state.setting.companyName}</strong><br/>
+                                        {this.state.setting.address} <br/>
+                                        {this.state.setting.city} <br/>
+                                        {this.state.setting.phone}
                                     </address>
                                     <p>
                                         <span><strong>Invoice Date :</strong> {moment(this.state.invoiceDate).format('YYYY/MM/DD')}</span><br/>
