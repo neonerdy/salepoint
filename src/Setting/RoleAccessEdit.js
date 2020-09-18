@@ -33,8 +33,35 @@ class RoleAccessEdit extends Component
 
 
     componentDidMount() {
+
+        let id = this.props.match.params.id;
         this.getRoles();
+        this.getRoleAccessById(id);
     }
+
+
+    getRoleAccessById = (id) => {
+
+        axios.get(config.serverUrl + '/api/roleaccess/getbyid/' + id).then(response=> {
+            this.setState({
+                id: response.data.id,
+                roleId: response.data.roleId,
+                isAllowDashboard: response.data.isAllowDashboard,
+                isAllowMasterData: response.data.isAllowMasterData,
+                isAllowEmployee: response.data.isAllowEmployee,
+                isAllowProduct: response.data.isAllowProduct,
+                isAllowCustomer: response.data.isAllowCustomer,
+                isAllowSupplier: response.data.isAllowSupplier,
+                isAllowPointOfSale: response.data.isAllowPointOfSale,
+                isAllowPurchaseInvoice: response.data.isAllowPurchaseInvoice,
+                isAllowSalesInvoice: response.data.isAllowSalesInvoice,
+                isAllowExpense: response.data.isAllowExpense,
+                isAllowReport: response.data.isAllowReport,
+                isAllowUser: response.data.isAllowUser
+            })
+        })
+    }
+
 
     onDashboardChange = (e) =>  {
         this.setState({isAllowDashboard: e.target.checked})
@@ -123,13 +150,14 @@ class RoleAccessEdit extends Component
 
 
 
-    saveRoleAccess = () => {
+    updateRoleAccess = () => {
 
         let isValid = this.validateRoleAccess();
 
         if (isValid) {
 
             let roleAccess = {
+                id: this.state.id,
                 roleId: this.state.roleId,
                 isAllowDashboard: this.state.isAllowDashboard,
                 isAllowMasterData: this.state.isAllowMasterData,
@@ -145,9 +173,7 @@ class RoleAccessEdit extends Component
                 isAllowUser: this.state.isAllowUser
             }
 
-            console.log(roleAccess);
-
-            axios.post(config.serverUrl + '/api/roleaccess/save', roleAccess).then(response=> {
+            axios.put(config.serverUrl + '/api/roleaccess/update', roleAccess).then(response=> {
                 this.props.history.push('/role-access');
             })
         }
@@ -155,7 +181,7 @@ class RoleAccessEdit extends Component
 
 
 
-    cancelAdd = () => {
+    cancelUpdate = () => {
         this.props.history.push('/role-access');
     }
 
@@ -193,7 +219,7 @@ class RoleAccessEdit extends Component
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role</label>
                                     
                                     <div class="col-md-7 col-sm-12 required">
-                                        <select class="form-control" name="roleId" onChange={this.onValueChange}>
+                                        <select class="form-control" name="roleId" onChange={this.onValueChange} value={this.state.roleId}>
                                             <option value="">Select Role</option>
                                             {this.state.roles.map(r=> 
                                                 <option value={r.id} key={r.id}>{r.roleName}</option>
@@ -324,9 +350,8 @@ class RoleAccessEdit extends Component
                             
 
                                 <div class="text-right">
-                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>&nbsp;
-
-                                        <button type="button" onClick={this.saveRoleAccess} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
+                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>&nbsp;
+                                        <button type="button" onClick={this.updateRoleAccess} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
                                 </div>
 
                              

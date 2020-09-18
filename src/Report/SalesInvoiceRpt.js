@@ -89,6 +89,7 @@ class SalesInvoiceRpt extends Component
 
 
                  <div class="row wrapper border-bottom white-bg page-heading">
+                     
                      <div class="col-lg-5">
                          <h2>Reports</h2>
                          <ol class="breadcrumb">
@@ -105,7 +106,7 @@ class SalesInvoiceRpt extends Component
                      <div class="col-lg-7">
                          <div class="title-action">
 
-                         <div class="btn-group">
+                         <div class="btn-group2">
 
                          <DateRangePicker
                                         initialSettings={{
@@ -156,12 +157,15 @@ class SalesInvoiceRpt extends Component
                                     &nbsp;&nbsp;
 
 
-                                <select class="form-control" onChange={this.onValueChange}>
+                                    <select class="form-control" onChange={this.onValueChange}>
                                     <option value="">Customer</option>
                                     {this.state.customers.map(c=> 
                                         <option value={c.id}>{c.customerName}</option>    
                                     )}
                                 </select>
+                            
+
+
                                 &nbsp;
                                 
                                 <button class="btn btn-default"><i class="fa fa-filter"></i></button>
@@ -175,16 +179,22 @@ class SalesInvoiceRpt extends Component
                                     <li><Link to="/product-rpt" class="dropdown-item">Product</Link></li>
                                     <li><Link to="/customer-rpt" class="dropdown-item">Customer</Link></li>
                                     <li><Link to="/supplier-rpt" class="dropdown-item">Supplier</Link></li>
+                                    <li class="dropdown-divider"></li>
                                     <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Customer</Link></li>
                                     <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Category</Link></li>
+                                    <li class="dropdown-divider"></li>
                                     <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Customer</Link></li>
                                     <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Category</Link></li>
+                                    <li class="dropdown-divider"></li>
                                     <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Supplier</Link></li>
                                     <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Category</Link></li>
+                                    <li class="dropdown-divider"></li>
                                     <li><Link to="/purchase-invoice-rpt" class="dropdown-item">TOP Product Sales</Link></li>
                                     <li><Link to="/purchase-invoice-rpt" class="dropdown-item">TOP Product Purchases</Link></li>
                                     <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Empty Product Stock</Link></li>
                                     <li><Link to="/expense-rpt" class="dropdown-item">Expense</Link></li>
+
+
                                 </ul>
                                 &nbsp;
                         
@@ -203,7 +213,12 @@ class SalesInvoiceRpt extends Component
 
                     <div class="ibox-content p-xl">
                             <div class="row">
+
+                                
+                                
                                 <div class="col-sm-6">
+                            
+                            
                                     <h2>Sales Invoice ({this.state.salesInvoices.length})</h2>
                                     <span class="label label-primary">{this.state.customerName}</span>
                                  </div>

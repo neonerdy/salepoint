@@ -6,6 +6,9 @@ import moment from 'moment';
 import config from '../Shared/Config';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Link } from 'react-router-dom';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
+
 
 class Setting extends Component
 {
@@ -21,6 +24,10 @@ class Setting extends Component
             zipCode: '',
             phone: '',
             email: '',
+            taxPct: '',
+            discountPct: '',
+            serviceChargePct: '',
+            isEnableServiceCharge: true
         }
     }
 
@@ -30,9 +37,15 @@ class Setting extends Component
     }
 
 
+    onServiceChargeChange = (e) =>  {
+        this.setState({isEnableServiceCharge: e.target.checked})
+    }
+
+
+
     getSettingById = (id) => {
 
-        axios.get(config.serverUrl + "/api/company/getbyid/" + id).then(response=> {
+        axios.get(config.serverUrl + "/api/setting/getbyid/" + id).then(response=> {
             this.setState({
                 id: response.data.id,
                 companyName: response.data.companyName,
@@ -41,7 +54,11 @@ class Setting extends Component
                 province: response.data.province,
                 zipCode: response.data.zipCode,
                 phone: response.data.phone,
-                email: response.data.email
+                email: response.data.email,
+                taxPct: response.data.taxPct,
+                discountPct: response.data.discountPct,
+                serviceChargePct: response.data.serviceChargePct,
+                isEnableServiceCharge: response.data.isEnableServiceCharge
             })
 
         }) 
@@ -78,7 +95,18 @@ class Setting extends Component
             error.phone = 'is required';
             isValid = false;
         }
-
+        if (this.state.taxPct === '') {
+            error.taxPct = 'is required';
+            isValid = false;
+        }
+        if (this.state.discountPct === '') {
+            error.discountPct = 'is required';
+            isValid = false;
+        }
+        if (this.state.serviceChargePct === '') {
+            error.serviceChargePct = 'is required';
+            isValid = false;
+        }
 
         this.setState({
             error: error 
@@ -106,11 +134,15 @@ class Setting extends Component
                 province: this.state.province,
                 zipCode: this.state.zipCode,
                 phone: this.state.phone,
-                email: this.state.email
+                email: this.state.email,
+                taxPct: parseInt(this.state.taxPct),
+                discountPct: parseInt(this.state.discountPct),
+                serviceChargePct: parseInt(this.state.serviceChargePct),
+                isEnableServiceCharge: this.state.isEnableServiceCharge
             }
 
-            axios.put(config.serverUrl + '/api/company/update', setting).then(response=> {
-                this.props.history.push('/master-data');
+            axios.put(config.serverUrl + '/api/setting/update', setting).then(response=> {
+                this.props.history.push('/dashboard');
             })
 
         }
@@ -134,34 +166,10 @@ class Setting extends Component
         return(
             <div id="page-wrapper" class="gray-bg">
                 
-                <div id="deleteUser" class="modal fade" role="dialog">
-                
-                <div class="modal-dialog">
-                    
-                    <div class="modal-content">
-
-                          <div class="modal-header">
-                            <h4>Delete User</h4>
-                          </div>
-                          <div class="modal-body">
-                          Are you sure want to delete '{this.state.userName}' ?
-                          </div>
-
-                          <div class="modal-footer">
-                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteUser(this.state.userId)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
-                          </div>
-                        
-                      </div>
-                  </div>
-              </div>
-
-
-
-
+            
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
-                    <h2>Setting </h2>
+                    <h2>Settings </h2>
                 </div>
             </div>
 
@@ -176,11 +184,12 @@ class Setting extends Component
                                 
                                 <ul class="nav nav-tabs">
                                     <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Company</a></li>
+                                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Other</a></li>
+                                    
                                 </ul>
 
                                 <div class="tab-content">
                                     <div id="tab-1" class="tab-pane active show">
-
 
                                         <br/>
                                         <form>
@@ -250,7 +259,60 @@ class Setting extends Component
 
                                     </div>
 
-                                   
+                                    <div id="tab-2" class="tab-pane">
+
+
+                                        <br/>
+                                        <form>
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Tax (%)</label>
+                                                <div class="col-md-7 col-sm-12 required">
+                                                    <input type="number" class="form-control" name="taxPct" onChange={this.onValueChange} value={this.state.taxPct}/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.taxPct}</span>
+                                            </div>
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Discount (%)</label>
+                                              
+                                                <div class="col-md-7 col-sm-12 required">
+                                                     <input type="number" class="form-control" name="discountPct" onChange={this.onValueChange} value={this.state.discountPct}/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.discountPct}</span>
+                                            </div>
+
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Service Charge (%)</label>
+                                                <div class="col-md-7 col-sm-12 required">
+                                                    <Switch
+                                                        color="#1ab394"
+                                                        checked={this.state.isEnableServiceCharge}
+                                                        onChange={this.onServiceChargeChange} />
+                                                    <br/><br/>
+                                                    
+                                                    <input type="number" class="form-control" name="serviceChargePct" onChange={this.onValueChange} value={this.state.serviceChargePct}/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.serviceChargePct}</span>
+                                            </div>
+                                            
+
+
+                                            
+
+                                            <br/><br/>
+
+                                            <div class="hr-line-dashed"></div>
+                                        
+
+                                            <div class="text-right">
+                                                <button type="button" onClick={this.updateSetting} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
+                                            </div>
+                                            
+
+                                        </form>
+
+
+
+
+                                    </div>
 
 
                                 </div>

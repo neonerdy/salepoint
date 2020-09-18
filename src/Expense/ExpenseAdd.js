@@ -90,7 +90,7 @@ class ExpenseAdd extends Component
         }
 
         if (this.state.accountId === '') {
-            error.accountName = 'is required';
+            error.accountId = 'is required';
             isValid = false;
         }
 
@@ -214,7 +214,7 @@ class ExpenseAdd extends Component
 
 
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountId}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Amount</label>

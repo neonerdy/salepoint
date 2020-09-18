@@ -10,7 +10,7 @@ namespace SalePointAPI
     public class AppDbContext : DbContext
     {
         
-        public DbSet<Company> CompanySetting { get; set; }
+        public DbSet<Setting> Settings { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
@@ -44,9 +44,9 @@ namespace SalePointAPI
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Company>(entity => 
+            modelBuilder.Entity<Setting>(entity => 
             {
-                entity.ToTable("Company");
+                entity.ToTable("Settings");
                 entity.Property(e => e.ID).HasColumnName("ID");
                 entity.Property(e => e.CompanyName).HasColumnName("CompanyName");
                 entity.Property(e => e.Address).HasColumnName("Address");
@@ -55,6 +55,11 @@ namespace SalePointAPI
                 entity.Property(e => e.ZipCode).HasColumnName("ZipCode");
                 entity.Property(e => e.Phone).HasColumnName("Phone");
                 entity.Property(e => e.Email).HasColumnName("Email");
+                entity.Property(e => e.TaxPct).HasColumnName("TaxPct");
+                entity.Property(e => e.DiscountPct).HasColumnName("DiscountPct");
+                entity.Property(e => e.ServiceChargePct).HasColumnName("ServiceChargePct");
+                entity.Property(e => e.IsEnableServiceCharge).HasColumnName("IsEnableServiceCharge");
+                
             });
 
 

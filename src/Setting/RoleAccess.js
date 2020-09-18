@@ -246,14 +246,11 @@ class RoleAccess extends Component
                                                         }
                                                     </td>
 
-                                                   
                                                     <td align="right">
-                                                         <a><i class="fa fa-edit"></i></a>
+                                                        <a onClick={()=>this.editRoleAccess(ra.id)}><i class="fa fa-edit"></i></a>
                                                         &nbsp;&nbsp;
-                                                        <a data-toggle="modal" data-target="#deleteEmployee"><i class="fa fa-trash"></i></a>
-
-
-
+                                                        <a data-toggle="modal" data-target="#deleteRoleAccess" 
+                                                            onClick={()=>this.onDeleteRoleAccess(ra.id, ra.role.roleName)}><i class="fa fa-trash"></i></a>
                                                     </td>
                                                     
                                                 </tr>

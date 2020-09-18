@@ -11,13 +11,13 @@ using SalePointAPI.Models;
 namespace SalePointAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
-    public class CompanyController : ControllerBase
+    public class SettingController : ControllerBase
     {
 
-        private readonly ILogger<AccountController> logger;
+        private readonly ILogger<SettingController> logger;
         private AppDbContext context;
 
-        public CompanyController(ILogger<AccountController> logger)
+        public SettingController(ILogger<SettingController> logger)
         {
             this.logger = logger;
             context = new AppDbContext();
@@ -29,8 +29,8 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var company = await context.CompanySetting.FindAsync(id);
-                return Ok(company);
+                var setting = await context.Settings.FindAsync(id);
+                return Ok(setting);
             }
             catch(Exception ex)
             {
@@ -42,12 +42,12 @@ namespace SalePointAPI.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] Company company)
+        public async Task<IActionResult> Update([FromBody] Setting setting)
         {
             int result = 0;
             try
             {
-                context.Update(company);
+                context.Update(setting);
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)

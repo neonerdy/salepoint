@@ -28,11 +28,11 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var roles = await context.RoleAccesses
+                var roleAccesses = await context.RoleAccesses
                     .Include(ra=>ra.Role)
                     .OrderBy(ra=>ra.Role.RoleName)
                     .ToListAsync();
-                return Ok(roles);
+                return Ok(roleAccesses);
             }
             catch(Exception ex)
             {
@@ -48,8 +48,8 @@ namespace SalePointAPI.Controllers
         {
             try
             {
-                var role = await context.RoleAccesses.FindAsync(id);
-                return Ok(role);
+                var roleAccess = await context.RoleAccesses.FindAsync(id);
+                return Ok(roleAccess);
             }
             catch(Exception ex) 
             {

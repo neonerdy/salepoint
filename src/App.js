@@ -33,7 +33,6 @@ import UserAdd from './Setting/UserAdd';
 import UserEdit from './Setting/UserEdit';
 import PaymentTypeAdd from './Payment/PaymentTypeAdd';
 import PaymentTypeEdit from './Payment/PaymentTypeEdit';
-import SettingEdit from './Setting/SettingEdit';
 import Employee from './Employee/Employee';
 import Product from './Product/Product';
 import Payment from './Payment/Payment';
@@ -57,6 +56,7 @@ import EmployeeRpt from './Report/EmployeeRpt';
 import SalesInvoiceRpt from './Report/SalesInvoiceRpt';
 import RoleAccess from './Setting/RoleAccess';
 import RoleAccessAdd from './Setting/RoleAccessAdd';
+import RoleAccessEdit from './Setting/RoleAccessEdit';
 
 
 
@@ -104,10 +104,10 @@ class App extends Component
                 <Route exact path="/add-unit" component={UnitAdd}/>
                 <Route exact path="/add-role" component={RoleAdd}/>
                 <Route exact path="/add-user" component={UserAdd}/>
+                <Route exact path="/add-role-access" component={RoleAccessAdd}/>
                 <Route exact path="/add-payment-type" component={PaymentTypeAdd}/>
                 <Route exact path="/add-account" component={AccountAdd}/>
                 <Route exact path="/add-expense-category" component={ExpenseCategoryAdd}/>
-                <Route exact path="/add-role-access" component={RoleAccessAdd}/>
                 
                 <Route exact path="/add-customer" component={CustomerAdd}/>
                 <Route exact path="/add-supplier" component={SupplierAdd}/>
@@ -121,12 +121,13 @@ class App extends Component
                 <Route exact path="/edit-product-category/:id" component={ProductCategoryEdit}/>
                 <Route exact path="/edit-unit/:id" component={UnitEdit}/>
                 <Route exact path="/edit-role/:id" component={RoleEdit}/>
+                <Route exact path="/edit-role-access/:id" component={RoleAccessEdit}/>
+                
                 <Route exact path="/edit-user/:id" component={UserEdit}/>
                 <Route exact path="/edit-payment-type/:id" component={PaymentTypeEdit}/>
                 <Route exact path="/edit-account/:id" component={AccountEdit}/>
                 <Route exact path="/edit-expense-category/:id" component={ExpenseCategoryEdit}/>
                
-                <Route exact path="/edit-setting/:id" component={SettingEdit}/>
                 <Route exact path="/edit-supplier/:id" component={SupplierEdit}/>
                 <Route exact path="/edit-customer/:id" component={CustomerEdit}/>
                 <Route exact path="/edit-employee/:id" component={EmployeeEdit}/>

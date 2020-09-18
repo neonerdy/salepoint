@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SalePointAPI.Models
 {
@@ -11,6 +12,9 @@ namespace SalePointAPI.Models
        public Guid AccountId { get; set; }
        public Account Account { get; set; }
        public decimal Amount { get; set; }
+
+       [NotMapped]
+       public decimal CurrentAmount { get; set;}
        public string Description { get; set; }
        public DateTime CreatedDate { get; set; }
        public DateTime ModifiedDate { get; set; }

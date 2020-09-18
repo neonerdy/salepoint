@@ -201,6 +201,13 @@ namespace SalePointAPI.Controllers
         }
 
 
+        public async Task<Account> GetAccountById(Guid id)
+        {
+            Account account = await context.Accounts.FindAsync(id);
+            return account;      
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] Expense expense)
@@ -211,8 +218,13 @@ namespace SalePointAPI.Controllers
                 expense.ID = Guid.NewGuid();
                 expense.CreatedDate = DateTime.Now;
                 expense.ModifiedDate = DateTime.Now;
-                
                 context.Expenses.Add(expense);
+
+                Account account = await GetAccountById(expense.AccountId);
+                var lastBalance = account.Balance - expense.Amount;
+                account.Balance = lastBalance;
+                context.Update(account);
+
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)
@@ -233,6 +245,23 @@ namespace SalePointAPI.Controllers
             {
                 expense.ModifiedDate = DateTime.Now;
                 context.Update(expense);
+
+                Account account = await GetAccountById(expense.AccountId);
+
+                decimal lastBalance = 0;
+                decimal amountTemp = 0;
+                             
+                if (expense.Amount > expense.CurrentAmount) {
+                    amountTemp = expense.Amount - expense.CurrentAmount;
+                    lastBalance = account.Balance - amountTemp;
+                } else {
+                    amountTemp = expense.CurrentAmount - expense.Amount;
+                    lastBalance = account.Balance + amountTemp;               
+                }
+             
+                account.Balance = lastBalance;
+                context.Update(account);
+             
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)
@@ -246,6 +275,7 @@ namespace SalePointAPI.Controllers
 
 
 
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -254,6 +284,12 @@ namespace SalePointAPI.Controllers
             {
                 var expense = await context.Expenses.FindAsync(id);
                 context.Remove(expense);
+                
+                Account account = await GetAccountById(expense.AccountId);
+                var lastBalance = account.Balance + expense.Amount;
+                account.Balance = lastBalance;
+                context.Update(account);
+
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)

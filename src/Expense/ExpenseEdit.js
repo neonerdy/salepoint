@@ -4,24 +4,33 @@ import Footer from '../Shared/Footer';
 import axios from 'axios';
 import config from '../Shared/Config';
 import moment from 'moment';
+import uuid from 'uuid';
+import Switch from 'react-switchery-component';
+import 'react-switchery-component/react-switchery-component.css';
+
 
 class ExpenseEdit extends Component
 {
 
     constructor(props) {
         super(props);
+
+        this.date = React.createRef()
+
+
         this.state = {
             error: {},
             today: new Date(), 
-            categories: [],
+            expenseCategories: [],
             accounts: [],
-            id: '',
+            id: uuid.v4(),
             date: '',
-            outletId: '00000000-0000-0000-0000-000000000000',
-            categoryId: '',
+            expenseCategoryId: '',
             accountId: '',
             amount: '',
-            notes: ''
+            description: '',
+            createdDate: '',
+            modifiedDate: ''
         }
     }
 
@@ -30,9 +39,9 @@ class ExpenseEdit extends Component
 
         let id = this.props.match.params.id;
 
-        this.getCategories();
+        this.getExpenseCategories();
         this.getAccounts();
-        this.getAccountById(id);
+        this.getExpenseById(id);
     }
 
 
@@ -42,27 +51,35 @@ class ExpenseEdit extends Component
         })
     }
 
+    onPostChanged = (e) => {
+        this.setState({isPosted: e.target.checked})
+    }
 
-    getAccountById = (id) => {
 
+    getExpenseById = (id) => {
+  
         axios.get(config.serverUrl + '/api/expense/getbyid/' + id).then(response=> {
             this.setState({
                 id: response.data.id,
                 date: response.data.date,
-                categoryId: response.data.categoryId,
+                expenseCategoryId: response.data.categoryId,
                 accountId: response.data.accountId,
                 amount: response.data.amount,
-                notes: response.data.notes
+                currentAmount: response.data.amount,
+                description: response.data.description,
+                createdDate: response.data.createdDate,
+                modifiedDate: response.data.modifiedDate
             })
         })
-    }    
+    }
+    
 
-
-    getCategories = () => {
+    
+    getExpenseCategories = () => {
   
         axios.get(config.serverUrl + '/api/expensecategory/getall').then(response=> {
             this.setState({
-                categories: response.data
+                expenseCategories: response.data
             })
         })
     }
@@ -85,18 +102,19 @@ class ExpenseEdit extends Component
         let isValid = true;
         let error = {};
 
-        if (this.state.date === '') {
+     
+        if (this.date.current.value === '') {
             error.date = 'is required';
             isValid = false;
         }
         
-        if (this.state.categoryId === '') {
-            error.categoryName = 'is required';
+        if (this.state.expenseCategoryId === '') {
+            error.expenseCategoryId = 'is required';
             isValid = false;
         }
 
         if (this.state.accountId === '') {
-            error.accountName = 'is required';
+            error.accountId = 'is required';
             isValid = false;
         }
 
@@ -120,22 +138,27 @@ class ExpenseEdit extends Component
         let isValid = this.validateExpense();
 
         if (isValid) {
-
+          
             let expense = {
                 id: this.state.id,
-                date: this.state.date,
-                outletId: this.state.outletId,
-                categoryId: this.state.categoryId,
+                date: new Date(this.date.current.value),
+                categoryId: this.state.expenseCategoryId,
                 accountId: this.state.accountId,
-                amount: this.state.amount,
-                notes: this.state.notes
+                amount: parseFloat(this.state.amount),
+                currentAmount: parseFloat(this.state.currentAmount),
+                description: this.state.description,
+                createdDate: this.state.createdDate,
+                modifiedDate: this.state.modifiedDate
             }
 
+        
             axios.put(config.serverUrl + '/api/expense/update', expense).then(response=> {
                 this.props.history.push('/expense');
             })
+
         }
     }
+
 
 
     deleteExpense = (id) => {
@@ -144,7 +167,6 @@ class ExpenseEdit extends Component
             this.props.history.push('/expense');
         })
     }
-
 
 
     cancelUpdate = () => {
@@ -163,35 +185,34 @@ class ExpenseEdit extends Component
            
            <div id="page-wrapper" class="gray-bg">
 
-
                 <div id="deleteExpense" class="modal fade" role="dialog">
                 
-                    <div class="modal-dialog">
-                        
-                        <div class="modal-content">
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
 
-                            <div class="modal-header">
-                                <h4>Delete Category</h4>
-                            </div>
-                            <div class="modal-body">
-                            Are you sure want to delete this expense ?
-                            </div>
-
-                            <div class="modal-footer">
-                                <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                                <button class="btn btn-label btn-danger" onClick={()=>this.deleteExpense(this.state.id)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
-                            </div>
-                            
+                        <div class="modal-header">
+                            <h4>Delete Expense</h4>
                         </div>
-                    </div>
+                        <div class="modal-body">
+                        Are you sure want to delete this expense ?
+                        </div>
 
+                        <div class="modal-footer">
+                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
+                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteExpense(this.state.id)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
+                        </div>
+                        
+                    </div>
                 </div>
+
+            </div>
 
                 
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-8">
 
-                    <h2>Edit Expense</h2>
+                    <h2>Update Expense</h2>
                 </div>
                 <div class="col-lg-4">
                     <div class="title-action">
@@ -210,33 +231,42 @@ class ExpenseEdit extends Component
                       <div class="ibox-content">
 
                       <br/>
+
+                        <form autoComplete="off">
+
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Date</label>
                                     <div class="input-group date col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control"  
-                                            name="date" onChange={this.onValueChange} value={moment(this.state.date).format('MM/DD/YYYY')}/> 
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                          <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">
+                                                <input type="text" name="date" class="form-control" ref={this.date} 
+                                                value={moment(this.state.date).format("MM/DD/YYYY")}/>
+                                                <div class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </div>
+                                           </div>
 
                                     </div>
                                   &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.date}</span>
                                 </div>
+                                
 
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Category Name</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Expense Category</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <select name="categoryId" class="form-control" onChange={this.onValueChange} value={this.state.categoryId}> 
-                                            <option value="">Select Category</option>
-                                            {this.state.categories.map(c=> 
-                                                <option value={c.id}>{c.categoryName}</option>
+                                        <select name="expenseCategoryId" class="form-control" onChange={this.onValueChange}
+                                             value={this.state.expenseCategoryId} disabled> 
+                                            <option value="">Select Expense</option>
+                                            {this.state.expenseCategories.map(e=> 
+                                                <option value={e.id}>{e.categoryName}</option>
                                             )} 
                                         </select>    
                                       
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.categoryName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.expenseCategoryId}</span>
                                 </div>
                                 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Account</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>From Account</label>
                                     <div class="col-md-7 col-sm-12 required">
-                                        <select name="accountId" class="form-control" onChange={this.onValueChange} value={this.state.accountId}> 
+                                        <select name="accountId" class="form-control" onChange={this.onValueChange} value={this.state.accountId} disabled> 
                                             <option value="">Select Account</option>
                                             {this.state.accounts.map(a=> 
                                                 <option value={a.id}>{a.accountName}</option>
@@ -245,7 +275,7 @@ class ExpenseEdit extends Component
 
 
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountName}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.accountId}</span>
                                 </div>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Amount</label>
@@ -256,12 +286,11 @@ class ExpenseEdit extends Component
                                 </div>
 
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Notes</label>
+                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
                                     <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
-                                        name="notes" onChange={this.onValueChange} value={this.state.notes}/>
+                                        name="description" onChange={this.onValueChange} value={this.state.description}/>
                                     </div>
                                 </div>
-
 
                                 <br/><br/>
 
@@ -272,10 +301,10 @@ class ExpenseEdit extends Component
                                         <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>
                                         <button type="button" onClick={this.updateExpense} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
                                         &nbsp;&nbsp;&nbsp;
-                                        <a data-toggle="modal" data-target="#deleteExpense" ><i class="fa fa-trash"></i></a>
+                                        <a data-toggle="modal" data-target="#deleteExpense"><i class="fa fa-trash"></i></a>
+                                    </div>
 
-                                </div>
-                        
+                        </form>
 
                       </div>
                       
