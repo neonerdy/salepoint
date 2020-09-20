@@ -117,7 +117,7 @@ class ExpenseAdd extends Component
           
             let expense = {
                 id: this.state.id,
-                date: new Date(this.date.current.value),
+                date: new Date(moment(this.date.current.value).add(1,'d')),
                 categoryId: this.state.expenseCategoryId,
                 accountId: this.state.accountId,
                 amount: parseFloat(this.state.amount),

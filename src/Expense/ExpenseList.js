@@ -39,8 +39,7 @@ class ExpenseList extends Component
         this.getAccounts();
 
         this.setState({
-            expenseTitle: moment(this.state.startDate.toDate()).format('MM/DD/YYYY') + ' - ' 
-                + moment(this.state.endDate.toDate()).format('MM/DD/YYYY')
+            expenseTitle: 'History'
         })
 
     }
@@ -80,14 +79,9 @@ class ExpenseList extends Component
 
 
     filterExpense = () => {
+        
         this.getExpenses(this.state.startDate.toDate(), this.state.endDate.toDate());
         this.getExpenseChart(this.state.startDate.toDate(), this.state.endDate.toDate());
-
-        this.setState({
-            expenseTitle: moment(this.state.startDate.toDate()).format('MM/DD/YYYY') + ' - ' 
-                + moment(this.state.endDate.toDate()).format('MM/DD/YYYY')
-        })
-
     }
 
     
@@ -160,9 +154,16 @@ class ExpenseList extends Component
     }
 
 
-    searchExpense = (q) => {
+    searchExpense = (startDate, endDate, keyword) => {
 
-        axios.get(config.serverUrl + '/api/expense/getbysearch/' + q).then(response=> {
+        var search = {
+            startDate: startDate,
+            endDate: endDate,
+            keyword: keyword
+        } 
+
+
+        axios.post(config.serverUrl + '/api/expense/getbysearch', search).then(response=> {
             this.setState({
                 expenses: response.data,
             })
@@ -194,17 +195,14 @@ class ExpenseList extends Component
             if (e.target.value === '') 
             {
                 this.getExpenses(this.state.startDate.toDate(), this.state.endDate.toDate());   
-                this.setState({
-                    expenseTitle: moment(this.state.startDate.toDate()).format('MM/DD/YYYY') + ' - ' 
-                        + moment(this.state.endDate.toDate()).format('MM/DD/YYYY')
-                })
             } 
             else 
             {
-                this.searchExpense(e.target.value.toLowerCase());
-                this.setState({
-                    expenseTitle: 'Search'
-                })
+                this.searchExpense(
+                    this.state.startDate.toDate(), 
+                    this.state.endDate.toDate(),
+                    e.target.value.toLowerCase()
+                );
             }
         }
 

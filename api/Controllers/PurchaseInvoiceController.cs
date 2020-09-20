@@ -42,8 +42,8 @@ namespace SalePointAPI.Controllers
                         pi.Status,
                         pi.CreatedDate,
                     })
-                    .Where(pi=>pi.InvoiceDate >= dateRange.StartDate.Date && pi.InvoiceDate <= dateRange.EndDate.Date)
-                    .OrderByDescending(pi=>pi.CreatedDate)
+                    .Where(pi=>pi.InvoiceDate.Date >= dateRange.StartDate.Date && pi.InvoiceDate.Date <= dateRange.EndDate.Date)
+                    .OrderByDescending(pi=>pi.InvoiceDate)
                     .ToListAsync();
             
                 return Ok(purchaseInvoices);
@@ -61,8 +61,8 @@ namespace SalePointAPI.Controllers
 
 
 
-        [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode(string code)
+        [HttpPost()]
+        public async Task<IActionResult> GetBySearch([FromBody] SearchViewModel search)
         {   
             try
             {
@@ -78,8 +78,9 @@ namespace SalePointAPI.Controllers
                         pi.Status,
                         pi.CreatedDate,
                     })
-                    .Where(pi=>pi.InvoiceCode.Contains(code))
-                    .OrderByDescending(pi=>pi.CreatedDate)
+                    .Where(pi=>(pi.InvoiceDate.Date >= search.StartDate.Date && pi.InvoiceDate.Date <= search.EndDate.Date))
+                    .Where(pi=>pi.InvoiceCode.Contains(search.Keyword) || pi.SupplierName.Contains(search.Keyword) || pi.Status.Contains(search.Keyword))
+                    .OrderByDescending(pi=>pi.InvoiceDate)
                     .ToListAsync();
             
                 return Ok(purchaseInvoices);

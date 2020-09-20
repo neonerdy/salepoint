@@ -146,9 +146,15 @@ class SalesInvoice extends Component
     }
 
 
-    searchSalesInvoice = (code) => {
+    searchSalesInvoice = (startDate, endDate, keyword) => {
       
-        axios.get(config.serverUrl + '/api/salesinvoice/getbycode/' + code).then(response=> {
+        var search = {
+            startDate: startDate,
+            endDate: endDate,
+            keyword: keyword
+        } 
+
+        axios.post(config.serverUrl + '/api/salesinvoice/getbysearch', search).then(response=> {
             this.setState({
                 salesInvoices: response.data,
             })
@@ -264,7 +270,11 @@ class SalesInvoice extends Component
             } 
             else 
             {
-                this.searchSalesInvoice(e.target.value.toLowerCase());
+                this.searchSalesInvoice(
+                    this.state.startDate.toDate(), 
+                    this.state.endDate.toDate(),
+                    e.target.value.toLowerCase()
+                );
             }
         }
      
@@ -411,7 +421,7 @@ class SalesInvoice extends Component
 
                          <div class="fh-column">
                             
-                            <Scrollbars  style={{ width: 240, height: 800 }}>
+                            <Scrollbars  style={{ width: 240, height: 800 }} autoHide>
                                 
                             <div>
 

@@ -7,7 +7,7 @@ import '../App.css';
 import uuid from 'uuid';
 import Select2 from 'react-select2-wrapper';
 import 'react-select2-wrapper/css/select2.css';
-
+import moment from 'moment';
 
 
 class SalesInvoiceAdd extends Component
@@ -218,8 +218,8 @@ class SalesInvoiceAdd extends Component
                 id: this.state.id,
                 invoiceCode: this.state.invoiceCode,
                 customerId: this.state.customerId,
-                invoiceDate: new Date(this.invoiceDate.current.value),
-                dueDate: new Date(this.dueDate.current.value),
+                invoiceDate: new Date(moment(this.invoiceDate.current.value).add(1, 'd')),
+                dueDate: new Date(moment(this.dueDate.current.value).add(1, 'd')),
                 salesPersonId: this.state.salesPersonId,
                 notes: this.state.notes,
                 amount: parseFloat(this.state.subTotal),

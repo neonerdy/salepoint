@@ -55,8 +55,8 @@ namespace SalePointAPI.Controllers
         }
 
 
-        [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode(string code)
+        [HttpPost()]
+        public async Task<IActionResult> GetBySearch([FromBody] SearchViewModel search)
         {   
             try
             {
@@ -71,7 +71,8 @@ namespace SalePointAPI.Controllers
                         pos.Status,
                         pos.CreatedDate,
                     })
-                    .Where(pos=>pos.SalesCode.Contains(code))
+                    .Where(pos=>pos.SalesDate.Date >= search.StartDate.Date && pos.SalesDate.Date <= search.EndDate.Date)
+                    .Where(pos=>pos.SalesCode.Contains(search.Keyword) || pos.CustomerName.Contains(search.Keyword) || pos.Status.Contains(search.Keyword))
                     .OrderByDescending(pos=>pos.SalesDate)
                     .ToListAsync();
             

@@ -163,10 +163,10 @@ class SalesInvoiceEdit extends Component
             salesInvoiceItem.salesInvoiceId = this.state.id;
             salesInvoiceItem.productId = productId; 
             salesInvoiceItem.productName = response.data.productName;
-            salesInvoiceItem.qty = this.state.qty;
-            salesInvoiceItem.price = response.data.salePrice;
-            salesInvoiceItem.taxPct = this.state.taxPct;
-            salesInvoiceItem.discountPct = this.state.discountPct;
+            salesInvoiceItem.qty = parseInt(this.state.qty);
+            salesInvoiceItem.price = parseFloat(response.data.salePrice);
+            salesInvoiceItem.taxPct = parseInt(this.state.taxPct);
+            salesInvoiceItem.discountPct = parseInt(this.state.discountPct);
             
           
             this.setState({
@@ -253,15 +253,15 @@ class SalesInvoiceEdit extends Component
                 id: this.state.id,
                 invoiceCode: this.state.invoiceCode,
                 customerId: this.state.customerId,
-                invoiceDate: this.invoiceDate.current.value,
-                dueDate: this.dueDate.current.value,
+                invoiceDate: new Date(moment(this.invoiceDate.current.value).add(1,'d')),
+                dueDate: new Date(moment(this.dueDate.current.value).add(1,'d')),
                 salesPersonId: this.state.salesPersonId,
                 notes: this.state.notes,
-                amount: this.state.subTotal,
+                amount: parseFloat(this.state.subTotal),
                 amountPaid: 0,
-                tax: this.state.tax,
-                discount: this.state.discount,
-                total: this.state.total,
+                tax: parseFloat(this.state.tax),
+                discount: parseFloat(this.state.discount),
+                total: parseFloat(this.state.total),
                 status: this.state.status,
                 createdDate: this.state.createdDate,                                
                 salesInvoiceItems: this.state.salesInvoiceItems

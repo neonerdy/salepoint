@@ -118,9 +118,15 @@ class PurchaseInvoice extends Component
     }
 
 
-    searchPurchaseInvoice = (code) => {
+    searchPurchaseInvoice = (startDate, endDate, keyword) => {
       
-        axios.get(config.serverUrl + '/api/purchaseinvoice/getbycode/' + code).then(response=> {
+        var search = {
+            startDate: startDate,
+            endDate: endDate,
+            keyword: keyword
+        } 
+
+        axios.post(config.serverUrl + '/api/purchaseinvoice/getbysearch', search).then(response=> {
             this.setState({
                 purchaseInvoices: response.data,
             })
@@ -263,7 +269,11 @@ class PurchaseInvoice extends Component
             } 
             else 
             {
-                this.searchPurchaseInvoice(e.target.value.toLowerCase());
+                this.searchPurchaseInvoice( 
+                    this.state.startDate.toDate(), 
+                    this.state.endDate.toDate(),
+                    e.target.value.toLowerCase()
+                 );
             }
         }
       
@@ -412,7 +422,7 @@ class PurchaseInvoice extends Component
 
                            <div class="fh-column">
                             
-                            <Scrollbars  style={{ width: 240, height: 800 }}>
+                            <Scrollbars  style={{ width: 240, height: 800 }} autoHide>
                                 
                             <div>
 

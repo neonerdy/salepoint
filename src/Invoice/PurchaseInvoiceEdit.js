@@ -150,10 +150,10 @@ class PurchaseInvoiceEdit extends Component
             purchaseInvoiceItem.purchaseInvoiceId = this.state.id;
             purchaseInvoiceItem.productId = productId; 
             purchaseInvoiceItem.productName = response.data.productName;
-            purchaseInvoiceItem.qty = this.state.qty;
-            purchaseInvoiceItem.price = response.data.salePrice;
-            purchaseInvoiceItem.taxPct = this.state.taxPct;
-            purchaseInvoiceItem.discountPct = this.state.discountPct;
+            purchaseInvoiceItem.qty = parseInt(this.state.qty);
+            purchaseInvoiceItem.price = parseFloat(response.data.salePrice);
+            purchaseInvoiceItem.taxPct = parseInt(this.state.taxPct);
+            purchaseInvoiceItem.discountPct = parseInt(this.state.discountPct);
             
           
             this.setState({
@@ -234,21 +234,20 @@ class PurchaseInvoiceEdit extends Component
                 id: this.state.id,
                 invoiceCode: this.state.invoiceCode,
                 supplierId: this.state.supplierId,
-                invoiceDate: this.invoiceDate.current.value,
-                dueDate: this.dueDate.current.value,
+                invoiceDate: new Date(moment(this.invoiceDate.current.value).add(1,'d')),
+                dueDate: new Date(moment(this.dueDate.current.value).add(1,'d')),
                 notes: this.state.notes,
-                amount: this.state.subTotal,
-                amountPaid: this.state.amountPaid,
-                tax: this.state.tax,
-                discount: this.state.discount,
-                total: this.state.total,
+                amount: parseFloat(this.state.subTotal),
+                amountPaid: parseFloat(this.state.amountPaid),
+                tax: parseFloat(this.state.tax),
+                discount: parseFloat(this.state.discount),
+                total: parseFloat(this.state.total),
                 status: this.state.status,
-                createdDate: this.state.createdDate,
+                createdDate: new Date(this.state.createdDate),
                 purchaseInvoiceItems: this.state.purchaseInvoiceItems
             }
 
             console.log(purchaseInvoice);
-
 
             axios.put(config.serverUrl + '/api/purchaseinvoice/update', purchaseInvoice).then(response=> {
                 this.props.history.push('/purchase-invoice');
@@ -326,18 +325,18 @@ class PurchaseInvoiceEdit extends Component
 
                                  </div>
                                 
-                               
                                  <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Invoice Date</label>
                                     <div class="input-group date col-md-7 col-sm-12 required">
                                           <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">
-                                                <input type="text" class="form-control" ref={this.invoiceDate} value={moment(this.state.invoiceDate).format("MM/DD/YYYY")}/>
+                                                <input type="text" name="invoiceDate" class="form-control" ref={this.invoiceDate} 
+                                                value={moment(this.state.invoiceDate).format("MM/DD/YYYY")}/>
                                                 <div class="input-group-addon">
                                                     <span class="fa fa-calendar"></span>
                                                 </div>
                                            </div>
 
                                     </div>
-                                  &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.orderDate}</span>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.invoiceDate}</span>
                                 </div>
 
                                   

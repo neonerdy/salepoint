@@ -86,9 +86,15 @@ class PointOfSale extends Component
     }
 
 
-    searchSales = (code) => {
+    searchSales = (startDate, endDate, keyword) => {
 
-        axios.get(config.serverUrl + '/api/pointofsale/getbycode/' + code).then(response=> {
+        var search = {
+            startDate: startDate,
+            endDate: endDate,
+            keyword: keyword
+        } 
+
+        axios.post(config.serverUrl + '/api/pointofsale/getbysearch', search).then(response=> {
             this.setState({
                 sales: response.data,
             })
@@ -217,7 +223,11 @@ class PointOfSale extends Component
             } 
             else 
             {
-                this.searchSales(e.target.value.toLowerCase());
+                this.searchSales(
+                    this.state.startDate.toDate(), 
+                    this.state.endDate.toDate(),   
+                    e.target.value.toLowerCase()
+                );
             }
         }
 
@@ -329,6 +339,7 @@ class PointOfSale extends Component
                                     </DateRangePicker>
                                    
                                     &nbsp;&nbsp;
+                                    
                                     <button class="btn btn-default" onClick={this.filterSales}><i class="fa fa-filter"></i></button>
                                     <button class="btn btn-default"><i class="fa fa-print"></i></button>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -347,13 +358,15 @@ class PointOfSale extends Component
 
                          <div class="fh-column">
                             
-                            <Scrollbars  style={{ width: 240, height: 800 }}>
+                            <Scrollbars  style={{ width: 240, height: 800 }} 
+                                autoHide={true}>
                                 
                             <div>
 
                                 <ul class="list-group elements-list">
-                                    <input type="text" class="form-control" onKeyPress={this.onSearchSales}/>
                                     
+                                <input type="text" class="form-control" onKeyPress={this.onSearchSales}/>
+                          
                                     {this.state.sales.map(s=> 
                                     
                                         <li key={s.id} class="list-group-item">

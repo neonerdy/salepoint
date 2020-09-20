@@ -49,7 +49,7 @@ namespace SalePointAPI.Controllers
                         e.CreatedDate,
                         e.ModifiedDate
                     })
-                    .Where(e=>e.Date >= dateRange.StartDate.Date && e.Date <= dateRange.EndDate.Date)
+                    .Where(e=>e.Date.Date >= dateRange.StartDate.Date && e.Date.Date <= dateRange.EndDate.Date)
                     .OrderByDescending(s=>s.CreatedDate)
                     .ToListAsync();
                 
@@ -67,8 +67,8 @@ namespace SalePointAPI.Controllers
 
 
 
-        [HttpGet("{search}")]
-        public async Task<IActionResult> GetBySearch(string search)
+        [HttpPost()]
+        public async Task<IActionResult> GetBySearch([FromBody] SearchViewModel search)
         {
             try
             {
@@ -88,7 +88,8 @@ namespace SalePointAPI.Controllers
                         e.CreatedDate,
                         e.ModifiedDate
                     })
-                    .Where(e=>e.CategoryName.Contains(search) || e.AccountName.Contains(search))
+                    .Where(e=>e.Date.Date >= search.StartDate.Date && e.Date.Date <= search.EndDate.Date)
+                    .Where(e=>e.CategoryName.Contains(search.Keyword) || e.AccountName.Contains(search.Keyword))
                     .OrderByDescending(s=>s.CreatedDate)
                     .ToListAsync();
                 
@@ -183,7 +184,7 @@ namespace SalePointAPI.Controllers
             try
             {
                 var expenses = await context.Expenses.Include(e=>e.Category)
-                        .Where(e=>e.Date >= dateRange.StartDate.Date && e.Date <= dateRange.EndDate.Date)
+                        .Where(e=>e.Date.Date >= dateRange.StartDate.Date && e.Date.Date <= dateRange.EndDate.Date)
                         .GroupBy(e=>e.Category.CategoryName)
                         .Select(g=> new {
                             CategoryName = g.Key,
