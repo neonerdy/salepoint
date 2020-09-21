@@ -32,6 +32,7 @@ namespace SalePointAPI
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<RoleAccess> RoleAccesses{ get; set; }
+        public DbSet<RecordCounter> RecordCounters { get; set; }
         
 
        
@@ -166,11 +167,13 @@ namespace SalePointAPI
                 entity.Property(e => e.SalesCode).HasColumnName("SalesCode");
                 entity.Property(e => e.SalesDate).HasColumnName("SalesDate");
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerId");
+                entity.Property(e => e.PaymentTypeId).HasColumnName("PaymentTypeId");
                 entity.Property(e => e.CashierId).HasColumnName("CashierId");
                 entity.Property(e => e.Notes).HasColumnName("Notes");
                 entity.Property(e => e.Amount).HasColumnName("Amount");
                 entity.Property(e => e.Tax).HasColumnName("Tax");
                 entity.Property(e => e.Discount).HasColumnName("Discount");
+                entity.Property(e => e.ServiceCharge).HasColumnName("ServiceCharge");
                 entity.Property(e => e.Total).HasColumnName("Total");
                 entity.Property(e => e.Status).HasColumnName("Status");
                 entity.Property(e => e.CreatedDate).HasColumnName("CreatedDate");
@@ -362,6 +365,18 @@ namespace SalePointAPI
                 entity.Property(e => e.IsAllowReport).HasColumnName("IsAllowReport");
                 entity.Property(e => e.IsAllowUser).HasColumnName("IsAllowUser");
           
+            });
+
+            
+            modelBuilder.Entity<RecordCounter>(entity => 
+            {
+                entity.ToTable("RecordCounters");
+                entity.Property(e => e.ID).HasColumnName("ID");
+                entity.Property(e => e.Month).HasColumnName("Month");
+                entity.Property(e => e.Month).HasColumnName("Year");
+                entity.Property(e => e.PointOfSaleLastCounter).HasColumnName("PointOfSaleLastCounter");
+                entity.Property(e => e.SalesInvoiceLastCounter).HasColumnName("SalesInvoiceLastCounter");
+                entity.Property(e => e.PurchaseInvoiceLastCounter).HasColumnName("PurchaseInvoiceLastCounter");
             });
 
 

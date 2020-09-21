@@ -20,11 +20,14 @@ class PointOfSaleAdd extends Component
         this.state = {
             error: {},
             id: uuid.v4(),
+            setting: {},
             customers: [],
+            paymentTypes: [],
             cashiers: [],
             products: [],
             salesCode: '',
             customerId: '',
+            paymentTypeId: '',
             salesDate: '',
             cashierId: '',
             notes: '',
@@ -36,6 +39,7 @@ class PointOfSaleAdd extends Component
             subTotal: 0,
             tax: 0,
             discount: 0,
+            serviceCharge: 0,
             total: 0
         }
     }
@@ -43,7 +47,10 @@ class PointOfSaleAdd extends Component
 
     componentDidMount() {
 
+        this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
+
         this.getCustomers();
+        this.getPaymentTypes();
         this.getCashiers();
         this.getProducts();
 
@@ -59,7 +66,18 @@ class PointOfSaleAdd extends Component
     
     }
 
+
+    getSettingById = (id) => {
+
+        axios.get(config.serverUrl + '/api/setting/getbyid/' + id).then(response=> {
+            this.setState({
+                setting: response.data
+            })
+        })
+
+    }
     
+
     getCustomers = () => {
 
         axios.get(config.serverUrl + '/api/customer/getall').then(response=> {
@@ -68,6 +86,17 @@ class PointOfSaleAdd extends Component
             })
         })
     }
+
+
+    getPaymentTypes = () => {
+       
+        axios.get(config.serverUrl + '/api/paymenttype/getall').then(response=> {
+            this.setState({
+                paymentTypes: response.data
+            })
+        })
+    }
+
 
 
     getCashiers = () => {
@@ -96,25 +125,41 @@ class PointOfSaleAdd extends Component
         let subTotal = 0;
         let totalTax = 0;
         let totalDiscount = 0;
+        let totalServiceCharge = 0;
        
         data.map(pi=> 
         {    
             let totalAmount  =  pi.price * pi.qty;
             let tax = (pi.taxPct/100) * totalAmount;
             let discount = (pi.discountPct/100) * totalAmount;
-            
+            let serviceCharge = 0;
+
+            console.log("sc=" + this.state.setting.isEnableSeviceCharge);
+      
+            if (this.state.setting.isEnableServiceCharge) {
+                serviceCharge = (this.state.setting.serviceChargePct/100) * totalAmount;
+                totalServiceCharge  += serviceCharge; 
+            }
+      
             totalTax += tax;
-            totalDiscount = totalDiscount + discount;
+            totalDiscount  += discount;
             subTotal += totalAmount;     
 
         });
 
-        let total = (subTotal+totalTax) - totalDiscount; 
+        let total = 0;
+
+        if (this.state.setting.isEnableServiceCharge) {
+            total = (subTotal+totalTax+totalServiceCharge) - totalDiscount; 
+        } else {
+            total = (subTotal+totalTax) - totalDiscount; 
+        }
 
         this.setState({
             subTotal: subTotal,
             tax: totalTax,
             discount: totalDiscount,
+            serviceCharge: totalServiceCharge,
             total: total 
         })       
 
@@ -179,13 +224,16 @@ class PointOfSaleAdd extends Component
             isValid = false;
         }
 
+        if (this.state.paymentTypeId === '') {
+            error.paymentTypeId = 'is required';
+            isValid = false;
+        }
 
         if (this.state.cashierId === '') {
             error.cashierId = 'is required';
             isValid = false;
         }
-        
-       
+               
         if (this.state.salesItems.length < 1) {
             error.productId = 'Product is empty';
             isValid = false;
@@ -211,18 +259,17 @@ class PointOfSaleAdd extends Component
                 id: this.state.id,
                 salesCode: this.state.salesCode,
                 customerId: this.state.customerId,
+                paymentTypeId: this.state.paymentTypeId,
                 cashierId: this.state.cashierId,
                 notes: this.state.notes,
                 amount: parseFloat(this.state.subTotal),
-                tax: parseInt(this.state.tax),
-                discount: parseInt(this.state.discount),
+                tax: parseFloat(this.state.tax),
+                serviceCharge: parseFloat(this.state.serviceCharge),
+                discount: parseFloat(this.state.discount),
                 total: parseFloat(this.state.total),
                 status: 'Paid',                                
                 pointOfSaleItems: this.state.salesItems
             }
-
-            console.log(sales);
-
 
             axios.post(config.serverUrl + '/api/pointofsale/save', sales).then(response=> {
                 this.props.history.push('/pos');
@@ -301,6 +348,22 @@ class PointOfSaleAdd extends Component
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.customerId}</span>
 
                                  </div>
+
+                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Type</label>
+                                    
+                                    <div class="col-md-7 col-sm-12 required">
+                                        <select name="paymentTypeId" class="form-control" onChange={this.onValueChange}>
+                                            <option value="">Select Payment Type</option>
+                                            {this.state.paymentTypes.map(pt=> 
+                                                <option value={pt.id}>{pt.paymentTypeName}</option>
+                                            )}
+                                        </select>
+                                       
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.paymentTypeId}</span>
+
+                                 </div>
+
 
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Cashier</label>
@@ -430,8 +493,14 @@ class PointOfSaleAdd extends Component
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}></label>
                                     <div class="col-md-7 col-sm-12" style={{textAlign:'right'}}>
                                         <div>Sub Total : {this.state.subTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div> 
-                                        <div>Discount : {this.state.discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
                                         <div>Tax : {this.state.tax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
+                                        {this.state.setting.isEnableServiceCharge == true? 
+                                        <div>Service Charge : {this.state.serviceCharge.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
+                                            : null
+                                         }
+                                        <div>Discount : {this.state.discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
+
+
                                         <br/>
                                         <div><h3>Total : {this.state.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h3></div>
                                     </div>

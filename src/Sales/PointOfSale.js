@@ -28,6 +28,7 @@ class PointOfSale extends Component
             subTotal: 0,
             tax: 0,
             discount: 0,
+            serviceCharge: 0,
             total: 0,
             status: '',
             startDate: moment().subtract(29, 'days'),
@@ -137,6 +138,7 @@ class PointOfSale extends Component
                 subTotal: response.data.amount,
                 tax: response.data.tax,
                 discount: response.data.discount,
+                serviceCharge: response.data.serviceCharge,
                 total: response.data.total,
                 status: response.data.status,
                 salesItems: response.data.saleItems,
@@ -161,7 +163,7 @@ class PointOfSale extends Component
     deleteSales = (id) => {
 
         axios.delete(config.serverUrl + '/api/pointofsale/delete/' + id).then(response=> {
-            this.getSalesWithTopOne();
+            this.getSalesWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
         })
     }
 
@@ -358,15 +360,16 @@ class PointOfSale extends Component
 
                          <div class="fh-column">
                             
-                            <Scrollbars  style={{ width: 240, height: 800 }} 
+                         <input type="text" class="form-control" onKeyPress={this.onSearchSales}/>
+
+                            <Scrollbars  style={{ width: 240, height: 745}} 
                                 autoHide={true}>
                                 
                             <div>
 
                                 <ul class="list-group elements-list">
                                     
-                                <input type="text" class="form-control" onKeyPress={this.onSearchSales}/>
-                          
+                              
                                     {this.state.sales.map(s=> 
                                     
                                         <li key={s.id} class="list-group-item">
@@ -496,10 +499,20 @@ class PointOfSale extends Component
                                     <td><strong>Tax :</strong></td>
                                     <td>{this.state.tax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                 </tr>
+
+                                {this.state.setting.isEnableServiceCharge == true ?             
+                                <tr>
+                                    <td><strong>Service Charge :</strong></td>
+                                    <td>{this.state.serviceCharge.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                </tr>
+                                  : null
+                                }
+
                                 <tr>
                                     <td><strong>Discount :</strong></td>
                                     <td>{this.state.discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                 </tr>
+
                                 <tr>
                                     <td><strong>Total :</strong></td>
                                     <td>{this.state.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
