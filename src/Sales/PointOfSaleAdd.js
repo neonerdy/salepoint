@@ -19,6 +19,7 @@ class PointOfSaleAdd extends Component
 
         this.state = {
             error: {},
+            recordCounter: {},
             id: uuid.v4(),
             setting: {},
             customers: [],
@@ -54,6 +55,13 @@ class PointOfSaleAdd extends Component
         this.getCashiers();
         this.getProducts();
 
+        let today = new Date();
+        let month = today.getMonth()+1;
+        let year = today.getFullYear();
+        
+        this.getRecordCounter(month,year);
+        
+
     }
 
 
@@ -74,6 +82,59 @@ class PointOfSaleAdd extends Component
                 setting: response.data
             })
         })
+
+    }
+
+
+    getRecordCounter = (month, year) => {
+
+        axios.get(config.serverUrl + '/api/recordcounter/getbymonth/' + month + "/" + year).then(response=> {
+            this.setState({
+                recordCounter: response.data
+            })
+
+            this.generateInvoiceCode();
+        })
+
+    }
+
+
+    zeroPad = (num, places) =>  {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    }
+
+
+
+
+    generateInvoiceCode = () => {
+
+        let date = new Date();
+        let month = date.getMonth() + 1;
+        month = month < 10 ? ("0" + month) : month;
+
+        let year = date.getFullYear();
+        year = year.toString().substr(2, year.length);
+
+        let delimiter = this.state.setting.delimiter;
+        let pointOfSalePrefix = this.state.setting.pointOfSalePrefix;
+        let code = pointOfSalePrefix + delimiter + month + year + delimiter;
+        let newCounter = 0;
+
+        let pointOfSaleLastCounter = this.state.recordCounter.pointOfSaleLastCounter; 
+
+        if (pointOfSaleLastCounter == 0) {
+            code = code + "00001";
+        }
+        else {
+            newCounter = pointOfSaleLastCounter + 1;
+            code = code + this.zeroPad(newCounter,5);
+       }
+
+       this.setState({
+            salesCode: code
+       })
+
 
     }
     
@@ -134,8 +195,7 @@ class PointOfSaleAdd extends Component
             let discount = (pi.discountPct/100) * totalAmount;
             let serviceCharge = 0;
 
-            console.log("sc=" + this.state.setting.isEnableSeviceCharge);
-      
+           
             if (this.state.setting.isEnableServiceCharge) {
                 serviceCharge = (this.state.setting.serviceChargePct/100) * totalAmount;
                 totalServiceCharge  += serviceCharge; 
@@ -292,6 +352,9 @@ class PointOfSaleAdd extends Component
             color: 'darkred'
         }
 
+
+       
+
         let productList = [];
         
          this.state.products.map(p=> {
@@ -328,8 +391,12 @@ class PointOfSaleAdd extends Component
                             <form autocomplete="off">
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Sales #</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="salesCode" onChange={this.onValueChange}/>
+                                    <div class="col-md-7 col-sm-12 required">
+
+                                        {this.state.setting.isEnableAutomaticNumbering == true ? 
+                                        <input type="text" class="form-control" name="salesCode" onChange={this.onValueChange} value={this.state.salesCode} disabled/>
+                                            :   <input type="text" class="form-control" name="salesCode" onChange={this.onValueChange}/>
+                                        }
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.salesCode}</span>
                                 </div>

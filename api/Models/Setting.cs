@@ -16,6 +16,11 @@ namespace SalePointAPI.Models
         public int DiscountPct { get; set; }
         public int ServiceChargePct { get; set;}
         public bool IsEnableServiceCharge { get; set; }
+        public bool IsEnableAutomaticNumbering { get; set; }
+        public string PointOfSalePrefix { get; set; }
+        public string SalesInvoicePrefix { get; set; }
+        public string PurchaseInvoicePrefix { get; set; }
+        public string Delimiter { get; set; }
     }
 
 

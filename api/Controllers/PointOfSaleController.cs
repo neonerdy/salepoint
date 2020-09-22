@@ -159,6 +159,12 @@ namespace SalePointAPI.Controllers
                 pointOfSale.ModifiedDate = DateTime.Now;
                 context.PointOfSales.Add(pointOfSale);
 
+                var recordCounter = await context.RecordCounters.Where(rc=>rc.Month == DateTime.Now.Month 
+                    && rc.Year == DateTime.Now.Year).SingleOrDefaultAsync();
+
+                recordCounter.PointOfSaleLastCounter = recordCounter.PointOfSaleLastCounter + 1;     
+                context.Update(recordCounter);
+
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)

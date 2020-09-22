@@ -60,6 +60,11 @@ namespace SalePointAPI
                 entity.Property(e => e.DiscountPct).HasColumnName("DiscountPct");
                 entity.Property(e => e.ServiceChargePct).HasColumnName("ServiceChargePct");
                 entity.Property(e => e.IsEnableServiceCharge).HasColumnName("IsEnableServiceCharge");
+                entity.Property(e => e.IsEnableAutomaticNumbering).HasColumnName("IsEnableAutomaticNumbering");
+                entity.Property(e => e.PointOfSalePrefix).HasColumnName("PointOfSalePrefix");
+                entity.Property(e => e.SalesInvoicePrefix).HasColumnName("SalesInvoicePrefix");
+                entity.Property(e => e.PurchaseInvoicePrefix).HasColumnName("PurchaseInvoicePrefix");
+                entity.Property(e => e.Delimiter).HasColumnName("Delimiter");
                 
             });
 
@@ -373,7 +378,7 @@ namespace SalePointAPI
                 entity.ToTable("RecordCounters");
                 entity.Property(e => e.ID).HasColumnName("ID");
                 entity.Property(e => e.Month).HasColumnName("Month");
-                entity.Property(e => e.Month).HasColumnName("Year");
+                entity.Property(e =>e.Year).HasColumnName("Year");
                 entity.Property(e => e.PointOfSaleLastCounter).HasColumnName("PointOfSaleLastCounter");
                 entity.Property(e => e.SalesInvoiceLastCounter).HasColumnName("SalesInvoiceLastCounter");
                 entity.Property(e => e.PurchaseInvoiceLastCounter).HasColumnName("PurchaseInvoiceLastCounter");

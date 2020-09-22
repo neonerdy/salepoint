@@ -27,7 +27,12 @@ class Setting extends Component
             taxPct: '',
             discountPct: '',
             serviceChargePct: '',
-            isEnableServiceCharge: true
+            isEnableServiceCharge: true,
+            isEnableAutomaticNumbering: true,
+            pointOfSalePrefix: '',
+            salesInvoicePrefix: '',
+            purchaseInvoicePrefix: '',
+            delimiter: ''
         }
     }
 
@@ -41,6 +46,11 @@ class Setting extends Component
         this.setState({isEnableServiceCharge: e.target.checked})
     }
 
+
+    onAutomaticNumberngChange = (e) =>  {
+        this.setState({isEnableAutomaticNumbering: e.target.checked})
+    }
+    
 
 
     getSettingById = (id) => {
@@ -58,7 +68,12 @@ class Setting extends Component
                 taxPct: response.data.taxPct,
                 discountPct: response.data.discountPct,
                 serviceChargePct: response.data.serviceChargePct,
-                isEnableServiceCharge: response.data.isEnableServiceCharge
+                isEnableServiceCharge: response.data.isEnableServiceCharge,
+                isEnableAutomaticNumbering: response.data.isEnableAutomaticNumbering,
+                pointOfSalePrefix: response.data.pointOfSalePrefix,
+                salesInvoicePrefix: response.data.salesInvoicePrefix,
+                purchaseInvoicePrefix: response.data.purchaseInvoicePrefix,
+                delimiter: response.data.delimiter
             })
 
         }) 
@@ -108,6 +123,18 @@ class Setting extends Component
             isValid = false;
         }
 
+        if (this.state.pointOfSalePrefix === '' || this.state.salesInvoicePrefix === '' 
+            || this.state.purchaseInvoicePrefix === '') {
+            error.prefix = 'is required';
+            isValid = false;
+        }
+
+        if (this.state.delimiter === '') {
+            error.delimiter = 'is required';
+            isValid = false;
+        }
+
+
         this.setState({
             error: error 
         })
@@ -138,7 +165,13 @@ class Setting extends Component
                 taxPct: parseInt(this.state.taxPct),
                 discountPct: parseInt(this.state.discountPct),
                 serviceChargePct: parseInt(this.state.serviceChargePct),
-                isEnableServiceCharge: this.state.isEnableServiceCharge
+                isEnableServiceCharge: this.state.isEnableServiceCharge,
+                isEnableAutomaticNumbering: this.state.isEnableAutomaticNumbering,
+                pointOfSalePrefix: this.state.pointOfSalePrefix,
+                salesInvoicePrefix: this.state.salesInvoicePrefix,
+                purchaseInvoicePrefix: this.state.purchaseInvoicePrefix,
+                delimiter: this.state.delimiter
+                
             }
 
             axios.put(config.serverUrl + '/api/setting/update', setting).then(response=> {
@@ -184,11 +217,14 @@ class Setting extends Component
                                 
                                 <ul class="nav nav-tabs">
                                     <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Company</a></li>
-                                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Other</a></li>
+                                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Invoice</a></li>
+                                    <li><a class="nav-link" data-toggle="tab" href="#tab-3">Other</a></li>
+                                    
                                     
                                 </ul>
 
                                 <div class="tab-content">
+                                    
                                     <div id="tab-1" class="tab-pane active show">
 
                                         <br/>
@@ -259,7 +295,81 @@ class Setting extends Component
 
                                     </div>
 
+
                                     <div id="tab-2" class="tab-pane">
+
+
+                                        <br/>
+                                        <form>
+
+                                       
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Automatic Numbering</label>
+                                                <div class="col-md-7 col-sm-12 required">
+                                                    <Switch
+                                                        color="#1ab394"
+                                                        checked={this.state.isEnableAutomaticNumbering}
+                                                        onChange={this.onAutomaticNumberngChange} />
+                                                    <br/><br/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.serviceChargePct}</span>
+                                            </div>
+                                            
+
+                                            <div class="form-group  row">
+                                                <label class="col-md-3 control-label" style={{textAlign:'right'}}>Prefix</label>
+                                                <div class="col-md-7 col-sm-12 required">
+                                                   
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <p>POINT OF SALE</p>
+                                                           <input type="text" class="form-control" name="pointOfSalePrefix" onChange={this.onValueChange} value={this.state.pointOfSalePrefix}/>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p>SALES INVOICE</p>
+                                                            <input type="text" class="form-control" name="salesInvoicePrefix" onChange={this.onValueChange} value={this.state.salesInvoicePrefix}/>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p>PURCHASE INVOICE</p>
+                                                            <input type="text" class="form-control" name="purchaseInvoicePrefix" onChange={this.onValueChange} value={this.state.purchaseInvoicePrefix}/>
+                                                        </div>
+
+                                                    </div>
+                                                   
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.prefix}</span>
+                                            </div>
+
+
+                                            <div class="form-group  row">
+                                                <label class="col-md-3 control-label" style={{textAlign:'right'}}>Delimiter</label>
+                                                <div class="col-md-7 col-sm-12 required">
+                                                    <input type="text" class="form-control" 
+                                                        name="delimiter" onChange={this.onValueChange} value={this.state.delimiter}/>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.delimiter}</span>
+                                            </div>
+                                            
+
+                                            <br/><br/>
+
+                                            <div class="hr-line-dashed"></div>
+                                        
+
+                                            <div class="text-right">
+                                                <button type="button" onClick={this.updateSetting} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
+                                            </div>
+                                            
+
+                                        </form>
+
+
+
+
+                                    </div>
+
+
+
+                                    <div id="tab-3" class="tab-pane">
 
 
                                         <br/>
@@ -313,6 +423,16 @@ class Setting extends Component
 
 
                                     </div>
+
+
+
+
+
+
+
+
+
+
 
 
                                 </div>
