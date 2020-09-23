@@ -34,7 +34,9 @@ class SalesInvoice extends Component
             total: 0,
             status: '',
             startDate: moment().subtract(29, 'days'),
-            endDate: moment()
+            endDate: moment(),
+            salesPaymentId: '', 
+            paymentDate: ''
         }
         
     }
@@ -133,9 +135,6 @@ class SalesInvoice extends Component
                 total: response.data.total,
                 status: response.data.status
             })
-
-            console.log(response.data);
-
         
         })
 
@@ -182,7 +181,25 @@ class SalesInvoice extends Component
     deleteSalesInvoice = (id) => {
 
         axios.delete(config.serverUrl + '/api/salesinvoice/delete/' + id).then(response=> {
-            this.getSalesInvoiceWithTopOne();
+            this.getSalesInvoiceWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
+        })
+    }
+
+
+
+    deleteSalesPayment = (id) => {
+        
+        axios.delete(config.serverUrl + '/api/salespayment/delete/' + id).then(response=> {
+            this.getSalesInvoiceDetail(this.state.id);
+            this.getSalesInvoices(this.state.startDate.toDate(), this.state.endDate.toDate());
+        })
+    }
+
+    
+    onDeleteSalesPayment = (salesPaymentId, paymentDate) => {
+        this.setState({
+            salesPaymentId: salesPaymentId,
+            paymentDate: paymentDate
         })
     }
 
@@ -225,7 +242,7 @@ class SalesInvoice extends Component
             return(
                 <ul class="dropdown-menu dropdown-user">
                     <li><a onClick={()=>this.editSalesInvoice(this.state.id)} class="dropdown-item">Edit</a></li>
-                    <li><a data-toggle="modal" data-target="#deletePurchaseInvoice" class="dropdown-item">Delete</a></li>
+                    <li><a data-toggle="modal" data-target="#deleteSalesInvoice" class="dropdown-item">Delete</a></li>
                     <li><a onClick={()=>this.payInvoice(this.state.id)}>Pay Invoice</a></li>
                     <li><a onClick={()=>this.updateStatus(this.state.id,'Canceled')} class="dropdown-item">Cancel Invoice</a></li>
                 </ul>
@@ -249,7 +266,7 @@ class SalesInvoice extends Component
         else if (status == 'Canceled') {
             return(
                 <ul class="dropdown-menu dropdown-user">
-                    <li><a data-toggle="modal" data-target="#deletePurchaseInvoice" class="dropdown-item">Delete</a></li>
+                    <li><a data-toggle="modal" data-target="#deleteSalesInvoice" class="dropdown-item">Delete</a></li>
                 </ul>
              )
         }
@@ -321,7 +338,7 @@ class SalesInvoice extends Component
        
                 <div id="page-wrapper" class="gray-bg">
 
-                     {/* DELETE */}
+                     {/* DELETE INVOICE */}
 
                      <div id="deleteSalesInvoice" class="modal fade" role="dialog">
                             
@@ -339,6 +356,31 @@ class SalesInvoice extends Component
                                     <div class="modal-footer">
                                         <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
                                         <button class="btn btn-label btn-danger" onClick={()=>this.deleteSalesInvoice(this.state.id)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {/* DELETE PAYMENT */}
+
+                        <div id="deleteSalesPayment" class="modal fade" role="dialog">
+                            
+                            <div class="modal-dialog">
+                                
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h4>Delete Sales Payment</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure want to delete this payment '{this.state.paymentDate}' ?
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
+                                        <button class="btn btn-label btn-danger" onClick={()=>this.deleteSalesPayment(this.state.salesPaymentId)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
                                     </div>
                                     
                                 </div>
@@ -421,12 +463,13 @@ class SalesInvoice extends Component
 
                          <div class="fh-column">
                             
-                            <Scrollbars  style={{ width: 240, height: 800 }} autoHide>
+                            <input type="text" class="form-control" onKeyPress={this.onSearchSalesInvoice}/>
+                               
+                            <Scrollbars  style={{ width: 240, height: 745 }} autoHide>
                                 
                             <div>
 
                                 <ul class="list-group elements-list">
-                                    <input type="text" class="form-control" onKeyPress={this.onSearchSalesInvoice}/>
                                     
                                     {this.state.salesInvoices.map(si=> 
                                     
@@ -602,7 +645,12 @@ class SalesInvoice extends Component
                                     <td>{sp.paymentMethod}</td>
                                     <td>{sp.amountPaid}</td>
                                     <td></td>
-                                    <td align="right"><i class="fa fa-trash"></i></td>
+                                    <td align="right">
+                                        <a data-toggle="modal" data-target="#deleteSalesPayment" 
+                                            onClick={()=>this.onDeleteSalesPayment(sp.id, moment(sp.paymentDate).format('MM/DD/YYYY'))}>
+                                                <i class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                                  )}                              
 

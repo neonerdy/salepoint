@@ -4,6 +4,7 @@ import config from '../Shared/Config';
 import axios from 'axios';
 import '../App.css';
 import uuid from 'uuid';
+import moment from 'moment';
 
 
 class SalesPayment extends Component
@@ -21,6 +22,7 @@ class SalesPayment extends Component
             amount: '',
             total: '',
             totalPaid: '',
+            outstanding: '',
             totalAmountPaid: '',
             customerId: '',
             paymentDate: '',
@@ -58,7 +60,8 @@ class SalesPayment extends Component
                 customerId: response.data.customerId,
                 amount: response.data.amount,
                 total: response.data.total,
-                totalPaid: response.data.amountPaid
+                totalPaid: response.data.amountPaid,
+                outstanding: response.data.total -  response.data.amountPaid
             })
         })
 
@@ -119,7 +122,7 @@ class SalesPayment extends Component
             let salesPayment = {
                 id: uuid.v4(),
                 salesInvoiceId: this.state.salesInvoiceId,       
-                paymentDate: new Date(this.paymentDate.current.value),
+                paymentDate: new Date(moment(this.paymentDate.current.value).add(1,'d')),
                 paymentTypeId: this.state.paymentTypeId,
                 amountPaid: parseFloat(this.state.amountPaid),
                 notes: this.state.notes,
@@ -184,8 +187,15 @@ class SalesPayment extends Component
                                 <input type="text" class="form-control" name="totalPaid" onChange={this.onValueChange} value={this.state.totalPaid} disabled/>
                             </div>
                         </div>
+
                         
-                      
+                        <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Outstanding</label>
+                            <div class="col-md-7 col-sm-12">
+                                <input type="text" class="form-control" name="totalPaid" onChange={this.onValueChange} value={this.state.outstanding} disabled/>
+                            </div>
+                        </div>
+
+                        
                         <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Date</label>
                             <div class="input-group date col-md-7 col-sm-12 required">
                                 <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">

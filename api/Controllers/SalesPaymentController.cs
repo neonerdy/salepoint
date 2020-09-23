@@ -92,6 +92,45 @@ namespace SalePointAPI.Controllers
 
 
 
+      
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            int result = 0;
+            try
+            {
+                var salesPayment = await context.SalesPayments.FindAsync(id);
+
+                var salesInvoice = await context.SalesInvoices.Where(si=>si.ID == salesPayment.SalesInvoiceId)
+                    .SingleOrDefaultAsync();
+
+                var paymentDiff = salesInvoice.AmountPaid - salesPayment.AmountPaid;  
+                if (paymentDiff > 0) {
+                    salesInvoice.AmountPaid = paymentDiff;     
+                } else {
+                    salesInvoice.AmountPaid = 0;
+                    salesInvoice.Status = "New";     
+                }
+
+                context.Update(salesInvoice);
+
+                context.Remove(salesPayment);
+                result = await context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+            }
+            
+            return Ok(result);
+        }
+
+
+
+
+
+
+
 
 
 

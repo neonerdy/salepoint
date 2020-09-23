@@ -105,8 +105,6 @@ class PointOfSaleAdd extends Component
     }
 
 
-
-
     generateInvoiceCode = () => {
 
         let date = new Date();

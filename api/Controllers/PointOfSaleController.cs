@@ -237,10 +237,10 @@ namespace SalePointAPI.Controllers
                 var pointOfSale = await context.PointOfSales.FindAsync(id);
                 context.Remove(pointOfSale);
 
-                var pointOfSaleItems = await context.PointOfSaleItems.Where(psi=>psi.PointOfSaleId == pointOfSale.ID).ToListAsync();
-                foreach(var psi in pointOfSaleItems) {
-                    context.Remove(psi);
-                }    
+                var pointOfSaleItems = await context.PointOfSaleItems.Where(psi=>psi.PointOfSaleId == pointOfSale.ID)
+                    .ToListAsync();
+                
+                context.RemoveRange(pointOfSaleItems);
 
                 result = await context.SaveChangesAsync();
             }

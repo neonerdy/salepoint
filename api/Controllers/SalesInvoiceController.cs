@@ -279,9 +279,15 @@ namespace SalePointAPI.Controllers
                 var salesInvoice = await context.SalesInvoices.FindAsync(id);
                 context.Remove(salesInvoice);
 
-                var salesInvoiceItems = salesInvoice.SalesInvoiceItems.Where(sii => sii.SalesInvoiceId == id);
+                var salesInvoiceItems = await context.SalesInvoiceItems.Where(sii => sii.SalesInvoiceId == id)
+                    .ToListAsync();
+                
+                var salesPayments = await context.SalesPayments.Where(sp=>sp.SalesInvoiceId == id)
+                    .ToListAsync();
+
                 context.RemoveRange(salesInvoiceItems);
-            
+                context.RemoveRange(salesPayments);
+
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)

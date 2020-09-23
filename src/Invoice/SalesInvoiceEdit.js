@@ -22,6 +22,7 @@ class SalesInvoiceEdit extends Component
 
         this.state = {
             error: {},
+            setting: {},
             id: '',
             customers: [],
             salesPersons:[],
@@ -50,6 +51,8 @@ class SalesInvoiceEdit extends Component
 
     componentDidMount() {
 
+        this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
+
         this.getCustomers();
         this.getSalesPersons();
         this.getProducts();
@@ -58,6 +61,15 @@ class SalesInvoiceEdit extends Component
         this.getSalesInvoiceById(id);
     }
 
+
+    getSettingById = (id) => {
+
+        axios.get(config.serverUrl + '/api/setting/getbyid/' + id).then(response=> {
+            this.setState({
+                setting: response.data
+            })
+        })
+    }
 
 
     getSalesInvoiceById = (id) => {
@@ -327,8 +339,12 @@ class SalesInvoiceEdit extends Component
                             <form autoComplete="off">
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Invoice #</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="invoiceCode" onChange={this.onValueChange} value={this.state.invoiceCode}/>
+                                    <div class="col-md-7 col-sm-12 required">
+                                    
+                                        {this.state.setting.isEnableAutomaticNumbering == true ? 
+                                            <input type="text" class="form-control" name="invoiceCode" onChange={this.onValueChange} value={this.state.invoiceCode} disabled/>
+                                                :<input type="text" class="form-control" name="invoiceCode" onChange={this.onValueChange} value={this.state.invoiceCode}/>
+                                        }   
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.invoiceCode}</span>
                                 </div>

@@ -35,7 +35,6 @@ import PaymentTypeAdd from './Payment/PaymentTypeAdd';
 import PaymentTypeEdit from './Payment/PaymentTypeEdit';
 import Employee from './Employee/Employee';
 import Product from './Product/Product';
-import Payment from './Payment/Payment';
 import PointOfSale from './Sales/PointOfSale';
 import PointOfSaleAdd from './Sales/PointOfSaleAdd';
 import PurchaseInvoice from './Invoice/PurchaseInvoice';
@@ -94,7 +93,6 @@ class App extends Component
                 <Route exact path="/purchase-payment/:id" component={PurchasePayment}/>
                 <Route exact path="/sales-payment/:id" component={SalesPayment}/>
                 <Route exact path="/expense" component={ExpenseList}/>
-                <Route exact path="/payment" component={Payment}/>
                 <Route exact path="/user" component={User}/>
                 <Route exact path="/role-access" component={RoleAccess}/>
                 
