@@ -17,7 +17,6 @@ class PointOfSale extends Component
         this.state = {
             sales: [],
             setting: {},
-            recordCounter: {},
             id: '',
             salesCode: '',
             salesDate: '',
@@ -45,13 +44,6 @@ class PointOfSale extends Component
         this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
         this.getSalesWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
 
-        let today = new Date();
-        let month = today.getMonth()+1;
-        let year = today.getFullYear();
-    
-        this.getRecordCounter(month,year);
-
-        this.generateInvoiceCode();
         
     }
 
@@ -60,32 +52,6 @@ class PointOfSale extends Component
     handleDateCallback = (startDate, endDate) => {
         this.setState({ startDate, endDate});
     }
-
-
-    generateInvoiceCode = () => {
-
-        let delimiter = this.state.setting.delimiter;
-        let pointOfSalePrefix = this.state.setting.pointOfSalePrefix;
-        let code = pointOfSalePrefix + delimiter;
-        let counter = 0;
-        let newCounter = 0;
-
-        let pointOfSaleLastCounter = this.state.recordCounter.pointOfSaleLastCounter; 
-
-        //if (pointOfSaleLastCounter == 0)
-       // {
-            code = code + "00001";
-        //}
-        //else
-        //{
-        //    newCounter = counter + 1;
-        //    code = code + newCounter;
-       // }
-
-        console.log(pointOfSaleLastCounter);
-
-    }
-
 
 
 
@@ -100,15 +66,7 @@ class PointOfSale extends Component
     }
 
 
-    getRecordCounter = (month, year) => {
-
-        axios.get(config.serverUrl + '/api/recordcounter/getbymonth/' + month + "/" + year).then(response=> {
-            this.setState({
-                recordCounter: response.data
-            })
-        })
-
-    }
+   
 
 
     getTopSales = () => {

@@ -61,6 +61,7 @@ namespace SalePointAPI
                 entity.Property(e => e.ServiceChargePct).HasColumnName("ServiceChargePct");
                 entity.Property(e => e.IsEnableServiceCharge).HasColumnName("IsEnableServiceCharge");
                 entity.Property(e => e.IsEnableAutomaticNumbering).HasColumnName("IsEnableAutomaticNumbering");
+                entity.Property(e => e.IsShowMonthAndYear).HasColumnName("IsShowMonthAndYear");
                 entity.Property(e => e.PointOfSalePrefix).HasColumnName("PointOfSalePrefix");
                 entity.Property(e => e.SalesInvoicePrefix).HasColumnName("SalesInvoicePrefix");
                 entity.Property(e => e.PurchaseInvoicePrefix).HasColumnName("PurchaseInvoicePrefix");

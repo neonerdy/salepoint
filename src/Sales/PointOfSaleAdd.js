@@ -116,9 +116,25 @@ class PointOfSaleAdd extends Component
         let year = date.getFullYear();
         year = year.toString().substr(2, year.length);
 
+        let isShowMonthAndYear = this.state.setting.isShowMonthAndYear;
+       
         let delimiter = this.state.setting.delimiter;
         let pointOfSalePrefix = this.state.setting.pointOfSalePrefix;
-        let code = pointOfSalePrefix + delimiter + month + year + delimiter;
+        let code = "";
+        
+        if (isShowMonthAndYear) {
+            if (pointOfSalePrefix !== '') { 
+                code = pointOfSalePrefix + delimiter + month + year + delimiter;
+            } else {
+                code = month + year + delimiter;
+            }
+        } else {
+            if (pointOfSalePrefix !== '') {
+                code = pointOfSalePrefix + delimiter;
+            }
+        }
+        
+        
         let newCounter = 0;
 
         let pointOfSaleLastCounter = this.state.recordCounter.pointOfSaleLastCounter; 

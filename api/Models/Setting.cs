@@ -17,6 +17,7 @@ namespace SalePointAPI.Models
         public int ServiceChargePct { get; set;}
         public bool IsEnableServiceCharge { get; set; }
         public bool IsEnableAutomaticNumbering { get; set; }
+        public bool IsShowMonthAndYear { get; set; }
         public string PointOfSalePrefix { get; set; }
         public string SalesInvoicePrefix { get; set; }
         public string PurchaseInvoicePrefix { get; set; }

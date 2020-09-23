@@ -29,6 +29,7 @@ class Setting extends Component
             serviceChargePct: '',
             isEnableServiceCharge: true,
             isEnableAutomaticNumbering: true,
+            isShowMonthAndYear: true,
             pointOfSalePrefix: '',
             salesInvoicePrefix: '',
             purchaseInvoicePrefix: '',
@@ -47,11 +48,15 @@ class Setting extends Component
     }
 
 
-    onAutomaticNumberngChange = (e) =>  {
+    onAutomaticNumberingChange = (e) =>  {
         this.setState({isEnableAutomaticNumbering: e.target.checked})
     }
-    
 
+    onShowMonthAndYearChange = (e) =>  {
+        this.setState({isShowMonthAndYear: e.target.checked})
+    }
+
+    
 
     getSettingById = (id) => {
 
@@ -70,6 +75,7 @@ class Setting extends Component
                 serviceChargePct: response.data.serviceChargePct,
                 isEnableServiceCharge: response.data.isEnableServiceCharge,
                 isEnableAutomaticNumbering: response.data.isEnableAutomaticNumbering,
+                isShowMonthAndYear: response.data.isShowMonthAndYear,
                 pointOfSalePrefix: response.data.pointOfSalePrefix,
                 salesInvoicePrefix: response.data.salesInvoicePrefix,
                 purchaseInvoicePrefix: response.data.purchaseInvoicePrefix,
@@ -123,6 +129,8 @@ class Setting extends Component
             isValid = false;
         }
 
+        /*
+
         if (this.state.pointOfSalePrefix === '' || this.state.salesInvoicePrefix === '' 
             || this.state.purchaseInvoicePrefix === '') {
             error.prefix = 'is required';
@@ -133,6 +141,7 @@ class Setting extends Component
             error.delimiter = 'is required';
             isValid = false;
         }
+        */
 
 
         this.setState({
@@ -167,6 +176,7 @@ class Setting extends Component
                 serviceChargePct: parseInt(this.state.serviceChargePct),
                 isEnableServiceCharge: this.state.isEnableServiceCharge,
                 isEnableAutomaticNumbering: this.state.isEnableAutomaticNumbering,
+                isShowMonthAndYear: this.state.isShowMonthAndYear,
                 pointOfSalePrefix: this.state.pointOfSalePrefix,
                 salesInvoicePrefix: this.state.salesInvoicePrefix,
                 purchaseInvoicePrefix: this.state.purchaseInvoicePrefix,
@@ -304,20 +314,28 @@ class Setting extends Component
 
                                        
                                             <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Automatic Numbering</label>
-                                                <div class="col-md-7 col-sm-12 required">
+                                                <div class="col-md-7 col-sm-12">
                                                     <Switch
                                                         color="#1ab394"
                                                         checked={this.state.isEnableAutomaticNumbering}
-                                                        onChange={this.onAutomaticNumberngChange} />
+                                                        onChange={this.onAutomaticNumberingChange} />
                                                     <br/><br/>
                                                 </div>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.serviceChargePct}</span>
                                             </div>
                                             
+                                            <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Month and Year</label>
+                                                <div class="col-md-7 col-sm-12">
+                                                    <Switch
+                                                        color="#1ab394"
+                                                        checked={this.state.isShowMonthAndYear}
+                                                        onChange={this.onShowMonthAndYearChange} />
+                                                    <br/><br/>
+                                                </div>
+                                            </div>
 
                                             <div class="form-group  row">
                                                 <label class="col-md-3 control-label" style={{textAlign:'right'}}>Prefix</label>
-                                                <div class="col-md-7 col-sm-12 required">
+                                                <div class="col-md-7 col-sm-12">
                                                    
                                                     <div class="row">
                                                         <div class="col-sm-4">
@@ -336,19 +354,15 @@ class Setting extends Component
                                                     </div>
                                                    
                                                 </div>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.prefix}</span>
                                             </div>
 
 
                                             <div class="form-group  row">
                                                 <label class="col-md-3 control-label" style={{textAlign:'right'}}>Delimiter</label>
-                                                <div class="col-md-7 col-sm-12 required">
-                                                    <input type="text" class="form-control" 
-                                                        name="delimiter" onChange={this.onValueChange} value={this.state.delimiter}/>
+                                                <div class="col-md-7 col-sm-12">
+                                                    <input type="text" class="form-control" name="delimiter" onChange={this.onValueChange} value={this.state.delimiter}/>
                                                 </div>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.delimiter}</span>
                                             </div>
-                                            
 
                                             <br/><br/>
 

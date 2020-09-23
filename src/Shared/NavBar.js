@@ -72,15 +72,13 @@ class NavBar extends Component
                                 <Link to="/pos"><i class="fa fa-television"></i><span class="nav-label"> Point of Sale</span></Link>
                             </li>
                             
-
-                            <li className={this.getNavLinkClass("/purchase-invoice")}>
-                                <Link to="/purchase-invoice"><i class="fa fa-calendar-check-o"></i><span class="nav-label"> Purchase Invoice</span></Link>
-                            </li>
-
                             <li className={this.getNavLinkClass("/sales-invoice")}>
                                 <Link to="/sales-invoice"><i class="fa fa-files-o"></i><span class="nav-label"> Sales Invoice</span></Link>
                             </li>
                            
+                            <li className={this.getNavLinkClass("/purchase-invoice")}>
+                                <Link to="/purchase-invoice"><i class="fa fa-calendar-check-o"></i><span class="nav-label"> Purchase Invoice</span></Link>
+                            </li>
                             
                             <li className={this.getNavLinkClass("/expense")}>
                                 <Link to="/expense"><i class="fa fa-dollar"></i> <span class="nav-label">Expenses</span></Link>

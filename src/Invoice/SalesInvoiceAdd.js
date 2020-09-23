@@ -21,6 +21,8 @@ class SalesInvoiceAdd extends Component
      
         this.state = {
             error: {},
+            recordCounter: {},
+            setting: {},
             id: uuid.v4(),
             customers: [],
             salesPersons:[],
@@ -46,6 +48,13 @@ class SalesInvoiceAdd extends Component
 
     componentDidMount() {
 
+        let today = new Date();
+        let month = today.getMonth()+1;
+        let year = today.getFullYear();
+
+        this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
+        this.getRecordCounter(month,year);
+
         this.getCustomers();
         this.getSalesPersons();
         this.getProducts();
@@ -58,6 +67,83 @@ class SalesInvoiceAdd extends Component
         })
     
     }
+
+
+    getSettingById = (id) => {
+
+        axios.get(config.serverUrl + '/api/setting/getbyid/' + id).then(response=> {
+            this.setState({
+                setting: response.data
+            })
+        })
+    }
+
+
+    getRecordCounter = (month, year) => {
+
+        axios.get(config.serverUrl + '/api/recordcounter/getbymonth/' + month + "/" + year).then(response=> {
+            this.setState({
+                recordCounter: response.data
+            })
+
+            this.generateInvoiceCode();
+        })
+
+    }
+
+    zeroPad = (num, places) =>  {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    }
+
+
+    generateInvoiceCode = () => {
+
+        let date = new Date();
+        let month = date.getMonth() + 1;
+        month = month < 10 ? ("0" + month) : month;
+
+        let year = date.getFullYear();
+        year = year.toString().substr(2, year.length);
+
+        let isShowMonthAndYear = this.state.setting.isShowMonthAndYear;
+       
+        let delimiter = this.state.setting.delimiter;
+        let salesInvoicePrefix = this.state.setting.salesInvoicePrefix;
+        let code = "";
+        
+        if (isShowMonthAndYear) {
+            if (salesInvoicePrefix !== '') { 
+                code = salesInvoicePrefix + delimiter + month + year + delimiter;
+            } else {
+                code = month + year + delimiter;
+            }
+        } else {
+            if (salesInvoicePrefix !== '') {
+                code = salesInvoicePrefix + delimiter;
+            }
+        }
+                
+        let newCounter = 0;
+
+        let salesInvoiceLastCounter = this.state.recordCounter.salesInvoiceLastCounter; 
+
+        if (salesInvoiceLastCounter == 0) {
+            code = code + "00001";
+        }
+        else {
+            newCounter = salesInvoiceLastCounter + 1;
+            code = code + this.zeroPad(newCounter,5);
+       }
+
+       this.setState({
+            invoiceCode: code
+       })
+
+
+    }
+
+
 
     getCustomers = () => {
 
@@ -290,9 +376,12 @@ class SalesInvoiceAdd extends Component
                             <form autocomplete="off">
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Invoice #</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="invoiceCode" onChange={this.onValueChange}/>
-                                    </div>
+                                    <div class="col-md-7 col-sm-12 required">
+                                        {this.state.setting.isEnableAutomaticNumbering == true ? 
+                                            <input type="text" class="form-control" name="invoiceCode" onChange={this.onValueChange} value={this.state.invoiceCode} disabled/>
+                                            : <input type="text" class="form-control" name="invoiceCode" onChange={this.onValueChange}/>
+                                         }
+                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.invoiceCode}</span>
                                 </div>
 
