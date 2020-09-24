@@ -33,7 +33,9 @@ class PurchaseInvoice extends Component
             total: 0,
             status: '',
             startDate: moment().subtract(29, 'days'),
-            endDate: moment()
+            endDate: moment(),
+            purchasePaymentId: '',
+            paymentDate: ''
         }
         
     }
@@ -178,9 +180,27 @@ class PurchaseInvoice extends Component
     deletePurchaseInvoice = (id) => {
 
         axios.delete(config.serverUrl + '/api/purchaseinvoice/delete/' + id).then(response=> {
-            this.getPurchaseInvoiceWithTopOne();
+            this.getPurchaseInvoiceWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
         })
     }
+
+
+    deletePurchasePayment = (id) => {
+        
+        axios.delete(config.serverUrl + '/api/purchasepayment/delete/' + id).then(response=> {
+            this.getPurchaseInvoiceDetail(this.state.id);
+            this.getPurchaseInvoices(this.state.startDate.toDate(), this.state.endDate.toDate());
+        })
+    }
+
+    
+    onDeletePurchasePayment = (purchasePaymentId, paymentDate) => {
+        this.setState({
+            purchasePaymentId: purchasePaymentId,
+            paymentDate: paymentDate
+        })
+    }
+
 
 
 
@@ -322,7 +342,7 @@ class PurchaseInvoice extends Component
        
                 <div id="page-wrapper" class="gray-bg">
 
-                     {/* DELETE */}
+                     {/* DELETE INVOICE*/}
 
                      <div id="deletePurchaseInvoice" class="modal fade" role="dialog">
                             
@@ -342,6 +362,29 @@ class PurchaseInvoice extends Component
                                         <button class="btn btn-label btn-danger" onClick={()=>this.deletePurchaseInvoice(this.state.id)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
                                     </div>
                                     
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {/* DELETE PAYMENT */}
+
+                        <div id="deletePurchasePayment" class="modal fade" role="dialog">
+                            
+                            <div class="modal-dialog">
+                                
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>Delete Purchase Payment</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure want to delete this payment '{this.state.paymentDate}' ?
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
+                                        <button class="btn btn-label btn-danger" onClick={()=>this.deletePurchasePayment(this.state.purchasePaymentId)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -582,48 +625,59 @@ class PurchaseInvoice extends Component
 
 
             {this.state.purchasePayments.length > 0 ?                                  
-                            <div class="col-lg-12">
-                                <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="col-lg-12">
+                <div class="wrapper wrapper-content animated fadeInRight">
 
-                                <div class="ibox-title" style={paymentHistoryStyle}>
-                                <h5>PAYMENT HISTORY</h5>
-                                
-                                </div>
-                                
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th width="12%">Payment Date</th>
-                                                <th width="12%">Payment Type</th>
-                                                <th width="15%">Amount Paid</th>
-                                                <th width="46%">Notes</th>
-                                                <th align="right"></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {this.state.purchasePayments.map(pp=> 
+                <div class="ibox-title" style={paymentHistoryStyle}>
+                <h5>PAYMENT HISTORY</h5>
+                
+                </div>
+                
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th width="12%">Payment Date</th>
+                                <th width="12%">Payment Type</th>
+                                <th width="15%">Amount Paid</th>
+                                <th width="46%">Notes</th>
+                                <th align="right"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.purchasePayments.map(pp=> 
 
-                                                <tr>
-                                                    <td>{moment(pp.paymentDate).format('MM/DD/YYYY')}</td>
-                                                    <td>{pp.paymentMethod}</td>
-                                                    <td>{pp.amountPaid}</td>
-                                                    <td></td>
-                                                    <td align="right"><i class="fa fa-trash"></i></td>
-                                                </tr>
-                                                )}                              
+                                <tr>
+                                    <td>{moment(pp.paymentDate).format('MM/DD/YYYY')}</td>
+                                    <td>{pp.paymentMethod}</td>
+                                    <td>{pp.amountPaid}</td>
+                                    <td></td>
+                                    
+                                    <td align="right">
+                                        {this.state.status == 'Partial' ? 
+                                             <a data-toggle="modal" data-target="#deletePurchasePayment" 
+                                             onClick={()=>this.onDeletePurchasePayment(pp.id, moment(pp.paymentDate).format('MM/DD/YYYY'))}>
+                                                 <i class="fa fa-trash"></i>
+                                            </a>
+                                         : 
+                                            null
+                                        }
+                                    </td>
+                               </tr>
+            
+                                )}                              
 
-                                            </tbody>
-                                        </table>
-                                    </div>
+                            </tbody>
+                        </table>
+                    </div>
 
 
-                                </div>
+                </div>
 
-                                </div>
+                </div>
 
-                            : null
-                            }
+            : null
+            }
 
 
                 

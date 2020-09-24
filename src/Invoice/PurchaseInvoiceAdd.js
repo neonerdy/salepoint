@@ -50,8 +50,7 @@ class PurchaseInvoiceAdd extends Component
         let today = new Date();
         let month = today.getMonth()+1;
         let year = today.getFullYear();
-        
-        this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
+
         this.getRecordCounter(month,year);
 
         this.getSuppliers();
@@ -75,6 +74,7 @@ class PurchaseInvoiceAdd extends Component
             this.setState({
                 setting: response.data
             })
+            this.generateInvoiceCode();
         })
     }
 
@@ -85,8 +85,7 @@ class PurchaseInvoiceAdd extends Component
             this.setState({
                 recordCounter: response.data
             })
-
-            this.generateInvoiceCode();
+            this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
         })
 
     }

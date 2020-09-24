@@ -187,15 +187,13 @@ class SalesPayment extends Component
                                 <input type="text" class="form-control" name="totalPaid" onChange={this.onValueChange} value={this.state.totalPaid} disabled/>
                             </div>
                         </div>
-
                         
                         <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Outstanding</label>
                             <div class="col-md-7 col-sm-12">
-                                <input type="text" class="form-control" name="totalPaid" onChange={this.onValueChange} value={this.state.outstanding} disabled/>
+                                <input type="text" class="form-control" name="outstanding" onChange={this.onValueChange} value={this.state.outstanding} disabled/>
                             </div>
                         </div>
-
-                        
+  
                         <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Date</label>
                             <div class="input-group date col-md-7 col-sm-12 required">
                                 <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">

@@ -52,7 +52,6 @@ class SalesInvoiceAdd extends Component
         let month = today.getMonth()+1;
         let year = today.getFullYear();
 
-        this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
         this.getRecordCounter(month,year);
 
         this.getCustomers();
@@ -75,6 +74,7 @@ class SalesInvoiceAdd extends Component
             this.setState({
                 setting: response.data
             })
+            this.generateInvoiceCode();
         })
     }
 
@@ -86,7 +86,7 @@ class SalesInvoiceAdd extends Component
                 recordCounter: response.data
             })
 
-            this.generateInvoiceCode();
+            this.getSettingById('E8DC5367-D553-4232-E621-08D84993E0DB');
         })
 
     }

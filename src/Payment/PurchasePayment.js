@@ -4,6 +4,7 @@ import config from '../Shared/Config';
 import axios from 'axios';
 import '../App.css';
 import uuid from 'uuid';
+import moment from 'moment';
 
 
 class PurchasePayment extends Component
@@ -24,6 +25,7 @@ class PurchasePayment extends Component
             amount: 0,
             total: 0,
             totalPaid: 0,
+            outstanding: '',
             totalAmountPaid: 0,
             id: uuid.v4(),
             paymentDate: '',
@@ -61,7 +63,8 @@ class PurchasePayment extends Component
                 supplierId: response.data.supplierId,
                 amount: response.data.amount,
                 total: response.data.total,
-                totalPaid: response.data.amountPaid
+                totalPaid: response.data.amountPaid,
+                outstanding: response.data.total -  response.data.amountPaid
             })
         })
 
@@ -123,7 +126,7 @@ class PurchasePayment extends Component
             let purchasePayment = {
                 id: uuid.v4(),
                 purchaseInvoiceId: this.state.purchaseInvoiceId,       
-                paymentDate: new Date(this.paymentDate.current.value),
+                paymentDate: new Date(moment(this.paymentDate.current.value).add(1,'d')),
                 paymentTypeId: this.state.paymentTypeId,
                 amountPaid: parseFloat(this.state.amountPaid),
                 notes: this.state.notes,
@@ -193,7 +196,12 @@ class PurchasePayment extends Component
                             </div>
                         </div>
                         
-                      
+                        <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Outstanding</label>
+                            <div class="col-md-7 col-sm-12">
+                                <input type="text" class="form-control" name="outstanding" onChange={this.onValueChange} value={this.state.outstanding} disabled/>
+                            </div>
+                        </div>
+
                         <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Date</label>
                             <div class="input-group date col-md-7 col-sm-12 required">
                                 <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">
@@ -239,7 +247,7 @@ class PurchasePayment extends Component
                             <div class="hr-line-dashed"></div>
                             <div class="text-right">
                                 <a class="btn btn-link text-left" href="#" onClick={this.cancelPay}>Cancel</a>
-                                <button type="button" onClick={this.payInvoice} class="btn btn-success"><i class="fa fa-check icon-white"></i> Pay</button>
+                                <button type="button" onClick={this.payInvoice} class="btn btn-success"><i class="fa fa-credit-card"></i>&nbsp;&nbsp;Pay</button>
                             </div>
 
 

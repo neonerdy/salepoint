@@ -160,8 +160,14 @@ namespace SalePointAPI.Controllers
             {
                 purchaseInvoice.CreatedDate = DateTime.Now;
                 purchaseInvoice.ModifiedDate = DateTime.Now;
-                
                 context.Add(purchaseInvoice);
+              
+                var recordCounter = await context.RecordCounters.Where(rc=>rc.Month == DateTime.Now.Month 
+                    && rc.Year == DateTime.Now.Year).SingleOrDefaultAsync();
+
+                recordCounter.PurchaseInvoiceLastCounter = recordCounter.PurchaseInvoiceLastCounter + 1;     
+                context.Update(recordCounter);
+              
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)
@@ -232,9 +238,15 @@ namespace SalePointAPI.Controllers
                 var purchaseInvoice = await context.PurchaseInvoices.FindAsync(id);
                 context.Remove(purchaseInvoice);
                 
-                var purchaseInvoiceItems = await context.PurchaseInvoiceItems.Where(pii=> pii.PurchaseInvoiceId == id).ToListAsync();
-                context.RemoveRange(purchaseInvoiceItems);
+                var purchaseInvoiceItems = await context.PurchaseInvoiceItems.Where(pii=> pii.PurchaseInvoiceId == id)
+                    .ToListAsync();
                 
+                var purchasePayments = await context.PurchasePayments.Where(pp=>pp.PurchaseInvoiceId == id)
+                    .ToListAsync();
+
+                context.RemoveRange(purchaseInvoiceItems);
+                context.RemoveRange(purchasePayments);
+
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)

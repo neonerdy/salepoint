@@ -206,6 +206,12 @@ namespace SalePointAPI.Controllers
                 salesInvoice.ModifiedDate = DateTime.Now;
                 context.SalesInvoices.Add(salesInvoice);
 
+                var recordCounter = await context.RecordCounters.Where(rc=>rc.Month == DateTime.Now.Month 
+                    && rc.Year == DateTime.Now.Year).SingleOrDefaultAsync();
+
+                recordCounter.SalesInvoiceLastCounter = recordCounter.SalesInvoiceLastCounter + 1;     
+                context.Update(recordCounter);
+
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)

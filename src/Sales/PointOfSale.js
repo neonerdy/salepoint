@@ -366,7 +366,7 @@ class PointOfSale extends Component
 
                          <div class="fh-column">
                             
-                         <input type="text" class="form-control" onKeyPress={this.onSearchSales}/>
+                             <input type="text" class="form-control" onKeyPress={this.onSearchSales}/>
 
                             <Scrollbars  style={{ width: 240, height: 745}} 
                                 autoHide={true}>
