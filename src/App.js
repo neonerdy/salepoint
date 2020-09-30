@@ -2,7 +2,6 @@ import React, {Component, Fragment} from 'react';
 
 import EmployeeAdd from './Employee/EmployeeAdd';
 import EmployeeEdit from './Employee/EmployeeEdit';
-import ProductList from './Product/ProductList';
 import AddProduct from './Product/ProductAdd';
 import ExpenseList from './Expense/ExpenseList';
 import Header from './Shared/Header';
@@ -14,7 +13,6 @@ import SupplierAdd from './Supplier/SupplierAdd';
 import SupplierEdit from './Supplier/SupplierEdit';
 
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import NavBar from './Shared/NavBar';
 import AccountAdd from './Expense/AccountAdd';
 import AccountEdit from './Expense/AccountEdit';
 import ExpenseAdd from './Expense/ExpenseAdd';
@@ -56,6 +54,7 @@ import SalesInvoiceRpt from './Report/SalesInvoiceRpt';
 import RoleAccess from './Setting/RoleAccess';
 import RoleAccessAdd from './Setting/RoleAccessAdd';
 import RoleAccessEdit from './Setting/RoleAccessEdit';
+import SalesInvoicePrint from './Invoice/SalesInvoicePrint';
 
 
 
@@ -71,15 +70,9 @@ class App extends Component
 
     return(
 
-      <Router>
-          <Fragment>
-            <Header/>
-            <NavBar/>
             <div id="wrapper">
 
-              <Switch>
                 <Route exact path="/" component={Dashboard}/>
-
                 <Route exact path="/setting" component={Setting}/>
                 <Route exact path="/dashboard" component={Dashboard}/>
                 <Route exact path="/master-data" component={MasterData}/>
@@ -135,17 +128,14 @@ class App extends Component
                 <Route exact path="/edit-expense/:id" component={ExpenseEdit}/>
 
 
+                <Route exact path="/print-sales-invoice/:id" component={SalesInvoicePrint}/>
+
+
                 <Route exact path="/product-rpt" component={ProductRpt}/>
                 <Route exact path="/employee-rpt" component={EmployeeRpt}/>
                 <Route exact path="/sales-invoice-rpt" component={SalesInvoiceRpt}/>
                 
-              </Switch>
             </div>
-          </Fragment>
-
-
-
-      </Router>
   
   
  

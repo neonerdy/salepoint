@@ -8,6 +8,8 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 class PointOfSale extends Component
@@ -263,6 +265,11 @@ class PointOfSale extends Component
         
 
         return(
+
+            <div>
+
+                <Header/>
+                <NavBar/>
        
                 <div id="page-wrapper" class="gray-bg">
 
@@ -552,6 +559,8 @@ class PointOfSale extends Component
                 
                 
            </div>
+
+        </div>                         
 
         )
     }

@@ -4,6 +4,8 @@ import Footer from '../Shared/Footer';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import config from '../Shared/Config';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 class Product extends Component
@@ -163,156 +165,163 @@ class Product extends Component
 
      
         return(
-     
-            <div id="page-wrapper" class="gray-bg">
+
+            <div>
+
+                <Header/>
+                <NavBar/>
+
+            
+                <div id="page-wrapper" class="gray-bg">
 
 
-            <div id="deleteProduct" class="modal fade" role="dialog">
-             
-               <div class="modal-dialog">
-                   
-                   <div class="modal-content">
+                <div id="deleteProduct" class="modal fade" role="dialog">
+                
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
 
-                         <div class="modal-header">
-                           <h4>Delete Product</h4>
-                         </div>
-                         <div class="modal-body">
-                         Are you sure want to delete '{this.state.productName}' ?
-                         </div>
+                            <div class="modal-header">
+                            <h4>Delete Product</h4>
+                            </div>
+                            <div class="modal-body">
+                            Are you sure want to delete '{this.state.productName}' ?
+                            </div>
 
-                         <div class="modal-footer">
-                           <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                           <button class="btn btn-label btn-danger" onClick={()=>this.deleteProduct(this.state.productId)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
-                         </div>
-                       
-                     </div>
-                 </div>
-             </div>
-
-
-                 <div class="row wrapper border-bottom white-bg page-heading">
-                     <div class="col-lg-6">
-                         <h2>Products ({this.state.products.length})</h2>
-                     </div>
-                     <div class="col-lg-6">
-                         <div class="title-action">
-
-                         <div class="btn-group">
-
-                                <input type="text" class="form-control" placeholder="Search" onKeyPress={this.onSearchChanged}/>
-                                &nbsp;&nbsp;&nbsp;
-
-                                <select class="form-control" onChange={this.onValueChange}>
-                                    <option value="">Select Category</option>
-                                    {this.state.categories.map(c=> 
-                                        <option value={c.id}>{c.categoryName}</option>    
-                                    )}
-                                </select>
-
-                                &nbsp;
-
-                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><i class="fa fa-bookmark-o"></i>+</button>
-                                <ul class="dropdown-menu" x-placement="bottom-start">
-                                <li><a class="dropdown-item" onClick={this.addCategory}>Add Category</a></li>
-                                <li><a class="dropdown-item" onClick={this.addUnit}>Add Unit</a></li>
-                                </ul>
-                                &nbsp;
+                            <div class="modal-footer">
+                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
+                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteProduct(this.state.productId)} data-dismiss="modal"><label><i class="ti-check"></i></label> YES</button>
+                            </div>
                         
-                                 <Link to="/add-product" class="btn btn-success">Add New Product </Link>
-                         </div>
+                        </div>
+                    </div>
+                </div>
 
-                         </div>
-                     </div>
-                 </div>
 
-             <br/>
+                    <div class="row wrapper border-bottom white-bg page-heading">
+                        <div class="col-lg-6">
+                            <h2>Products ({this.state.products.length})</h2>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="title-action">
 
-             <div class="row">
-                 <div class="col-lg-12">
+                            <div class="btn-group">
 
-                     <div class="ibox">
+                                    <input type="text" class="form-control" placeholder="Search" onKeyPress={this.onSearchChanged}/>
+                                    &nbsp;&nbsp;&nbsp;
 
-                           <div class="ibox-content">
+                                    <select class="form-control" onChange={this.onValueChange}>
+                                        <option value="">Select Category</option>
+                                        {this.state.categories.map(c=> 
+                                            <option value={c.id}>{c.categoryName}</option>    
+                                        )}
+                                    </select>
 
-                            <ul class="nav nav-tabs">
-                                 <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Products</a></li>
-                             </ul>
+                                    &nbsp;
 
-                             <div class="tab-content">
-                                 <div id="tab-1" class="tab-pane active show">
+                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><i class="fa fa-bookmark-o"></i>+</button>
+                                    <ul class="dropdown-menu" x-placement="bottom-start">
+                                    <li><a class="dropdown-item" onClick={this.addCategory}>Add Category</a></li>
+                                    <li><a class="dropdown-item" onClick={this.addUnit}>Add Unit</a></li>
+                                    </ul>
+                                    &nbsp;
+                            
+                                    <Link to="/add-product" class="btn btn-success">Add New Product </Link>
+                            </div>
 
-                                      <table class="table table-hover table-striped">
-                                       
-                                        <thead>
-                                            <th>Product Code</th>
-                                            <th>Product Name</th>
-                                            <th>Category</th>
-                                            <th>Purchase Price</th>
-                                            <th>Sale Price</th>
-                                            <th>Stock</th>
-                                            <th>Unit</th>
-                                            <th></th>
-                                            <th></th>
-                                        </thead>
-                                         <tbody>
-                                                                                      
-                                         {this.state.products.map(p=> 
+                            </div>
+                        </div>
+                    </div>
+
+                <br/>
+
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="ibox">
+
+                            <div class="ibox-content">
+
+                                <ul class="nav nav-tabs">
+                                    <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Products</a></li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="tab-1" class="tab-pane active show">
+
+                                        <table class="table table-hover table-striped">
+                                        
+                                            <thead>
+                                                <th>Product Code</th>
+                                                <th>Product Name</th>
+                                                <th>Category</th>
+                                                <th>Purchase Price</th>
+                                                <th>Sale Price</th>
+                                                <th>Stock</th>
+                                                <th>Unit</th>
+                                                <th></th>
+                                                <th></th>
+                                            </thead>
+                                            <tbody>
+                                                                                        
+                                            {this.state.products.map(p=> 
+                                                
+                                                <tr key={p.id}>
+                                                    <td>{p.productCode}</td>
+                                                    <td>{p.productName}</td>
+                                                    <td>{p.category.categoryName}</td>
+                                                    <td>{p.purchasePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                    <td>{p.salePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                    <td>{p.stock}</td>
+                                                    <td>{p.unit.unitName}</td>
+                                                    <td align="middle">
+                                                        {p.isDiscontinued===true? 
+                                                            <span class="label label-danger">Discontinued</span>
+                                                        : null
+                                                        }
+                                                    </td>                                                  
+                                                    <td align="right">
+                                                        <a onClick={()=>this.editProduct(p.id)}><i class="fa fa-edit"></i></a>
+                                                        &nbsp;&nbsp;
+                                                        <a data-toggle="modal" data-target="#deleteProduct" onClick={()=>this.onDeleteProduct(p.id,p.productName)}>
+                                                            <i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                                
+                                            )}
                                             
-                                            <tr key={p.id}>
-                                                 <td>{p.productCode}</td>
-                                                 <td>{p.productName}</td>
-                                                 <td>{p.category.categoryName}</td>
-                                                 <td>{p.purchasePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                                                 <td>{p.salePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                                                 <td>{p.stock}</td>
-                                                 <td>{p.unit.unitName}</td>
-                                                 <td align="middle">
-                                                    {p.isDiscontinued===true? 
-                                                        <span class="label label-danger">Discontinued</span>
-                                                    : null
-                                                    }
-                                                 </td>                                                  
-                                                 <td align="right">
-                                                     <a onClick={()=>this.editProduct(p.id)}><i class="fa fa-edit"></i></a>
-                                                     &nbsp;&nbsp;
-                                                     <a data-toggle="modal" data-target="#deleteProduct" onClick={()=>this.onDeleteProduct(p.id,p.productName)}>
-                                                         <i class="fa fa-trash"></i></a>
-                                                 </td>
-                                             </tr>
-                                            
-                                         )}
-                                         
 
-                                         </tbody>
-                                     </table>
+                                            </tbody>
+                                        </table>
 
-                                 </div>
-                             
-                               
-                             
-                             
-                             </div>
+                                    </div>
+                                
+                                
+                                
+                                
+                                </div>
 
 
 
 
-                           </div>
-                           
+                            </div>
+                            
 
 
-                     </div>
+                        </div>
 
-                 
-                 </div>
-                 
-                 
-             </div>
+                    
+                    </div>
+                    
+                    
+                </div>
 
-             
-             <Footer/>
+                
+                <Footer/>
+
+        </div>
 
      </div>
- 
             
             
         )

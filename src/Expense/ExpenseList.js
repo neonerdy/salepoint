@@ -11,6 +11,8 @@ import Expense from './Expense';
 import {Link} from 'react-router-dom';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 
@@ -219,9 +221,13 @@ class ExpenseList extends Component
         )
 
         return(
-        
-              <div id="page-wrapper" class="gray-bg">
 
+            <div>
+
+                <Header/>
+                <NavBar/>
+
+              <div id="page-wrapper" class="gray-bg">
 
                     <div class="row wrapper border-bottom white-bg page-heading">
                         <div class="col-lg-4">
@@ -411,15 +417,11 @@ class ExpenseList extends Component
                 
                 <Footer/>
 
-
-
-
-
-
-
-
-            
+ 
             </div>
+        
+        </div>
+           
 
         )
     }

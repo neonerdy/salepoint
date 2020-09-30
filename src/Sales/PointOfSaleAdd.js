@@ -7,6 +7,8 @@ import '../App.css';
 import uuid from 'uuid';
 import Select2 from 'react-select2-wrapper';
 import 'react-select2-wrapper/css/select2.css';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 class PointOfSaleAdd extends Component
@@ -381,244 +383,252 @@ class PointOfSaleAdd extends Component
 
        
         return(
-            <div id="page-wrapper" class="gray-bg">
 
-       
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-lg-8">
+            <div>
+                <Header/>
+                <NavBar/>
+         
+                <div id="page-wrapper" class="gray-bg">
 
-                    <h2>Add New Sale</h2>
+        
+                <div class="row wrapper border-bottom white-bg page-heading">
+                    <div class="col-lg-8">
+
+                        <h2>Add New Sale</h2>
+                    </div>
                 </div>
-            </div>
 
-        <br/>
+            <br/>
 
-        <div class="row">
-            <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
 
-                <div class="ibox">
+                    <div class="ibox">
 
-                      <div class="ibox-content">
+                        <div class="ibox-content">
 
-                      <br/>
-                            <form autocomplete="off">
+                        <br/>
+                                <form autocomplete="off">
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Sales #</label>
-                                    <div class="col-md-7 col-sm-12 required">
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Sales #</label>
+                                        <div class="col-md-7 col-sm-12 required">
 
-                                        {this.state.setting.isEnableAutomaticNumbering == true ? 
-                                        <input type="text" class="form-control" name="salesCode" onChange={this.onValueChange} value={this.state.salesCode} disabled/>
-                                            :   <input type="text" class="form-control" name="salesCode" onChange={this.onValueChange}/>
-                                        }
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.salesCode}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Customer Name</label>
-                                    
-                                    <div class="col-md-7 col-sm-12 required">
-                                        <select name="customerId" class="form-control" onChange={this.onValueChange}>
-                                            <option value="">Select Customer</option>
-                                            {this.state.customers.map(c=> 
-                                                <option value={c.id}>{c.customerName}</option>
-                                            )}
-                                        </select>
-                                       
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.customerId}</span>
-
-                                 </div>
-
-                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Type</label>
-                                    
-                                    <div class="col-md-7 col-sm-12 required">
-                                        <select name="paymentTypeId" class="form-control" onChange={this.onValueChange}>
-                                            <option value="">Select Payment Type</option>
-                                            {this.state.paymentTypes.map(pt=> 
-                                                <option value={pt.id}>{pt.paymentTypeName}</option>
-                                            )}
-                                        </select>
-                                       
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.paymentTypeId}</span>
-
-                                 </div>
-
-
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Cashier</label>
-                                    
-                                    <div class="col-md-7 col-sm-12 required">
-                                        <select name="cashierId" class="form-control" onChange={this.onValueChange}>
-                                            <option value="">Select Cashier</option>
-                                            {this.state.cashiers.map(s=> 
-                                                <option value={s.id}>{s.employeeName}</option>
-                                            )}
-                                        </select>
-                                       
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.cashierId}</span>
-
-                                 </div>
-
-                             
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Notes</label>
-                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
-                                        name="notes" onChange={this.onValueChange}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.notes}</span>
-                                </div>
-
-                                <br/>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right',color:'grey'}}><b>Add Product</b></label>
-                                
-
-                                <div class="col-md-7 col-sm-12 hr-line-dashed"></div>
-                                
-                                </div>
-
-
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}></label>
-                                
-                                    <div class="col-md-4 col-sm-12">
-                                        <p>Product Name</p>
-
-                                        <Select2 className="form-control"
-                                            data={productList}
-                                            onChange={(e) => { this.setState({productId: e.target.value}) }}
-                                            value={this.state.productId}
-                                            options={{
-                                                placeholder: 'Select Product',
-                                            }}
-                                            />
-                                      
+                                            {this.state.setting.isEnableAutomaticNumbering == true ? 
+                                            <input type="text" class="form-control" name="salesCode" onChange={this.onValueChange} value={this.state.salesCode} disabled/>
+                                                :   <input type="text" class="form-control" name="salesCode" onChange={this.onValueChange}/>
+                                            }
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.salesCode}</span>
                                     </div>
 
-                                    <div class="col-md-1 col-sm-12">
-                                        <p>Qty</p>
-                                         <input name="qty" type="number" class="form-control" onChange={this.onValueChange} defaultValue="1"/>
-                                    </div>
-
-                                    <div class="col-md-1 col-sm-12">
-                                        <p>Tax (%)</p>
-                                         <input name="taxPct" type="number" class="form-control" onChange={this.onValueChange} defaultValue="10"/>
-                                    </div>
-                                    
-
-                                    <div class="col-md-1 col-sm-12 required">
-                                         <p>Disc (%)</p>
-                                         <input name="discountPct" type="number" class="form-control" onChange={this.onValueChange} defaultValue="0"/>
-                                    </div>
-
-                                    <div class="col-md-2 col-sm-1">
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Customer Name</label>
                                         
-                                        <span style={errStyle}>{this.state.error.productId}</span>
-                                        &nbsp;&nbsp;<a onClick={()=>this.addSalesItems(this.state.productId)} class="btn btn-sm btn-default">
-                                        <i class="fa fa-shopping-cart"></i> Add</a>
+                                        <div class="col-md-7 col-sm-12 required">
+                                            <select name="customerId" class="form-control" onChange={this.onValueChange}>
+                                                <option value="">Select Customer</option>
+                                                {this.state.customers.map(c=> 
+                                                    <option value={c.id}>{c.customerName}</option>
+                                                )}
+                                            </select>
+                                        
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.customerId}</span>
+
                                     </div>
 
-                                </div>
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Type</label>
+                                        
+                                        <div class="col-md-7 col-sm-12 required">
+                                            <select name="paymentTypeId" class="form-control" onChange={this.onValueChange}>
+                                                <option value="">Select Payment Type</option>
+                                                {this.state.paymentTypes.map(pt=> 
+                                                    <option value={pt.id}>{pt.paymentTypeName}</option>
+                                                )}
+                                            </select>
+                                        
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.paymentTypeId}</span>
 
-                          
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}></label>
-                                    <div class="col-md-7 col-sm-12">
+                                    </div>
+
+
+
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Cashier</label>
+                                        
+                                        <div class="col-md-7 col-sm-12 required">
+                                            <select name="cashierId" class="form-control" onChange={this.onValueChange}>
+                                                <option value="">Select Cashier</option>
+                                                {this.state.cashiers.map(s=> 
+                                                    <option value={s.id}>{s.employeeName}</option>
+                                                )}
+                                            </select>
+                                        
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.cashierId}</span>
+
+                                    </div>
+
+                                
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Notes</label>
+                                        <div class="col-md-7 col-sm-12"><input type="text" class="form-control" 
+                                            name="notes" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.notes}</span>
+                                    </div>
+
+                                    <br/>
+
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right',color:'grey'}}><b>Add Product</b></label>
                                     
 
-                                    <ul class="nav nav-tabs">
-                                        <li><a class="nav-link active show" data-toggle="tab" href="#tab-1"><i class="fa fa-dropbox"></i> Items</a></li>
-                                    </ul>
+                                    <div class="col-md-7 col-sm-12 hr-line-dashed"></div>
+                                    
+                                    </div>
 
-                                    <div class="tab-content">
-                                        <div id="tab-1" class="tab-pane active show">
 
-                                        <table class="table table-hover table-striped">
-                                                <thead>
-                                                    <th width="30%" class="text-left">Product Name</th>
-                                                    <th width="10%" class="text-right">Qty</th>
-                                                    <th width="20%" class="text-right">Price</th>
-                                                    <th width="10%" class="text-right">Discount</th>
-                                                    <th width="10%" class="text-right">Tax</th>
-                                                    <th width="20%" class="text-right">Amount</th>
-                                                    <th></th>
-                                                </thead>
-                                                <tbody>
-                                                    {this.state.salesItems.map(si=> 
-                                                    <tr key={si.id}>
-                                                       <td width="30%">{si.productName}</td>
-                                                       <td width="10%" align="right">{si.qty}</td>
-                                                       <td width="20%" align="right">{si.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                                                       <td width="10%" align="right">{si.discountPct} %</td>
-                                                       <td width="10%" align="right">{si.taxPct} %</td>
-                                                       <td width="20%" align="right">{(si.qty * si.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                                                       <td align="right">
-                                                            <a onClick={()=>this.removeSalesItem(si.id)}><i class="fa fa-trash"></i></a>
 
-                                                       </td>
-                                                    </tr>
-                                                    )}                                                    
-                                                    
-                                                </tbody>
-                                            </table>
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}></label>
+                                    
+                                        <div class="col-md-4 col-sm-12">
+                                            <p>Product Name</p>
 
+                                            <Select2 className="form-control"
+                                                data={productList}
+                                                onChange={(e) => { this.setState({productId: e.target.value}) }}
+                                                value={this.state.productId}
+                                                options={{
+                                                    placeholder: 'Select Product',
+                                                }}
+                                                />
+                                        
+                                        </div>
+
+                                        <div class="col-md-1 col-sm-12">
+                                            <p>Qty</p>
+                                            <input name="qty" type="number" class="form-control" onChange={this.onValueChange} defaultValue="1"/>
+                                        </div>
+
+                                        <div class="col-md-1 col-sm-12">
+                                            <p>Tax (%)</p>
+                                            <input name="taxPct" type="number" class="form-control" onChange={this.onValueChange} defaultValue="10"/>
+                                        </div>
+                                        
+
+                                        <div class="col-md-1 col-sm-12 required">
+                                            <p>Disc (%)</p>
+                                            <input name="discountPct" type="number" class="form-control" onChange={this.onValueChange} defaultValue="0"/>
+                                        </div>
+
+                                        <div class="col-md-2 col-sm-1">
+                                            
+                                            <span style={errStyle}>{this.state.error.productId}</span>
+                                            &nbsp;&nbsp;<a onClick={()=>this.addSalesItems(this.state.productId)} class="btn btn-sm btn-default">
+                                            <i class="fa fa-shopping-cart"></i> Add</a>
+                                        </div>
+
+                                    </div>
+
+                            
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}></label>
+                                        <div class="col-md-7 col-sm-12">
+                                        
+
+                                        <ul class="nav nav-tabs">
+                                            <li><a class="nav-link active show" data-toggle="tab" href="#tab-1"><i class="fa fa-dropbox"></i> Items</a></li>
+                                        </ul>
+
+                                        <div class="tab-content">
+                                            <div id="tab-1" class="tab-pane active show">
+
+                                            <table class="table table-hover table-striped">
+                                                    <thead>
+                                                        <th width="30%" class="text-left">Product Name</th>
+                                                        <th width="10%" class="text-right">Qty</th>
+                                                        <th width="20%" class="text-right">Price</th>
+                                                        <th width="10%" class="text-right">Discount</th>
+                                                        <th width="10%" class="text-right">Tax</th>
+                                                        <th width="20%" class="text-right">Amount</th>
+                                                        <th></th>
+                                                    </thead>
+                                                    <tbody>
+                                                        {this.state.salesItems.map(si=> 
+                                                        <tr key={si.id}>
+                                                        <td width="30%">{si.productName}</td>
+                                                        <td width="10%" align="right">{si.qty}</td>
+                                                        <td width="20%" align="right">{si.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                        <td width="10%" align="right">{si.discountPct} %</td>
+                                                        <td width="10%" align="right">{si.taxPct} %</td>
+                                                        <td width="20%" align="right">{(si.qty * si.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                        <td align="right">
+                                                                <a onClick={()=>this.removeSalesItem(si.id)}><i class="fa fa-trash"></i></a>
+
+                                                        </td>
+                                                        </tr>
+                                                        )}                                                    
+                                                        
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+
+                                        
                                         </div>
                                     </div>
 
+
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}></label>
+                                        <div class="col-md-7 col-sm-12" style={{textAlign:'right'}}>
+                                            <div>Sub Total : {this.state.subTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div> 
+                                            <div>Tax : {this.state.tax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
+                                            {this.state.setting.isEnableServiceCharge == true? 
+                                            <div>Service Charge : {this.state.serviceCharge.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
+                                                : null
+                                            }
+                                            <div>Discount : {this.state.discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
+
+
+                                            <br/>
+                                            <div><h3>Total : {this.state.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h3></div>
+                                        </div>
+                                    </div>
+
+                                    <br/><br/>
                                     
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}></label>
-                                    <div class="col-md-7 col-sm-12" style={{textAlign:'right'}}>
-                                        <div>Sub Total : {this.state.subTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div> 
-                                        <div>Tax : {this.state.tax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
-                                        {this.state.setting.isEnableServiceCharge == true? 
-                                        <div>Service Charge : {this.state.serviceCharge.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
-                                            : null
-                                         }
-                                        <div>Discount : {this.state.discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
-
-
-                                        <br/>
-                                        <div><h3>Total : {this.state.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h3></div>
-                                    </div>
-                                </div>
-
-                                <br/><br/>
+                                    <div class="hr-line-dashed"></div>
                                 
-                                <div class="hr-line-dashed"></div>
-                            
 
-                                <div class="text-right">
-                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>
-                                        <button type="button" onClick={this.saveSales} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
-                                </div>
+                                    <div class="text-right">
+                                            <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>
+                                            <button type="button" onClick={this.saveSales} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
+                                    </div>
 
 
-                            </form>
+                                </form>
 
 
 
-                      </div>
-                      
+                        </div>
+                        
 
 
+                    </div>
+
+                
                 </div>
-
-            
+                
+                
             </div>
+
+            <br/><br/>
+
             
-            
-        </div>
+            <Footer/>
 
-        <br/><br/>
+            </div>
 
-        
-        <Footer/>
+         </div>
 
-        </div>
         )
     }
 

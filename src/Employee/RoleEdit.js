@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 import Footer from '../Shared/Footer';
 import axios from 'axios';
 import config from '../Shared/Config';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 class RoleEdit extends Component
@@ -102,25 +104,29 @@ class RoleEdit extends Component
 
 
         return(
+
+            <div>
+                <Header/>
+                <NavBar/>
            
-           <div id="page-wrapper" class="gray-bg">
-                
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-lg-8">
-                    <h2>Edit Role</h2>
-                </div>
-            </div>
+                <div id="page-wrapper" class="gray-bg">
+                        
+                    <div class="row wrapper border-bottom white-bg page-heading">
+                        <div class="col-lg-8">
+                            <h2>Edit Role</h2>
+                        </div>
+                    </div>
 
-        <br/>
+                <br/>
 
-        <div class="row">
-            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-12">
 
-                <div class="ibox">
+                        <div class="ibox">
 
-                      <div class="ibox-content">
+                            <div class="ibox-content">
 
-                      <br/>
+                            <br/>
                             <form>
 
                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role Name</label>
@@ -146,27 +152,27 @@ class RoleEdit extends Component
                                         <button type="button" onClick={this.updateRole} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
                                 </div>
 
-                             
+                            
                             </form>
 
+                            </div>
+                            
 
+                        </div>
 
-                      </div>
-                      
+                    
+                    </div>
+                    
+                    
+                </div>
 
+                
+                <Footer/>
 
                 </div>
 
-             
-            </div>
-            
-            
         </div>
 
-        
-        <Footer/>
-
-        </div>
         )
 
     }

@@ -7,6 +7,8 @@ import config from '../Shared/Config';
 import moment from 'moment';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 class PurchaseInvoice extends Component
@@ -340,6 +342,11 @@ class PurchaseInvoice extends Component
 
         return(
        
+            <div>
+
+                <Header/>
+                <NavBar/>
+                
                 <div id="page-wrapper" class="gray-bg">
 
                      {/* DELETE INVOICE*/}
@@ -702,6 +709,9 @@ class PurchaseInvoice extends Component
                 
                 
            </div>
+        
+        </div>
+            
 
         )
     }

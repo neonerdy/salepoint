@@ -12,7 +12,9 @@ class NavBar extends Component
 
     
     componentDidMount() {
-        this.props.history.push('/dashboard');
+        
+        //this.props.history.push('/dashboard');
+
     }
     
     onEmployeeClicked =()=> {
@@ -38,11 +40,7 @@ class NavBar extends Component
                 <nav class="navbar-default navbar-static-side" role="navigation">
                     <div class="sidebar-collapse">
                         <ul class="nav metismenu" id="side-menu">
-                            <li class="nav-header">
-                                <div class="logo-element">
-                                &nbsp;
-                                </div>
-                            </li>
+                          
                             <li className={this.getNavLinkClass("/dashboard")}>
                                 <Link to="/dashboard"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboards</span></Link>
                             </li>

@@ -7,6 +7,8 @@ import moment from 'moment';
 import config from '../Shared/Config';
 import Switch from 'react-switchery-component';
 import 'react-switchery-component/react-switchery-component.css';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 class EmployeeAdd extends Component
@@ -150,135 +152,143 @@ class EmployeeAdd extends Component
         }
 
         return(
-            <div id="page-wrapper" class="gray-bg">
-                
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-lg-8">
-                    <h2>Add Employee </h2>
+
+            <div>
+
+                <Header/>
+                <NavBar/>
+
+                <div id="page-wrapper" class="gray-bg">
+                    
+                <div class="row wrapper border-bottom white-bg page-heading">
+                    <div class="col-lg-8">
+                        <h2>Add Employee </h2>
+                    </div>
                 </div>
-            </div>
 
-        <br/>
+            <br/>
 
-        <div class="row">
-            <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
 
-                <div class="ibox">
+                    <div class="ibox">
 
-                      <div class="ibox-content">
+                        <div class="ibox-content">
 
-                      <br/>
-                        <form autoComplete="off">
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Employee Name</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="employeeName" onChange={this.onValueChange}/>
+                        <br/>
+                            <form autoComplete="off">
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Employee Name</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="employeeName" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.employeeName}</span>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.employeeName}</span>
-                                </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role</label>
-                                    <div class="col-md-7 col-sm-12 required">
-                                        <select class="form-control" name="roleId" onChange={this.onValueChange}>
-                                           <option value="">Please Select Role</option>
-                                            {this.state.roles.map(r=> 
-                                                <option key={r.id} value={r.id}>{r.roleName}</option> 
-                                            )}
-                                        </select>
-
-                                </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.roleId}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Join Date</label>
-                                    <div class="input-group date col-md-7 col-sm-12 required">
-                                          <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">
-                                                <input type="text" name="joinDate" class="form-control" ref={this.joinDate}/>
-                                                <div class="input-group-addon">
-                                                    <span class="fa fa-calendar"></span>
-                                                </div>
-                                           </div>
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Role</label>
+                                        <div class="col-md-7 col-sm-12 required">
+                                            <select class="form-control" name="roleId" onChange={this.onValueChange}>
+                                            <option value="">Please Select Role</option>
+                                                {this.state.roles.map(r=> 
+                                                    <option key={r.id} value={r.id}>{r.roleName}</option> 
+                                                )}
+                                            </select>
 
                                     </div>
-                                  &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.joinDate}</span>
-                                </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.roleId}</span>
+                                    </div>
+
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Join Date</label>
+                                        <div class="input-group date col-md-7 col-sm-12 required">
+                                            <div class="input-group date" data-provide="datepicker" data-date-autoclose="true" data-date-today-highlight="true">
+                                                    <input type="text" name="joinDate" class="form-control" ref={this.joinDate}/>
+                                                    <div class="input-group-addon">
+                                                        <span class="fa fa-calendar"></span>
+                                                    </div>
+                                            </div>
+
+                                        </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.joinDate}</span>
+                                    </div>
+                                    
+
+
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Address</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="address" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.address}</span>
+                                    </div>
+
+
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>City</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="city" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.city}</span>
+                                    </div>
+
+                                
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Phone</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="phone" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.phone}</span>
+                                    </div>
+
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>E-Mail</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="email" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
+                                    </div>
+
+
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
+                                        <div class="col-md-7 col-sm-12">
+
+                                        <Switch
+                                            color="#1ab394"
+                                            checked={this.state.isActive}
+                                            onChange={this.onActiveChanged} />
+                                        </div>
+
+                                    </div>
+
+                                    
+
+                                    <br/><br/>
+
+                                    <div class="hr-line-dashed"></div>
                                 
 
+                                    <div class="text-right">
+                                            <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>
+                                            <button type="button" onClick={this.saveEmployee} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
+                                        </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Address</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="address" onChange={this.onValueChange}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.address}</span>
-                                </div>
+                                </form>
 
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>City</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="city" onChange={this.onValueChange}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.city}</span>
-                                </div>
-
-                            
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Phone</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="phone" onChange={this.onValueChange}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.phone}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>E-Mail</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="email" onChange={this.onValueChange}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
-                                </div>
+                        </div>
+                        
 
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
-                                    <div class="col-md-7 col-sm-12">
+                    </div>
 
-                                    <Switch
-                                        color="#1ab394"
-                                        checked={this.state.isActive}
-                                        onChange={this.onActiveChanged} />
-                                    </div>
-
-                                </div>
-
-                                 
-
-                                <br/><br/>
-
-                                <div class="hr-line-dashed"></div>
-                            
-
-                                <div class="text-right">
-                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>
-                                        <button type="button" onClick={this.saveEmployee} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
-                                    </div>
-
-                            </form>
-
-                      </div>
-                      
-
-
+                
                 </div>
-
-            
+                
+                
             </div>
+
+            <br/> <br/>                                           
             
-            
+            <Footer/>
+
+            </div>
+
         </div>
 
-         <br/> <br/>                                           
-        
-        <Footer/>
-
-        </div>
-
-        )
+       )
     }
 
 

@@ -1,8 +1,6 @@
 
 import React, {Component} from 'react';
 
-import NavBar from '../Shared/NavBar';
-import Header from '../Shared/Header';
 import Footer from '../Shared/Footer';
 import axios from 'axios';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -10,6 +8,8 @@ import config from '../Shared/Config';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 class Dashboard extends Component
 {
@@ -34,6 +34,11 @@ class Dashboard extends Component
 
 
         return (
+
+        <div>
+            
+            <Header/>
+            <NavBar/>
 
             <div id="page-wrapper" class="gray-bg">
                 
@@ -161,6 +166,8 @@ class Dashboard extends Component
 
             
             </div>
+
+        </div>
 
         </div>
 

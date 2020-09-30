@@ -5,6 +5,8 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 import axios from 'axios';
 import config from '../Shared/Config';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 class MasterData extends Component
@@ -44,7 +46,6 @@ class MasterData extends Component
         this.getProductCategories();
         this.getUnits();
         this.getRoles();
-        //this.getUsers();
         this.getPaymentTypes();
         this.getAccounts();
         this.getExpenseCategories();
@@ -324,6 +325,11 @@ class MasterData extends Component
 
 
         return(
+
+        <div>
+
+           <Header/>
+           <NavBar/>
            
            <div id="page-wrapper" class="gray-bg">
 
@@ -399,32 +405,7 @@ class MasterData extends Component
                   </div>
               </div>
 
-            {/*}
-
-              <div id="deleteUser" class="modal fade" role="dialog">
-                
-                <div class="modal-dialog">
-                    
-                    <div class="modal-content">
-
-                          <div class="modal-header">
-                            <h4>Delete User</h4>
-                          </div>
-                          <div class="modal-body">
-                          Are you sure want to delete '{this.state.userName}' ?
-                          </div>
-
-                          <div class="modal-footer">
-                            <a class="btn btn-link text-left" href="#" data-dismiss="modal">Cancel</a>
-                            <button class="btn btn-label btn-danger" onClick={()=>this.deleteUser(this.state.userId)} data-dismiss="modal">
-                                <label><i class="ti-check"></i></label> YES</button>
-                          </div>
-                        
-                      </div>
-                  </div>
-              </div>
-            {*/}
-
+           
               <div id="deletePaymentType" class="modal fade" role="dialog">
                 
                 <div class="modal-dialog">
@@ -723,47 +704,7 @@ class MasterData extends Component
 
 
 
-            {/*}                
-
-            <div class="col-lg-4">
-
-
-                <div class="ibox-content">
-                    <h2>Users ({this.state.users.length})</h2>
-                    
-                    <Scrollbars style={{ height: 310 }}>
-
-                    <ul class="todo-list m-t ui-sortable">
-                    
-                        {this.state.users.map(u=> 
-                        <li key={u.id}>
-                            <span class="m-l-xs">{u.employee.employeeName}
-                        <small class="label label-primary"><i class="fa fa-lock"></i> {u.userName}</small>
-                            </span>
-                            <small class="float-right">
-                                 <a onClick={()=>this.editUser(u.id)}><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
-                                 <a data-toggle="modal" data-target="#deleteUser" 
-                                    onClick={()=>this.onDeleteUser(u.id, u.userName)}><i class="fa fa-trash"></i></a>
-                                    &nbsp;&nbsp;
-                            </small>
-
-                        </li>
-                        )}
-                    </ul>
-                    </Scrollbars>
-
-                </div>
-
-
-
-                </div>
-                
-                       {*/}                   
-
-
-
-               
-
+        
 
 
         </div>
@@ -775,6 +716,10 @@ class MasterData extends Component
         <Footer/>
 
         </div>
+
+
+       </div>
+
         )
 
     }

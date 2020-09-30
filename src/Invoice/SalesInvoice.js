@@ -7,7 +7,9 @@ import config from '../Shared/Config';
 import moment from 'moment';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
-
+import '../App.css';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 class SalesInvoice extends Component
 {
@@ -36,7 +38,8 @@ class SalesInvoice extends Component
             startDate: moment().subtract(29, 'days'),
             endDate: moment(),
             salesPaymentId: '', 
-            paymentDate: ''
+            paymentDate: '',
+            printUrl: ''
         }
         
     }
@@ -135,6 +138,11 @@ class SalesInvoice extends Component
                 total: response.data.total,
                 status: response.data.status
             })
+
+            this.setState({
+                printUrl: '/print-sales-invoice/' + id
+            })
+           
         
         })
 
@@ -162,7 +170,7 @@ class SalesInvoice extends Component
 
 
 
-    filterPurchaseInvoice = () => {
+    filterSalesInvoice = () => {
         this.getSalesInvoiceWithTopOne(this.state.startDate.toDate(), this.state.endDate.toDate());
     }
 
@@ -302,6 +310,25 @@ class SalesInvoice extends Component
         this.props.history.push('/sales-payment/' + id);
     }
 
+    
+    printIframe = (id) => {
+    
+        const iframe = document.frames
+            ? document.frames[id]
+            : document.getElementById(id);
+
+        const iframeWindow = iframe.contentWindow || iframe;
+
+        iframe.focus();
+        iframeWindow.print();
+
+        return false;
+  
+    }
+
+
+
+
 
 
     render() {
@@ -336,8 +363,13 @@ class SalesInvoice extends Component
 
         return(
        
+            <div>
+
+                <Header/>
+                <NavBar/>                
                 <div id="page-wrapper" class="gray-bg">
 
+               
                      {/* DELETE INVOICE */}
 
                      <div id="deleteSalesInvoice" class="modal fade" role="dialog">
@@ -392,7 +424,6 @@ class SalesInvoice extends Component
                     <div class="row wrapper border-bottom white-bg page-heading">
                             <div class="col-lg-4">
                                 <h2>Sales Invoices ({this.state.salesInvoices.length})</h2>
-                            
                             </div>
                             <div class="col-lg-8">
                                 <div class="title-action">
@@ -445,10 +476,12 @@ class SalesInvoice extends Component
                                     </DateRangePicker>
                                    
                                     &nbsp;&nbsp;
-                                    <button class="btn btn-default" onClick={this.filterPurchaseInvoice}><i class="fa fa-filter"></i></button>
-                                    <button class="btn btn-default"><i class="fa fa-print"></i></button>
+                                    <button class="btn btn-default" onClick={this.filterSalesInvoice}><i class="fa fa-filter"></i></button>
+                                    <button class="btn btn-default" onClick={()=>this.printIframe('receipt')}><i class="fa fa-print"></i></button>
+                                    
                                     &nbsp;&nbsp;&nbsp;&nbsp;
-                                
+
+                             
                                 </div>
 
 
@@ -535,8 +568,13 @@ class SalesInvoice extends Component
                     </div>                          
                 </div>
 
-
-                    <div class="ibox-content p-xl">
+                <iframe
+                    id="receipt"
+                    src={this.state.printUrl}
+                    style={{ display: 'none' }}
+                />
+            
+                 <div class="ibox-content p-xl">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <h5>From:</h5>
@@ -689,6 +727,10 @@ class SalesInvoice extends Component
                 
                 
            </div>
+
+           </div>
+
+
 
         )
     }

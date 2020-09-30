@@ -5,6 +5,8 @@ import axios from 'axios';
 import '../App.css';
 import Switch from 'react-switchery-component';
 import 'react-switchery-component/react-switchery-component.css';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 
@@ -122,123 +124,132 @@ class CustomerAdd extends Component
         }
 
         return(
-            <div id="page-wrapper" class="gray-bg">
-                
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-lg-8">
 
-                    <h2>Add Customer </h2>
-                </div>
-                <div class="col-lg-4">
-                    <div class="title-action">
+            <div>
 
-                  
+                <Header/>
+                <NavBar/>
+
+                <div id="page-wrapper" class="gray-bg">
+                    
+                <div class="row wrapper border-bottom white-bg page-heading">
+                    <div class="col-lg-8">
+
+                        <h2>Add Customer </h2>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="title-action">
+
+                    
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        <br/>
+            <br/>
 
-        <div class="row">
-            <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
 
-                <div class="ibox">
+                    <div class="ibox">
 
-                      <div class="ibox-content">
+                        <div class="ibox-content">
 
-                      <br/>
-                            <form>
+                        <br/>
+                                <form>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Customer Name</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="customerName" onChange={this.onValueChange}/>
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Customer Name</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="customerName" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.customerName}</span>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.customerName}</span>
-                                </div>
-                                
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Address</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="address" onChange={this.onValueChange}/>
-                                </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.address}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>City</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="city" onChange={this.onValueChange}/>
+                                    
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Address</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="address" onChange={this.onValueChange}/>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.city}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Province</label>
-                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="province" onChange={this.onValueChange}/></div>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Zip Code</label>
-                                    <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="zipCode" onChange={this.onValueChange}/></div>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Phone</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="phone" onChange={this.onValueChange}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.phone}</span>
-                                </div>
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>E-Mail</label>
-                                    <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
-                                        name="email" onChange={this.onValueChange}/>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
-                                </div>
-
-
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
-                                    <div class="col-md-7 col-sm-12">
-
-                                    <Switch
-                                        color="#1ab394"
-                                        checked={this.state.isActive}
-                                        onChange={this.onActiveChanged} />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.address}</span>
                                     </div>
 
-                                </div>
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>City</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="city" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.city}</span>
+                                    </div>
 
-                                 
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Province</label>
+                                        <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="province" onChange={this.onValueChange}/></div>
+                                    </div>
 
-                                <br/><br/>
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Zip Code</label>
+                                        <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="zipCode" onChange={this.onValueChange}/></div>
+                                    </div>
 
-                                <div class="hr-line-dashed"></div>
-                            
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Phone</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="phone" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.phone}</span>
+                                    </div>
 
-                                <div class="text-right">
-                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>
-                                        <button type="button" onClick={this.saveCustomer} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
-                                </div>
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>E-Mail</label>
+                                        <div class="col-md-7 col-sm-12 required"><input type="text" class="form-control" 
+                                            name="email" onChange={this.onValueChange}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.email}</span>
+                                    </div>
 
-                                
+
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Active</label>
+                                        <div class="col-md-7 col-sm-12">
+
+                                        <Switch
+                                            color="#1ab394"
+                                            checked={this.state.isActive}
+                                            onChange={this.onActiveChanged} />
+                                        </div>
+
+                                    </div>
+
+                                    
+
+                                    <br/><br/>
+
+                                    <div class="hr-line-dashed"></div>
                                 
 
-                            </form>
+                                    <div class="text-right">
+                                            <a class="btn btn-link text-left" href="#" onClick={this.cancelAdd}>Cancel</a>
+                                            <button type="button" onClick={this.saveCustomer} class="btn btn-success"><i class="fa fa-check icon-white"></i> Save</button>
+                                    </div>
+
+                                    
+                                    
+
+                                </form>
 
 
 
-                      </div>
-                      
+                        </div>
+                        
 
 
+                    </div>
+
+                
                 </div>
-
-            
+                
+                
             </div>
-            
-            
-        </div>
 
+            
+            <Footer/>
+
+            </div>
         
-        <Footer/>
-
         </div>
+            
         )
     }
 
