@@ -16,6 +16,7 @@ namespace SalePointAPI.Controllers
 
         private readonly ILogger<PointOfSaleController> logger;
         private AppDbContext context;
+        private const string SETTING_ID="E8DC5367-D553-4232-E621-08D84993E0DB";
 
         public PointOfSaleController(ILogger<PointOfSaleController> logger)
         {
@@ -159,6 +160,20 @@ namespace SalePointAPI.Controllers
                 pointOfSale.ModifiedDate = DateTime.Now;
                 context.PointOfSales.Add(pointOfSale);
 
+                //update stock 
+
+                foreach(var si in pointOfSale.PointOfSaleItems) 
+                {
+                    var product = await context.Products.Where(p=>p.ID == si.ProductId).SingleOrDefaultAsync();
+                    if (product.IsStockTracking) 
+                    {
+                        product.Stock = product.Stock - si.Qty;
+                        context.Update(product);
+                    }
+                }
+
+                //update record counter
+
                 var recordCounter = await context.RecordCounters.Where(rc=>rc.Month == DateTime.Now.Month 
                     && rc.Year == DateTime.Now.Year).SingleOrDefaultAsync();
 
@@ -174,35 +189,6 @@ namespace SalePointAPI.Controllers
 
             return Ok(result);
         }
-
-
-
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] PointOfSale pointOfSale)
-        {
-            int result = 0;
-            try
-            {
-                pointOfSale.ModifiedDate = DateTime.Now;
-                context.Update(pointOfSale);
-                context.Database.ExecuteSqlRaw("DELETE FROM PointOfSaleItems WHERE SalesId = {0}",
-                     new object[] { pointOfSale.ID});
-
-                foreach(var si in pointOfSale.PointOfSaleItems) {
-                    context.Add(si);
-                }
-            
-                result = await context.SaveChangesAsync();
-            }
-            catch(Exception ex)
-            {
-                logger.LogError(ex.ToString());
-            }
-          
-
-            return Ok(result);
-        }
-        
 
 
         [HttpGet("{id}/{status}")]
@@ -241,6 +227,18 @@ namespace SalePointAPI.Controllers
                     .ToListAsync();
                 
                 context.RemoveRange(pointOfSaleItems);
+
+                //Update Stock
+
+                foreach(var si in pointOfSale.PointOfSaleItems) 
+                {
+                    var product = await context.Products.Where(p=>p.ID == si.ProductId).SingleOrDefaultAsync();
+                    if (product.IsStockTracking) 
+                    {
+                        product.Stock = product.Stock + si.Qty;
+                        context.Update(product);
+                    }
+                }
 
                 result = await context.SaveChangesAsync();
             }

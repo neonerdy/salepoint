@@ -174,7 +174,6 @@ class SalesInvoiceRpt extends Component
                                     &nbsp;
                                     
                                     <button class="btn btn-default"><i class="fa fa-filter"></i></button>
-                                    <button class="btn btn-default"><i class="fa fa-print"></i></button>
                                     &nbsp;&nbsp;&nbsp;
 
 
@@ -187,16 +186,16 @@ class SalesInvoiceRpt extends Component
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Customer</Link></li>
                                         <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Category</Link></li>
+                                        <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Product</Link></li>
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Customer</Link></li>
                                         <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Category</Link></li>
+                                        <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Product</Link></li>
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Supplier</Link></li>
                                         <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Category</Link></li>
+                                        <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Product</Link></li>
                                         <li class="dropdown-divider"></li>
-                                        <li><Link to="/purchase-invoice-rpt" class="dropdown-item">TOP Product Sales</Link></li>
-                                        <li><Link to="/purchase-invoice-rpt" class="dropdown-item">TOP Product Purchases</Link></li>
-                                        <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Empty Product Stock</Link></li>
                                         <li><Link to="/expense-rpt" class="dropdown-item">Expense</Link></li>
 
 
