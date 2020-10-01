@@ -329,8 +329,6 @@ class SalesInvoice extends Component
 
 
 
-
-
     render() {
 
         let dateLabel = this.state.startDate.format('MMMM D, YYYY') + ' - ' + this.state.endDate.format('MMMM D, YYYY'); 

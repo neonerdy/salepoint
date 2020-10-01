@@ -34,7 +34,8 @@ class PointOfSale extends Component
             total: 0,
             status: '',
             startDate: moment().subtract(29, 'days'),
-            endDate: moment()
+            endDate: moment(),
+            printUrl: ''
         }
         
     }
@@ -152,7 +153,10 @@ class PointOfSale extends Component
                 salesItems: response.data.saleItems,
             })
 
-        
+            this.setState({
+                printUrl: '/print-pos/' + id
+            })
+           
         })
 
 
@@ -245,6 +249,21 @@ class PointOfSale extends Component
 
     }
 
+
+    printIframe = (id) => {
+    
+        const iframe = document.frames
+            ? document.frames[id]
+            : document.getElementById(id);
+
+        const iframeWindow = iframe.contentWindow || iframe;
+
+        iframe.focus();
+        iframeWindow.print();
+
+        return false;
+  
+    }
 
 
 
@@ -356,7 +375,8 @@ class PointOfSale extends Component
                                     &nbsp;&nbsp;
                                     
                                     <button class="btn btn-default" onClick={this.filterSales}><i class="fa fa-filter"></i></button>
-                                    <button class="btn btn-default"><i class="fa fa-print"></i></button>
+                                    <button class="btn btn-default" onClick={()=>this.printIframe('receipt')}><i class="fa fa-print"></i></button>
+                                
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                 
                                 </div>
@@ -447,7 +467,14 @@ class PointOfSale extends Component
                 </div>
 
 
-                    <div class="ibox-content p-xl">
+                <iframe
+                    id="receipt"
+                    src={this.state.printUrl}
+                    style={{ display: 'none' }}
+                />
+            
+            
+                   <div class="ibox-content p-xl">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <h5>From:</h5>

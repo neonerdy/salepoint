@@ -37,7 +37,8 @@ class PurchaseInvoice extends Component
             startDate: moment().subtract(29, 'days'),
             endDate: moment(),
             purchasePaymentId: '',
-            paymentDate: ''
+            paymentDate: '',
+            printUrl: ''
         }
         
     }
@@ -160,7 +161,10 @@ class PurchaseInvoice extends Component
                 status: response.data.status
             })
 
-        
+            this.setState({
+                printUrl: '/print-purchase-invoice/' + id
+            })
+
         })
 
         this.getPurchasePayments(id);
@@ -307,6 +311,20 @@ class PurchaseInvoice extends Component
     }
 
 
+    printIframe = (id) => {
+    
+        const iframe = document.frames
+            ? document.frames[id]
+            : document.getElementById(id);
+
+        const iframeWindow = iframe.contentWindow || iframe;
+
+        iframe.focus();
+        iframeWindow.print();
+
+        return false;
+  
+    }
 
 
     render() {
@@ -455,7 +473,8 @@ class PurchaseInvoice extends Component
                                    
                                     &nbsp;&nbsp;
                                     <button class="btn btn-default" onClick={this.filterPurchaseInvoice}><i class="fa fa-filter"></i></button>
-                                    <button class="btn btn-default"><i class="fa fa-print"></i></button>
+                                    <button class="btn btn-default" onClick={()=>this.printIframe('receipt')}><i class="fa fa-print"></i></button>
+                                 
                                     &nbsp;&nbsp;&nbsp;&nbsp;
 
                                 </div>
@@ -548,6 +567,12 @@ class PurchaseInvoice extends Component
                             {this.renderMenu(this.state.status)}
                     </div>                          
                 </div>
+
+                <iframe
+                    id="receipt"
+                    src={this.state.printUrl}
+                    style={{ display: 'none' }}
+                />
 
 
                     <div class="ibox-content p-xl">

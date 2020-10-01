@@ -55,6 +55,8 @@ import RoleAccess from './Setting/RoleAccess';
 import RoleAccessAdd from './Setting/RoleAccessAdd';
 import RoleAccessEdit from './Setting/RoleAccessEdit';
 import SalesInvoicePrint from './Invoice/SalesInvoicePrint';
+import PurchaseInvoicePrint from './Invoice/PurchaseInvoicePrint';
+import PointOfSalePrint from './Sales/PointOfSalePrint';
 
 
 
@@ -127,10 +129,10 @@ class App extends Component
                 <Route exact path="/edit-sales-invoice/:id" component={SalesInvoiceEdit}/>
                 <Route exact path="/edit-expense/:id" component={ExpenseEdit}/>
 
-
+                <Route exact path="/print-pos/:id" component={PointOfSalePrint}/>
                 <Route exact path="/print-sales-invoice/:id" component={SalesInvoicePrint}/>
-
-
+                <Route exact path="/print-purchase-invoice/:id" component={PurchaseInvoicePrint}/>
+                
                 <Route exact path="/product-rpt" component={ProductRpt}/>
                 <Route exact path="/employee-rpt" component={EmployeeRpt}/>
                 <Route exact path="/sales-invoice-rpt" component={SalesInvoiceRpt}/>
