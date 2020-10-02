@@ -30,7 +30,6 @@ class ProductEdit extends Component
             stock: '',
             unitId: '',
             description: '',
-            IsStockTracking: false,
             isDiscontinued: false,
             createdDate: ''
         }
@@ -64,7 +63,6 @@ class ProductEdit extends Component
                 unitId: response.data.unitId,
                 unitName: response.data.unitName,
                 description: response.data.description,
-                IsStockTracking: response.data.isStockTracking,
                 isDiscontinued: response.data.isDiscontinued,
                 createdDate: response.data.createdDate
             })
@@ -100,11 +98,6 @@ class ProductEdit extends Component
         })
     }
 
-
-    onStockTrackingChange = (e) =>  {
-        this.setState({IsStockTracking: e.target.checked})
-   
-    }
 
     onDiscontinuedChanged = (e) => {
         this.setState({isDiscontinued: e.target.checked})
@@ -180,7 +173,6 @@ class ProductEdit extends Component
                 stock: parseInt(this.state.stock),
                 unitId: this.state.unitId,
                 description: this.state.description,
-                IsStockTracking: this.state.IsStockTracking,
                 isDiscontinued: this.state.isDiscontinued,
                 createdDate: this.state.createdDate
             }
@@ -312,17 +304,7 @@ class ProductEdit extends Component
                                         <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="description" onChange={this.onValueChange} value={this.state.description}/></div>
                                     </div>
 
-                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Stock Tracking</label>
-                                        <div class="col-md-7 col-sm-12">
-
-                                        <Switch
-                                            color="#1ab394"
-                                            checked={this.state.IsStockTracking}
-                                            onChange={this.onStockTrackingChange} />
-                                        </div>
-
-                                    </div>
-
+                              
                                     <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Discontinued</label>
                                         <div class="col-md-7 col-sm-12">
 

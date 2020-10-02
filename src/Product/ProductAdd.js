@@ -30,7 +30,6 @@ class ProductAdd extends Component
             stock: '',
             unitId: '',
             description: '',
-            IsStockTracking: true,
             isDiscontinued: false
         }
     }
@@ -68,10 +67,6 @@ class ProductAdd extends Component
         })
     }
 
-    onStockTrackingChange = (e) =>  {
-        this.setState({IsStockTracking: e.target.checked})
-   
-    }
 
     onDiscontinuedChanged = (e) => {
         this.setState({isDiscontinued: e.target.checked})
@@ -147,7 +142,6 @@ class ProductAdd extends Component
                 stock: parseInt(this.state.stock),
                 unitId: this.state.unitId,
                 description: this.state.description,
-                IsStockTracking: this.state.IsStockTracking,
                 isDiscontinued: this.state.isDiscontinued
             }
 
@@ -280,17 +274,6 @@ class ProductAdd extends Component
                                         <div class="col-md-7 col-sm-12"><input type="text" class="form-control" name="description" onChange={this.onValueChange}/></div>
                                     </div>
                                 
-                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Stock Tracking</label>
-                                        <div class="col-md-7 col-sm-12">
-
-                                        <Switch
-                                            color="#1ab394"
-                                            checked={this.state.IsStockTracking}
-                                            onChange={this.onStockTrackingChange} />
-                                        </div>
-
-                                    </div>
-
                                     <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Discontinued</label>
                                         <div class="col-md-7 col-sm-12">
 

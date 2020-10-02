@@ -30,6 +30,7 @@ class Setting extends Component
             discountPct: '',
             serviceChargePct: '',
             isEnableServiceCharge: true,
+            isEnableStockTracking: true,
             isEnableAutomaticNumbering: true,
             isShowMonthAndYear: true,
             pointOfSalePrefix: '',
@@ -49,6 +50,10 @@ class Setting extends Component
         this.setState({isEnableServiceCharge: e.target.checked})
     }
 
+
+    onStockTrackingChange = (e) =>  {
+        this.setState({isEnableStockTracking: e.target.checked})
+    }
 
     onAutomaticNumberingChange = (e) =>  {
         this.setState({isEnableAutomaticNumbering: e.target.checked})
@@ -76,6 +81,7 @@ class Setting extends Component
                 discountPct: response.data.discountPct,
                 serviceChargePct: response.data.serviceChargePct,
                 isEnableServiceCharge: response.data.isEnableServiceCharge,
+                isEnableStockTracking: response.data.isEnableStockTracking,
                 isEnableAutomaticNumbering: response.data.isEnableAutomaticNumbering,
                 isShowMonthAndYear: response.data.isShowMonthAndYear,
                 pointOfSalePrefix: response.data.pointOfSalePrefix,
@@ -131,21 +137,6 @@ class Setting extends Component
             isValid = false;
         }
 
-        /*
-
-        if (this.state.pointOfSalePrefix === '' || this.state.salesInvoicePrefix === '' 
-            || this.state.purchaseInvoicePrefix === '') {
-            error.prefix = 'is required';
-            isValid = false;
-        }
-
-        if (this.state.delimiter === '') {
-            error.delimiter = 'is required';
-            isValid = false;
-        }
-        */
-
-
         this.setState({
             error: error 
         })
@@ -177,6 +168,7 @@ class Setting extends Component
                 discountPct: parseInt(this.state.discountPct),
                 serviceChargePct: parseInt(this.state.serviceChargePct),
                 isEnableServiceCharge: this.state.isEnableServiceCharge,
+                isEnableStockTracking: this.state.isEnableStockTracking,
                 isEnableAutomaticNumbering: this.state.isEnableAutomaticNumbering,
                 isShowMonthAndYear: this.state.isShowMonthAndYear,
                 pointOfSalePrefix: this.state.pointOfSalePrefix,
@@ -424,6 +416,18 @@ class Setting extends Component
                                                     &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.serviceChargePct}</span>
                                                 </div>
                                                 
+
+                                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Stock Tracking</label>
+                                                    <div class="col-md-7 col-sm-12 required">
+                                                        <Switch
+                                                            color="#1ab394"
+                                                            checked={this.state.isEnableStockTracking}
+                                                            onChange={this.onStockTrackingChange} />
+                                                        <br/><br/>
+                                                        
+                                                    </div>
+                                                </div>
+
 
 
                                                 

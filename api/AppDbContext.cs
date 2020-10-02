@@ -60,6 +60,7 @@ namespace SalePointAPI
                 entity.Property(e => e.DiscountPct).HasColumnName("DiscountPct");
                 entity.Property(e => e.ServiceChargePct).HasColumnName("ServiceChargePct");
                 entity.Property(e => e.IsEnableServiceCharge).HasColumnName("IsEnableServiceCharge");
+                entity.Property(e => e.IsEnableStockTracking).HasColumnName("IsEnableStockTracking");
                 entity.Property(e => e.IsEnableAutomaticNumbering).HasColumnName("IsEnableAutomaticNumbering");
                 entity.Property(e => e.IsShowMonthAndYear).HasColumnName("IsShowMonthAndYear");
                 entity.Property(e => e.PointOfSalePrefix).HasColumnName("PointOfSalePrefix");
@@ -157,7 +158,6 @@ namespace SalePointAPI
                 entity.Property(e => e.Stock).HasColumnName("Stock");
                 entity.Property(e => e.UnitId).HasColumnName("UnitId");
                 entity.Property(e => e.Description).HasColumnName("Description");
-                entity.Property(e => e.IsStockTracking).HasColumnName("IsStockTracking");
                 entity.Property(e => e.IsDiscontinued).HasColumnName("IsDiscontinued");
                 entity.Property(e => e.CreatedDate).HasColumnName("CreatedDate");
                 entity.Property(e => e.ModifiedDate).HasColumnName("ModifiedDate");

@@ -16,6 +16,7 @@ namespace SalePointAPI.Models
         public int DiscountPct { get; set; }
         public int ServiceChargePct { get; set;}
         public bool IsEnableServiceCharge { get; set; }
+        public bool IsEnableStockTracking { get; set; }
         public bool IsEnableAutomaticNumbering { get; set; }
         public bool IsShowMonthAndYear { get; set; }
         public string PointOfSalePrefix { get; set; }

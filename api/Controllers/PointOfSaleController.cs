@@ -162,11 +162,13 @@ namespace SalePointAPI.Controllers
 
                 //update stock 
 
+                var setting = await context.Settings.FindAsync(SETTING_ID);
+
                 foreach(var si in pointOfSale.PointOfSaleItems) 
                 {
-                    var product = await context.Products.Where(p=>p.ID == si.ProductId).SingleOrDefaultAsync();
-                    if (product.IsStockTracking) 
+                    if (setting.IsEnableStockTracking) 
                     {
+                        var product = await context.Products.Where(p=>p.ID == si.ProductId).SingleOrDefaultAsync();
                         product.Stock = product.Stock - si.Qty;
                         context.Update(product);
                     }
@@ -230,11 +232,13 @@ namespace SalePointAPI.Controllers
 
                 //Update Stock
 
+                var setting = await context.Settings.FindAsync(SETTING_ID);
+
                 foreach(var si in pointOfSale.PointOfSaleItems) 
                 {
-                    var product = await context.Products.Where(p=>p.ID == si.ProductId).SingleOrDefaultAsync();
-                    if (product.IsStockTracking) 
+                    if (setting.IsEnableStockTracking)
                     {
+                        var product = await context.Products.Where(p=>p.ID == si.ProductId).SingleOrDefaultAsync();
                         product.Stock = product.Stock + si.Qty;
                         context.Update(product);
                     }

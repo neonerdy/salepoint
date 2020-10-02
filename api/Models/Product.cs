@@ -21,7 +21,6 @@ namespace SalePointAPI.Models
         public Guid UnitId { get; set; }
         public Unit Unit { get; set; }
         public string Description { get; set; }
-        public Boolean IsStockTracking { get; set; }
         public Boolean IsDiscontinued { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
