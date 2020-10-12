@@ -16,6 +16,7 @@ namespace SalePointAPI.Controllers
 
         private readonly ILogger<PurchaseInvoiceController> logger;
         private AppDbContext context;
+        private const string SETTING_ID="E8DC5367-D553-4232-E621-08D84993E0DB";
 
         public PurchaseInvoiceController(ILogger<PurchaseInvoiceController> logger)
         {
@@ -161,13 +162,29 @@ namespace SalePointAPI.Controllers
                 purchaseInvoice.CreatedDate = DateTime.Now;
                 purchaseInvoice.ModifiedDate = DateTime.Now;
                 context.Add(purchaseInvoice);
-              
+
+                //Update record counter
+
                 var recordCounter = await context.RecordCounters.Where(rc=>rc.Month == DateTime.Now.Month 
                     && rc.Year == DateTime.Now.Year).SingleOrDefaultAsync();
 
                 recordCounter.PurchaseInvoiceLastCounter = recordCounter.PurchaseInvoiceLastCounter + 1;     
                 context.Update(recordCounter);
               
+                //update stock 
+
+                var setting = await context.Settings.FindAsync(SETTING_ID);
+
+                foreach(var pii in purchaseInvoice.PurchaseInvoiceItems) 
+                {
+                    if (setting.IsEnableStockTracking) 
+                    {
+                        var product = await context.Products.Where(p=>p.ID == pii.ProductId).SingleOrDefaultAsync();
+                        product.Stock = product.Stock - pii.Qty;
+                        context.Update(product);
+                    }
+                }
+
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)
@@ -247,6 +264,20 @@ namespace SalePointAPI.Controllers
                 context.RemoveRange(purchaseInvoiceItems);
                 context.RemoveRange(purchasePayments);
 
+                //Update Stock
+
+                var setting = await context.Settings.FindAsync(SETTING_ID);
+
+                foreach(var pii in purchaseInvoice.PurchaseInvoiceItems) 
+                {
+                    if (setting.IsEnableStockTracking)
+                    {
+                        var product = await context.Products.Where(p=>p.ID == pii.ProductId).SingleOrDefaultAsync();
+                        product.Stock = product.Stock + pii.Qty;
+                        context.Update(product);
+                    }
+                }
+                
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)

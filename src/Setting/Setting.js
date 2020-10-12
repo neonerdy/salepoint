@@ -418,7 +418,7 @@ class Setting extends Component
                                                 
 
                                                 <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Stock Tracking</label>
-                                                    <div class="col-md-7 col-sm-12 required">
+                                                    <div class="col-md-7 col-sm-12">
                                                         <Switch
                                                             color="#1ab394"
                                                             checked={this.state.isEnableStockTracking}
@@ -427,10 +427,6 @@ class Setting extends Component
                                                         
                                                     </div>
                                                 </div>
-
-
-
-                                                
 
                                                 <br/><br/>
 
@@ -444,20 +440,7 @@ class Setting extends Component
 
                                             </form>
 
-
-
-
                                         </div>
-
-
-
-
-
-
-
-
-
-
 
 
                                     </div>

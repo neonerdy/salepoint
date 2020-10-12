@@ -199,9 +199,30 @@ namespace SalePointAPI.Controllers
             int result = 0;
             try
             {
-                var pointOfSale = await context.PointOfSales.FindAsync(id);
+                var pointOfSale = await context.PointOfSales.Include(pos=>pos.PointOfSaleItems)
+                    .Where(pos=>pos.ID == id).SingleOrDefaultAsync();
+            
                 pointOfSale.Status = status;
-                context.Update(pointOfSale);     
+                context.Update(pointOfSale);  
+
+                 //Update Stock
+
+                var setting = await context.Settings.FindAsync(new Guid(SETTING_ID));
+                if (setting.IsEnableStockTracking)
+                {
+                    if (status == "Canceled")
+                    {
+                        foreach(var si in pointOfSale.PointOfSaleItems) 
+                        {
+                            if (setting.IsEnableStockTracking)
+                            {
+                                var product = await context.Products.Where(p=>p.ID == si.ProductId).SingleOrDefaultAsync();
+                                product.Stock = product.Stock + si.Qty;
+                                context.Update(product);
+                            }
+                        }
+                    }
+                }
 
                 result = await context.SaveChangesAsync();
             }
@@ -229,21 +250,6 @@ namespace SalePointAPI.Controllers
                     .ToListAsync();
                 
                 context.RemoveRange(pointOfSaleItems);
-
-                //Update Stock
-
-                var setting = await context.Settings.FindAsync(SETTING_ID);
-
-                foreach(var si in pointOfSale.PointOfSaleItems) 
-                {
-                    if (setting.IsEnableStockTracking)
-                    {
-                        var product = await context.Products.Where(p=>p.ID == si.ProductId).SingleOrDefaultAsync();
-                        product.Stock = product.Stock + si.Qty;
-                        context.Update(product);
-                    }
-                }
-
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)

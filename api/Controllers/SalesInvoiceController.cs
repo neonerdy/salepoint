@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+
 using SalePointAPI.Models;
 
 
@@ -16,6 +18,7 @@ namespace SalePointAPI.Controllers
 
         private readonly ILogger<SalesInvoiceController> logger;
         private AppDbContext context;
+        private const string SETTING_ID="E8DC5367-D553-4232-E621-08D84993E0DB";
 
         public SalesInvoiceController(ILogger<SalesInvoiceController> logger)
         {
@@ -206,9 +209,25 @@ namespace SalePointAPI.Controllers
                 salesInvoice.ModifiedDate = DateTime.Now;
                 context.SalesInvoices.Add(salesInvoice);
 
+                //update stock 
+
+                var setting = await context.Settings.FindAsync(new Guid(SETTING_ID));
+
+                foreach(var sii in salesInvoice.SalesInvoiceItems) 
+                {
+                    if (setting.IsEnableStockTracking) 
+                    {
+                        var product = await context.Products.Where(p=>p.ID == sii.ProductId).SingleOrDefaultAsync();
+                        product.Stock = product.Stock - sii.Qty;
+                        context.Update(product);
+                    }
+                }
+
+                //Update record counter 
+
                 var recordCounter = await context.RecordCounters.Where(rc=>rc.Month == DateTime.Now.Month 
                     && rc.Year == DateTime.Now.Year).SingleOrDefaultAsync();
-
+                
                 recordCounter.SalesInvoiceLastCounter = recordCounter.SalesInvoiceLastCounter + 1;     
                 context.Update(recordCounter);
 
@@ -229,28 +248,87 @@ namespace SalePointAPI.Controllers
         public async Task<IActionResult> Update([FromBody] SalesInvoice salesInvoice)
         {
             int result = 0;
-            try
-            {
-                salesInvoice.ModifiedDate = DateTime.Now;
-                context.Update(salesInvoice);
-                context.Database.ExecuteSqlRaw("DELETE FROM SalesInvoiceItems WHERE SalesInvoiceId = {0}",
-                     new object[]{salesInvoice.ID});
-            
-                foreach(var sii in salesInvoice.SalesInvoiceItems) {
-                    context.Add(sii);
-                }
-      
-                result = await context.SaveChangesAsync();
 
-            }
-            catch(Exception ex)
+            using (var transaction = context.Database.BeginTransaction())
             {
-                logger.LogError(ex.ToString());
+
+                try
+                {
+                    List<SalesInvoiceItem> items = salesInvoice.SalesInvoiceItems;
+                    salesInvoice.ModifiedDate = DateTime.Now;
+                    context.Update(salesInvoice);
+
+                    var setting = await context.Settings.FindAsync(new Guid(SETTING_ID));
+
+                    if (setting.IsEnableStockTracking)
+                    {
+                        using (var command = context.Database.GetDbConnection().CreateCommand())
+                        {
+                            command.CommandText = "SELECT ProductId, Qty FROM SalesInvoiceItems WHERE SalesInvoiceId = @SalesInvoiceId";
+                            command.Transaction = context.Database.CurrentTransaction.GetDbTransaction();
+                            context.Database.OpenConnection();
+
+                            var param = command.CreateParameter();
+                            param.ParameterName = "@SalesInvoiceId";
+                            param.Value = salesInvoice.ID;
+                            command.Parameters.Add(param);
+
+                            List<ProductViewModel> productViewModels = new List<ProductViewModel>();
+
+                            using (var rdr = command.ExecuteReader())
+                            {
+                                while(rdr.Read()) {
+
+                                    var productId = new Guid(rdr["ProductId"].ToString());
+                                    var qty = Convert.ToInt32(rdr["Qty"]);
+                                    var pvm = new ProductViewModel();
+                                    pvm.ProductId = productId;
+                                    pvm.Qty = qty;
+
+                                    productViewModels.Add(pvm);
+                                }    
+                            }
+
+                            foreach(var pvm in productViewModels)
+                            {
+                                var product = await context.Products.Where(p=>p.ID == pvm.ProductId).SingleOrDefaultAsync();
+                                product.Stock = product.Stock + pvm.Qty;
+                                context.Update(product);
+                            }
+                    
+                        }
+                    }
+
+                    result = await context.Database.ExecuteSqlRawAsync("DELETE FROM SalesInvoiceItems WHERE SalesInvoiceId = {0}",
+                        new object[]{salesInvoice.ID});
+
+                    foreach(var sii in items) 
+                    {
+                        context.Add(sii);
+                    
+                        if (setting.IsEnableStockTracking)
+                        {
+                            var product = await context.Products.Where(p=>p.ID == sii.ProductId).SingleOrDefaultAsync();
+                            product.Stock = product.Stock - sii.Qty;
+                            context.Update(product);
+                        }
+                    }
+
+                    await context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch(Exception ex)
+                {
+                    logger.LogError(ex.ToString());
+                    transaction.Rollback();
+                }
+
             }
 
             return Ok(result);
         }
         
+
 
 
         [HttpGet("{id}/{status}")]
@@ -259,10 +337,29 @@ namespace SalePointAPI.Controllers
             int result = 0;
             try
             {
-                var salesInvoice = await context.SalesInvoices.FindAsync(id);
+                var salesInvoice = await context.SalesInvoices.Include(si=>si.SalesInvoiceItems)
+                    .Where(si=>si.ID == id).SingleOrDefaultAsync();
+                
                 salesInvoice.Status = status;
                 context.Update(salesInvoice);     
 
+                //Update Stock
+
+                var setting = await context.Settings.FindAsync(new Guid(SETTING_ID));
+               
+                if (setting.IsEnableStockTracking)
+                {
+                    if (status == "Canceled")
+                    {
+                        foreach(var sii in salesInvoice.SalesInvoiceItems) 
+                        {
+                            var product = await context.Products.Where(p=>p.ID == sii.ProductId).SingleOrDefaultAsync();
+                            product.Stock = product.Stock + sii.Qty;
+                            context.Update(product);
+                        }
+                    }
+                }
+                
                 result = await context.SaveChangesAsync();
             }
             catch(Exception ex)
