@@ -32,11 +32,14 @@ namespace SalePointAPI.Controllers
             {
                 var pointOfSales = await context.PointOfSales
                     .Include(pos=>pos.Cashier)
+                    .Include(pos=>pos.PaymentType)
                     .Select(pos=>new {
                         pos.ID,
                         pos.SalesCode,
                         pos.SalesDate,
                         CustomerName = pos.Customer.CustomerName,
+                        Cashier = pos.Cashier.EmployeeName,
+                        PaymentType = pos.PaymentType.PaymentTypeName,
                         pos.Total,
                         pos.Status,
                         pos.CreatedDate,
@@ -144,6 +147,77 @@ namespace SalePointAPI.Controllers
 
             return Ok();
 
+        }
+
+
+
+        [HttpPost()]
+        public async Task<IActionResult> GetByCategory([FromBody] SearchViewModel search)
+        {   
+            try
+            {
+                List<PointOfSaleViewModel> pointOfSales = new List<PointOfSaleViewModel>();
+
+                string condition = string.Empty;
+        
+                if (!string.IsNullOrEmpty(search.Keyword)) 
+                {
+                    condition = "WHERE (pos.SalesDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND pos.SalesDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "' "
+                            + ") AND (pc.ID = '" + search.Keyword + "')";  
+                } 
+                else
+                {
+                    condition = "WHERE pos.SalesDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND pos.SalesDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "'";
+                }
+
+                string sql = "SELECT pos.ID, pos.SalesCode,pos.SalesDate, c.CustomerName, e.EmployeeName as Cashier, "
+                        + "pt.PaymentTypeName as PaymentType, pos.Total, pos.Status from PointOfSales pos "
+                        + "INNER JOIN Customers c ON pos.CustomerId = c.ID "
+                        + "INNER JOIN PaymentTypes pt ON pos.PaymentTypeId = pt.ID "
+                        + "INNER JOIN Employees e ON pos.CashierId = e.ID "
+                        + "LEFT JOIN PointOfSaleItems psi ON psi.PointOfSaleId = pos.ID "
+                        + "LEFT JOIN Products p ON P.ID = psi.ProductId "
+                        + "LEFT JOIN ProductCategories pc ON pc.ID = p.CategoryId "
+                        + condition + " "
+                        + "GROUP BY pos.ID, pos.SalesCode, pos.SalesDate, c.CustomerName, e.EmployeeName ,pt.PaymentTypeName, "
+                        + "pos.Total, pos.Status";
+
+                using (var command = context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = sql;
+                    context.Database.OpenConnection();
+                 
+                    using (var rdr = command.ExecuteReader())
+                    {
+                        while(rdr.Read())
+                        {
+                            var pos = new PointOfSaleViewModel();
+                            pos.ID = new Guid(rdr["ID"].ToString());
+                            pos.SalesCode = rdr["SalesCode"].ToString();
+                            pos.SalesDate = Convert.ToDateTime(rdr["SalesDate"]);
+                            pos.CustomerName = rdr["CustomerName"].ToString();
+                            pos.Cashier = rdr["Cashier"].ToString();
+                            pos.PaymentType = rdr["PaymentType"].ToString();
+                            pos.Total = Convert.ToDecimal(rdr["Total"]);
+                            pos.Status = rdr["Status"].ToString();
+
+                            pointOfSales.Add(pos);
+
+                        }
+                    }
+
+                } 
+        
+                return Ok(pointOfSales);
+            }
+            catch(Exception ex) 
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
         }
 
 
