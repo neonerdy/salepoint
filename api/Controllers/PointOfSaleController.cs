@@ -194,6 +194,7 @@ namespace SalePointAPI.Controllers
                         while(rdr.Read())
                         {
                             var pos = new PointOfSaleViewModel();
+                         
                             pos.ID = new Guid(rdr["ID"].ToString());
                             pos.SalesCode = rdr["SalesCode"].ToString();
                             pos.SalesDate = Convert.ToDateTime(rdr["SalesDate"]);
