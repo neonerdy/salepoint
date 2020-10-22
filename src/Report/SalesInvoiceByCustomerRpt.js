@@ -220,8 +220,8 @@ class SalesInvoiceByCustomerRpt extends Component
                                         <li><Link to="/sales-invoice-customer-rpt" class="dropdown-item">Sales Invoice by Customer</Link></li>
                                         <li><Link to="/sales-invoice-category-rpt" class="dropdown-item">Sales Invoice by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
-                                        <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Supplier</Link></li>
-                                        <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Product Category</Link></li>
+                                        <li><Link to="/purchase-invoice-supplier-rpt" class="dropdown-item">Purchase Invoice by Supplier</Link></li>
+                                        <li><Link to="/purchase-invoice-category-rpt" class="dropdown-item">Purchase Invoice by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/expense-rpt" class="dropdown-item">Expense</Link></li>
                                     </ul>

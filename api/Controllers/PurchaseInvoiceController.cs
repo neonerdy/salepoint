@@ -152,6 +152,138 @@ namespace SalePointAPI.Controllers
 
 
 
+        [HttpPost()]
+        public async Task<IActionResult> GetBySupplier([FromBody] SearchViewModel search)
+        {   
+            try
+            {
+                List<PurchaseInvoiceViewModel> purchaseInvoices = new List<PurchaseInvoiceViewModel>();
+
+                string condition = string.Empty;
+        
+                if (!string.IsNullOrEmpty(search.Keyword)) 
+                {
+                    condition = "WHERE (pi.InvoiceDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND pi.InvoiceDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "' "
+                            + ") AND (s.ID = '" + search.Keyword + "')";  
+                } 
+                else
+                {
+                    condition = "WHERE pi.InvoiceDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND pi.InvoiceDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "'";
+                }
+
+                string sql = "SELECT  pi.ID, pi.InvoiceCode,s.SupplierName, pi.InvoiceDate, pi.DueDate,"
+                    + "pi.Total, pi.AmountPaid, pi.Status FROM PurchaseInvoices pi "
+                    + "INNER JOIN Suppliers s ON pi.SupplierId = s.ID "
+                    + condition;
+                          
+                using (var command = context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = sql;
+                    context.Database.OpenConnection();
+                 
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        while(rdr.Read())
+                        {
+                            var pi = new PurchaseInvoiceViewModel();
+                         
+                            pi.ID = new Guid(rdr["ID"].ToString());
+                            pi.InvoiceCode = rdr["InvoiceCode"].ToString();
+                            pi.SupplierName = rdr["SupplierName"].ToString();
+                            pi.InvoiceDate = Convert.ToDateTime(rdr["InvoiceDate"]);
+                            pi.DueDate = Convert.ToDateTime(rdr["DueDate"]);
+                            pi.Total = Convert.ToDecimal(rdr["Total"]);
+                            pi.AmountPaid = Convert.ToDecimal(rdr["AmountPaid"]);
+                            pi.Status = rdr["Status"].ToString();
+
+                            purchaseInvoices.Add(pi);
+                        }
+                    }
+
+                } 
+        
+                return Ok(purchaseInvoices);
+            }
+            catch(Exception ex) 
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+        }
+
+
+
+        [HttpPost()]
+        public async Task<IActionResult> GetByCategory([FromBody] SearchViewModel search)
+        {   
+            try
+            {
+                List<PurchaseInvoiceViewModel> purchaseInvoices = new List<PurchaseInvoiceViewModel>();
+
+                string condition = string.Empty;
+        
+                if (!string.IsNullOrEmpty(search.Keyword)) 
+                {
+                    condition = "WHERE (pi.InvoiceDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND pi.InvoiceDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "' "
+                            + ") AND (pc.ID = '" + search.Keyword + "')";  
+                } 
+                else
+                {
+                    condition = "WHERE pi.InvoiceDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND pi.InvoiceDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "'";
+                }
+
+                string sql = "SELECT  pi.ID, pi.InvoiceCode,s.SupplierName, pi.InvoiceDate, pi.DueDate,"
+                    + "pi.Total, pi.AmountPaid, pi.Status FROM PurchaseInvoices pi "
+                    + "INNER JOIN Suppliers s ON pi.SupplierId = s.ID "
+                    + "LEFT JOIN PurchaseInvoiceItems pii ON pii.PurchaseInvoiceId = pi.ID "
+                    + "LEFT JOIN Products p ON p.ID = pii.ProductId "
+                    + "LEFT JOIN ProductCategories pc ON pc.ID = p.CategoryId "
+                    + condition 
+                    + " GROUP BY pi.ID, pi.InvoiceCode,s.SupplierName, pi.InvoiceDate, pi.DueDate,"
+                    + "pi.Total, pi.AmountPaid, pi.Status"; 
+
+                using (var command = context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = sql;
+                    context.Database.OpenConnection();
+                 
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        while(rdr.Read())
+                        {
+                            var pi = new PurchaseInvoiceViewModel();
+                         
+                            pi.ID = new Guid(rdr["ID"].ToString());
+                            pi.InvoiceCode = rdr["InvoiceCode"].ToString();
+                            pi.SupplierName = rdr["SupplierName"].ToString();
+                            pi.InvoiceDate = Convert.ToDateTime(rdr["InvoiceDate"]);
+                            pi.DueDate = Convert.ToDateTime(rdr["DueDate"]);
+                            pi.Total = Convert.ToDecimal(rdr["Total"]);
+                            pi.AmountPaid = Convert.ToDecimal(rdr["AmountPaid"]);
+                            pi.Status = rdr["Status"].ToString();
+
+                            purchaseInvoices.Add(pi);
+                        }
+                    }
+
+                } 
+        
+                return Ok(purchaseInvoices);
+            }
+            catch(Exception ex) 
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] PurchaseInvoice purchaseInvoice)

@@ -60,6 +60,8 @@ import PointOfSalePrint from './Sales/PointOfSalePrint';
 import PointOfSaleByCustomerRpt from './Report/PointOfSaleByCustomerRpt';
 import PointOfSaleByCategoryRpt from './Report/PointOfSaleByCategoryRpt';
 import SalesInvoiceByCategoryRpt from './Report/SalesInvoiceByCategoryRpt';
+import PurchaseInvoiceBySupplierRpt from './Report/PurchaseInvoiceBySupplierRpt';
+import PurchaseInvoiceByCategoryRpt from './Report/PurchaseInvoiceByCategoryRpt';
 
 
 
@@ -142,8 +144,10 @@ class App extends Component
                 <Route exact path="/pos-category-rpt" component={PointOfSaleByCategoryRpt}/>
                 <Route exact path="/sales-invoice-customer-rpt" component={SalesInvoiceByCustomerRpt}/>
                 <Route exact path="/sales-invoice-category-rpt" component={SalesInvoiceByCategoryRpt}/>
+                <Route exact path="/purchase-invoice-supplier-rpt" component={PurchaseInvoiceBySupplierRpt}/>
+                <Route exact path="/purchase-invoice-category-rpt" component={PurchaseInvoiceByCategoryRpt}/>
                
-                
+
             </div>
   
   

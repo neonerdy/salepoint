@@ -10,17 +10,16 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import Header from '../Shared/Header';
 import NavBar from '../Shared/NavBar';
 
-class SalesInvoiceByCategoryRpt extends Component
+class PurchaseInvoiceByCategoryRpt extends Component
 {
    
     constructor(props) {
         super(props);
         this.state = {
-            category: {},
             categories: [],
             categoryId: '',
             categoryName: 'All',
-            salesInvoices: [],
+            purchaseInvoices: [],
             startDate: moment().subtract(29, 'days'),
             endDate: moment()
         }
@@ -32,7 +31,7 @@ class SalesInvoiceByCategoryRpt extends Component
         window.scrollTo(0, 0);
 
         this.getCategories();
-        this.getSalesInvoices(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.categoryId);
+        this.getPurchaseInvoices(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.categoryId);
     }
 
   
@@ -58,8 +57,9 @@ class SalesInvoiceByCategoryRpt extends Component
         })
     }
 
+
     
-    getSalesInvoices = (startDate, endDate, categoryId) => {
+    getPurchaseInvoices = (startDate, endDate, categoryId) => {
 
         var filter = {
             startDate: startDate,
@@ -67,9 +67,9 @@ class SalesInvoiceByCategoryRpt extends Component
             keyword: categoryId
         }
 
-        axios.post(config.serverUrl + '/api/salesinvoice/getbycategory', filter).then(response=> {
+        axios.post(config.serverUrl + '/api/purchaseinvoice/getbycategory', filter).then(response=> {
             this.setState({
-                salesInvoices: response.data
+                purchaseInvoices: response.data
             })
         
             if (categoryId !== '') {
@@ -93,8 +93,8 @@ class SalesInvoiceByCategoryRpt extends Component
     }
 
 
-    filterSalesInvoices = () => {
-        this.getSalesInvoices(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.categoryId);
+    filterPurchaseInvoices = () => {
+        this.getPurchaseInvoices(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.categoryId);
     }
 
 
@@ -106,9 +106,9 @@ class SalesInvoiceByCategoryRpt extends Component
         let totalInvoice = 0;
         let totalPaid = 0;
         
-        this.state.salesInvoices.map(si=> {
-            totalInvoice += si.total;
-            totalPaid += si.amountPaid;
+        this.state.purchaseInvoices.map(pi=> {
+            totalInvoice += pi.total;
+            totalPaid += pi.amountPaid;
         });
 
         let totalUnpaid = totalInvoice - totalPaid;
@@ -127,7 +127,7 @@ class SalesInvoiceByCategoryRpt extends Component
                             <h2>Reports</h2>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    Sales Invoice
+                                    Purchase Invoice
                                 </li>    
                                 <li class="breadcrumb-item">
                                     {this.state.categoryName}
@@ -194,7 +194,7 @@ class SalesInvoiceByCategoryRpt extends Component
 
 
                                         <select class="form-control" name="categoryId" onChange={this.onValueChange}>
-                                        <option value="">Category</option>
+                                        <option value="">Product Category</option>
                                         {this.state.categories.map(c=> 
                                             <option value={c.id}>{c.categoryName}</option>    
                                         )}
@@ -202,8 +202,9 @@ class SalesInvoiceByCategoryRpt extends Component
                                 
                                     &nbsp;
                                     
-                                    <button class="btn btn-default" onClick={this.filterSalesInvoices}><i class="fa fa-filter"></i></button>
+                                    <button class="btn btn-default" onClick={this.filterPurchaseInvoices}><i class="fa fa-filter"></i></button>
                                     &nbsp;&nbsp;&nbsp;
+
 
                                     <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false"><i class="fa fa-archive"></i></button>
                                     <ul class="dropdown-menu" x-placement="bottom-start">
@@ -241,8 +242,12 @@ class SalesInvoiceByCategoryRpt extends Component
                         <div class="ibox-content p-xl">
                                 <div class="row">
 
+                                    
+                                    
                                     <div class="col-sm-6">
-                                        <h2>Sales Invoice ({this.state.salesInvoices.length})</h2>
+                                
+                                
+                                        <h2>Purchase Invoice ({this.state.purchaseInvoices.length})</h2>
                                         <span class="label label-primary">{this.state.categoryName}</span>
                                     </div>
 
@@ -253,10 +258,9 @@ class SalesInvoiceByCategoryRpt extends Component
                                         <thead>
                                         <tr>
                                             <th>Invoice Code</th>
-                                            <th>Customer Name</th>
+                                            <th>Supplier Name</th>
                                             <th>Invoice Date</th>
                                             <th>Due Date</th>
-                                            <th>Sales Person</th>
                                             <th>Total Invoice</th>
                                             <th>Amount Paid</th>
                                             <th>Status</th>
@@ -265,17 +269,16 @@ class SalesInvoiceByCategoryRpt extends Component
                                         
                                         <tbody>
                                             
-                                            {this.state.salesInvoices.map(si=> 
+                                            {this.state.purchaseInvoices.map(pi=> 
                                                 
-                                            <tr key={si.id}>
-                                                    <td>{si.invoiceCode}</td>
-                                                    <td>{si.customerName}</td>
-                                                    <td>{moment(si.invoiceDate).format("MM/DD/YYYY")}</td>
-                                                    <td>{moment(si.dueDate).format("MM/DD/YYYY")}</td>
-                                                    <td>{si.salesPerson}</td>
-                                                    <td>{si.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                                                    <td>{si.amountPaid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                                                    <td>{si.status}</td>
+                                            <tr key={pi.id}>
+                                                <td>{pi.invoiceCode}</td>
+                                                <td>{pi.supplierName}</td>
+                                                <td>{moment(pi.invoiceDate).format("MM/DD/YYYY")}</td>
+                                                <td>{moment(pi.dueDate).format("MM/DD/YYYY")}</td>
+                                                <td>{pi.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                <td>{pi.amountPaid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                <td>{pi.status}</td>
                                             </tr>
                                                 
                                             )} 
@@ -334,5 +337,5 @@ class SalesInvoiceByCategoryRpt extends Component
 
 }
 
-export default SalesInvoiceByCategoryRpt;
+export default PurchaseInvoiceByCategoryRpt;
 
