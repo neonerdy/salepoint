@@ -198,6 +198,146 @@ namespace SalePointAPI.Controllers
         }
 
 
+        [HttpPost()]
+        public async Task<IActionResult> GetByCustomer([FromBody] SearchViewModel search)
+        {   
+            try
+            {
+                List<SalesInvoiceViewModel> salesInvoices = new List<SalesInvoiceViewModel>();
+
+                string condition = string.Empty;
+        
+                if (!string.IsNullOrEmpty(search.Keyword)) 
+                {
+                    condition = "WHERE (si.InvoiceDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND si.InvoiceDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "' "
+                            + ") AND (c.ID = '" + search.Keyword + "')";  
+                } 
+                else
+                {
+                    condition = "WHERE si.InvoiceDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND si.InvoiceDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "'";
+                }
+
+                string sql ="SELECT  si.ID, si.InvoiceCode,c.CustomerName, si.InvoiceDate, si.DueDate, e.EmployeeName as SalesPerson,"
+                          + "si.Total, si.AmountPaid, si.Status FROM SalesInvoices si "  
+                          + "INNER JOIN Customers c ON si.CustomerId = c.ID " 
+                          + "INNER JOIN Employees e ON si.SalesPersonId = e.ID "
+                          + condition;
+                          
+                using (var command = context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = sql;
+                    context.Database.OpenConnection();
+                 
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        while(rdr.Read())
+                        {
+                            var si = new SalesInvoiceViewModel();
+                         
+                            si.ID = new Guid(rdr["ID"].ToString());
+                            si.InvoiceCode = rdr["InvoiceCode"].ToString();
+                            si.CustomerName = rdr["CustomerName"].ToString();
+                            si.InvoiceDate = Convert.ToDateTime(rdr["InvoiceDate"]);
+                            si.DueDate = Convert.ToDateTime(rdr["DueDate"]);
+                            si.SalesPerson = rdr["SalesPerson"].ToString();
+                            si.Total = Convert.ToDecimal(rdr["Total"]);
+                            si.Status = rdr["Status"].ToString();
+
+                            salesInvoices.Add(si);
+                        }
+                    }
+
+                } 
+        
+                return Ok(salesInvoices);
+            }
+            catch(Exception ex) 
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+        }
+
+
+
+
+        [HttpPost()]
+        public async Task<IActionResult> GetByCategory([FromBody] SearchViewModel search)
+        {   
+            try
+            {
+                List<SalesInvoiceViewModel> salesInvoices = new List<SalesInvoiceViewModel>();
+
+                string condition = string.Empty;
+        
+                if (!string.IsNullOrEmpty(search.Keyword)) 
+                {
+                    condition = "WHERE (si.InvoiceDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND si.InvoiceDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "' "
+                            + ") AND (pc.ID = '" + search.Keyword + "')";  
+                } 
+                else
+                {
+                    condition = "WHERE si.InvoiceDate >= '" + search.StartDate.Date.ToString("MM/dd/yyyy") 
+                            + "' AND si.InvoiceDate <= '" + search.EndDate.Date.ToString("MM/dd/yyyy") + "'";
+                }
+
+
+                string sql = "SELECT  si.ID, si.InvoiceCode,c.CustomerName, si.InvoiceDate, si.DueDate, e.EmployeeName as SalesPerson,"
+                    + "si.Total, si.AmountPaid, si.Status FROM SalesInvoices si "
+                    + "INNER JOIN Customers c ON si.CustomerId = c.ID "
+                    + "INNER JOIN Employees e ON si.SalesPersonId = e.ID "
+                    + "LEFT JOIN SalesInvoiceItems sii ON sii.SalesInvoiceId = si.ID "
+                    + "LEFT JOIN Products p ON p.ID = sii.ProductId "
+                    + "LEFT JOIN ProductCategories pc ON pc.ID = p.CategoryId "
+                    + condition
+                    + "GROUP BY si.ID,si.InvoiceCode,c.CustomerName, si.InvoiceDate, si.DueDate, e.EmployeeName, si.Total, si.AmountPaid, si.Status";
+                          
+                using (var command = context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = sql;
+                    context.Database.OpenConnection();
+                 
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        while(rdr.Read())
+                        {
+                            var si = new SalesInvoiceViewModel();
+                         
+                            si.ID = new Guid(rdr["ID"].ToString());
+                            si.InvoiceCode = rdr["InvoiceCode"].ToString();
+                            si.CustomerName = rdr["CustomerName"].ToString();
+                            si.InvoiceDate = Convert.ToDateTime(rdr["InvoiceDate"]);
+                            si.DueDate = Convert.ToDateTime(rdr["DueDate"]);
+                            si.SalesPerson = rdr["SalesPerson"].ToString();
+                            si.Total = Convert.ToDecimal(rdr["Total"]);
+                            si.Status = rdr["Status"].ToString();
+
+                            salesInvoices.Add(si);
+                        }
+                    }
+
+                } 
+        
+                return Ok(salesInvoices);
+            }
+            catch(Exception ex) 
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();
+        }
+
+
+
+
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] SalesInvoice salesInvoice)

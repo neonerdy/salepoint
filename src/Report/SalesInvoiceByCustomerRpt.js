@@ -10,18 +10,18 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import Header from '../Shared/Header';
 import NavBar from '../Shared/NavBar';
 
-class SalesInvoiceRpt extends Component
+class SalesInvoiceByCustomerRpt extends Component
 {
    
     constructor(props) {
         super(props);
         this.state = {
-            company: {},
             customers: [],
+            customerId: '',
             customerName: 'All',
             salesInvoices: [],
-            start: moment().subtract(29, 'days'),
-            end: moment()
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
         }
     }
 
@@ -30,24 +30,13 @@ class SalesInvoiceRpt extends Component
         
         window.scrollTo(0, 0);
 
-        this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
         this.getCustomers();
-        this.getSalesInvoices();
+        this.getSalesInvoices(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.customerId);
     }
 
   
-    handleCallback = (start, end) => {
-        this.setState({ start, end});
-    }
-
-
-    getCompanyById = (id) => {
-        axios.get(config.serverUrl + '/api/company/getById/' + id).then(response=> {
-            this.setState({
-                company: response.data
-            })
-
-        })
+    handleDateCallback = (startDate, endDate) => {
+        this.setState({ startDate, endDate});
     }
 
 
@@ -60,21 +49,61 @@ class SalesInvoiceRpt extends Component
     }
 
 
-    getSalesInvoices = () => {
-        axios.get(config.serverUrl + '/api/salesinvoice/getall').then(response=> {
+    
+    getCustomerById = (id) => {
+        axios.get(config.serverUrl + '/api/customer/getbyid/' + id).then(response=> {
             this.setState({
-                salesInvoices: response.data
+                customerName: response.data.customerName
             })
         })
     }
 
+
+    
+    getSalesInvoices = (startDate, endDate, customerId) => {
+
+        var filter = {
+            startDate: startDate,
+            endDate: endDate,
+            keyword: customerId
+        }
+
+        axios.post(config.serverUrl + '/api/salesinvoice/getbycustomer', filter).then(response=> {
+            this.setState({
+                salesInvoices: response.data
+            })
+        
+            if (customerId !== '') {
+                this.getCustomerById(customerId);
+             } else {
+                this.setState({
+                    customerName: 'All'
+                })
+             }
+        })
+    }
+
+
+
+    onValueChange = (e) => {
+
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+
+    }
+
+
+    filterSalesInvoices = () => {
+        this.getSalesInvoices(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.customerId);
+    }
 
 
 
     render() {
 
        
-        let label = this.state.start.format('MMMM D, YYYY') + ' - ' + this.state.end.format('MMMM D, YYYY'); 
+        let dateLabel = this.state.startDate.format('MMMM D, YYYY') + ' - ' + this.state.endDate.format('MMMM D, YYYY'); 
         let totalInvoice = 0;
         let totalPaid = 0;
         
@@ -113,67 +142,68 @@ class SalesInvoiceRpt extends Component
 
                             <div class="btn-group2">
 
-                            <DateRangePicker
-                                            initialSettings={{
-                                            startDate: this.state.start.toDate(),
-                                            endDate: this.state.end.toDate(),
-                                            ranges: {
-                                                Today: [moment().toDate(), moment().toDate()],
-                                                Yesterday: [
-                                                moment().subtract(1, 'days').toDate(),
-                                                moment().subtract(1, 'days').toDate(),
-                                                ],
-                                                'Last 7 Days': [
-                                                moment().subtract(6, 'days').toDate(),
-                                                moment().toDate(),
-                                                ],
-                                                'Last 30 Days': [
-                                                moment().subtract(29, 'days').toDate(),
-                                                moment().toDate(),
-                                                ],
-                                                'This Month': [
-                                                moment().startOf('month').toDate(),
-                                                moment().endOf('month').toDate(),
-                                                ],
-                                                'Last Month': [
-                                                moment().subtract(1, 'month').startOf('month').toDate(),
-                                                moment().subtract(1, 'month').endOf('month').toDate(),
-                                                ],
-                                            },
-                                            }}
-                                            onCallback={this.handleCallback}
+                                  <DateRangePicker
+                                        initialSettings={{
+                                        startDate: this.state.startDate.toDate(),
+                                        endDate: this.state.endDate.toDate(),
+                                        ranges: {
+                                            Today: [moment().toDate(), moment().toDate()],
+                                            Yesterday: [
+                                            moment().subtract(1, 'days').toDate(),
+                                            moment().subtract(1, 'days').toDate(),
+                                            ],
+                                            'Last 7 Days': [
+                                            moment().subtract(6, 'days').toDate(),
+                                            moment().toDate(),
+                                            ],
+                                            'Last 30 Days': [
+                                            moment().subtract(29, 'days').toDate(),
+                                            moment().toDate(),
+                                            ],
+                                            'This Month': [
+                                            moment().startOf('month').toDate(),
+                                            moment().endOf('month').toDate(),
+                                            ],
+                                            'Last Month': [
+                                            moment().subtract(1, 'month').startOf('month').toDate(),
+                                            moment().subtract(1, 'month').endOf('month').toDate(),
+                                            ],
+                                        },
+                                        }}
+                                        onCallback={this.handleDateCallback}
+                                    >
+                                        <div
+                                        id="reportrange"
+                                       
+                                        style={{
+                                            background: '#fff',
+                                            cursor: 'pointer',
+                                            padding: '5px 10px',
+                                            border: '1px solid #ccc',
+                                            width: '100%',
+                                        }}
                                         >
-                                            <div
-                                            id="reportrange"
-                                        
-                                            style={{
-                                                background: '#fff',
-                                                cursor: 'pointer',
-                                                padding: '5px 10px',
-                                                border: '1px solid #ccc',
-                                                width: '100%',
-                                            }}
-                                            >
-                                            <i className="fa fa-calendar"></i>&nbsp;
-                                            <span>{label}</span> <i className="fa fa-caret-down"></i>
-                                            </div>
-                                        </DateRangePicker>
-                                    
+                                        <i className="fa fa-calendar"></i>&nbsp;
+                                        <span>{dateLabel}</span> <i className="fa fa-caret-down"></i>
+                                        </div>
+                                    </DateRangePicker>
+                         
+
+
+
                                         &nbsp;&nbsp;
 
 
-                                        <select class="form-control" onChange={this.onValueChange}>
+                                        <select class="form-control" name="customerId" onChange={this.onValueChange}>
                                         <option value="">Customer</option>
                                         {this.state.customers.map(c=> 
                                             <option value={c.id}>{c.customerName}</option>    
                                         )}
                                     </select>
                                 
-
-
                                     &nbsp;
                                     
-                                    <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                                    <button class="btn btn-default" onClick={this.filterSalesInvoices}><i class="fa fa-filter"></i></button>
                                     &nbsp;&nbsp;&nbsp;
 
 
@@ -184,21 +214,16 @@ class SalesInvoiceRpt extends Component
                                         <li><Link to="/customer-rpt" class="dropdown-item">Customer</Link></li>
                                         <li><Link to="/supplier-rpt" class="dropdown-item">Supplier</Link></li>
                                         <li class="dropdown-divider"></li>
-                                        <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Customer</Link></li>
-                                        <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Category</Link></li>
-                                        <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Product</Link></li>
+                                        <li><Link to="/pos-customer-rpt" class="dropdown-item">Point of Sale by Customer</Link></li>
+                                        <li><Link to="/pos-category-rpt" class="dropdown-item">Point of Sale by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
-                                        <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Customer</Link></li>
-                                        <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Category</Link></li>
-                                        <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Product</Link></li>
+                                        <li><Link to="/sales-invoice-customer-rpt" class="dropdown-item">Sales Invoice by Customer</Link></li>
+                                        <li><Link to="/sales-invoice-category-rpt" class="dropdown-item">Sales Invoice by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Supplier</Link></li>
-                                        <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Category</Link></li>
-                                        <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Product</Link></li>
+                                        <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/expense-rpt" class="dropdown-item">Expense</Link></li>
-
-
                                     </ul>
                                     &nbsp;
                             
@@ -227,16 +252,6 @@ class SalesInvoiceRpt extends Component
                                         <span class="label label-primary">{this.state.customerName}</span>
                                     </div>
 
-                                    <div class="col-sm-6 text-right">
-                                    
-                                        <address>
-                                            <strong>{this.state.company.companyName}</strong><br/>
-                                            {this.state.company.address}<br/>
-                                            {this.state.company.city}<br/>
-                                            <abbr title="Phone"></abbr> {this.state.company.phone}
-                                        </address>
-                                        
-                                    </div>
                                 </div>
 
                                 <div>
@@ -325,4 +340,5 @@ class SalesInvoiceRpt extends Component
 
 }
 
-export default SalesInvoiceRpt;
+export default SalesInvoiceByCustomerRpt;
+

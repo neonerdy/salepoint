@@ -93,9 +93,16 @@ class EmployeeRpt extends Component
                                     <li><Link to="/product-rpt" class="dropdown-item">Product</Link></li>
                                     <li><Link to="/customer-rpt" class="dropdown-item">Customer</Link></li>
                                     <li><Link to="/supplier-rpt" class="dropdown-item">Supplier</Link></li>
-                                    <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale</Link></li>
-                                    <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice</Link></li>
-                                    <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice</Link></li>
+                                    <li class="dropdown-divider"></li>
+                                    <li><Link to="/pos-customer-rpt" class="dropdown-item">Point of Sale by Customer</Link></li>
+                                    <li><Link to="/pos-category-rpt" class="dropdown-item">Point of Sale by Product Category</Link></li>
+                                    <li class="dropdown-divider"></li>
+                                    <li><Link to="/sales-invoice-customer-rpt" class="dropdown-item">Sales Invoice by Customer</Link></li>
+                                    <li><Link to="/sales-invoice-category-rpt" class="dropdown-item">Sales Invoice by Product Category</Link></li>
+                                    <li class="dropdown-divider"></li>
+                                    <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Supplier</Link></li>
+                                    <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Product Category</Link></li>
+                                    <li class="dropdown-divider"></li>
                                     <li><Link to="/expense-rpt" class="dropdown-item">Expense</Link></li>
                                 </ul>
                                 &nbsp;

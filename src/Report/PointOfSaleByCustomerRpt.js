@@ -10,29 +10,29 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import Header from '../Shared/Header';
 import NavBar from '../Shared/NavBar';
 
-class PointOfSaleByCategoryRpt extends Component
+class PointOfSaleByCustomerRpt extends Component
 {
    
     constructor(props) {
         super(props);
         this.state = {
-            category: {},
-            categories: [],
-            categoryId: '',
-            categoryName: 'All',
+            company: {},
+            customers: [],
+            customerId: '',
+            customerName: 'All',
             pointOfSales: [],
             startDate: moment().subtract(29, 'days'),
-            endDate: moment(),        }
+            endDate: moment()
+        }
     }
 
 
     componentDidMount() {
         
         window.scrollTo(0, 0);
-
-        this.getCategories();
-        this.getPointOfSales(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.categoryId);
-
+    
+        this.getCustomers();
+        this.getPointOfSales(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.customerId);
     }
 
   
@@ -41,46 +41,48 @@ class PointOfSaleByCategoryRpt extends Component
     }
 
 
-    getCategories = () => {
-        axios.get(config.serverUrl + '/api/productcategory/getall').then(response=> {
+    getCustomers = () => {
+        axios.get(config.serverUrl + '/api/customer/getall').then(response=> {
             this.setState({
-                categories: response.data
+                customers: response.data
             })
         })
     }
 
 
-    getCategoryById = (id) => {
-        axios.get(config.serverUrl + '/api/productcategory/getbyid/' + id).then(response=> {
+    
+    getCustomerById = (id) => {
+        axios.get(config.serverUrl + '/api/customer/getbyid/' + id).then(response=> {
             this.setState({
-                categoryName: response.data.categoryName
+                customerName: response.data.customerName
             })
         })
     }
 
 
-    getPointOfSales = (startDate, endDate, categoryId) => {
+    getPointOfSales = (startDate, endDate, customerId) => {
 
         var filter = {
             startDate: startDate,
             endDate: endDate,
-            keyword: categoryId
+            keyword: customerId
         }
 
-        axios.post(config.serverUrl + '/api/pointofsale/getbycategory', filter).then(response=> {
+        axios.post(config.serverUrl + '/api/pointofsale/getbycustomer', filter).then(response=> {
             this.setState({
                 pointOfSales: response.data
             })
         
-            if (categoryId !== '') {
-                this.getCategoryById(categoryId);
+            if (customerId !== '') {
+                this.getCustomerById(customerId);
              } else {
                 this.setState({
-                    categoryName: 'All'
+                    customerName: 'All'
                 })
              }
         })
     }
+
 
 
     onValueChange = (e) => {
@@ -93,9 +95,7 @@ class PointOfSaleByCategoryRpt extends Component
 
 
     filterPointOfSales = () => {
-
-        this.getPointOfSales(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.categoryId);
-        
+        this.getPointOfSales(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.customerId);
     }
 
 
@@ -123,10 +123,10 @@ class PointOfSaleByCategoryRpt extends Component
                             <h2>Reports</h2>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    Sales
+                                    Point of Sale
                                 </li>    
                                 <li class="breadcrumb-item">
-                                    {this.state.categoryName}
+                                    {this.state.customerName}
                                 </li>                        
                             </ol>
                             
@@ -137,7 +137,7 @@ class PointOfSaleByCategoryRpt extends Component
 
                             <div class="btn-group2">
 
-                            <DateRangePicker
+                                  <DateRangePicker
                                         initialSettings={{
                                         startDate: this.state.startDate.toDate(),
                                         endDate: this.state.endDate.toDate(),
@@ -182,18 +182,16 @@ class PointOfSaleByCategoryRpt extends Component
                                         <span>{dateLabel}</span> <i className="fa fa-caret-down"></i>
                                         </div>
                                     </DateRangePicker>
-                              
+                         
+                                    &nbsp;&nbsp;
 
-                                        &nbsp;&nbsp;
-
-
-                                    <select class="form-control" name="categoryId" onChange={this.onValueChange}>
-                                        <option value="">All Product Category</option>
-                                        {this.state.categories.map(c=> 
-                                            <option value={c.id}>{c.categoryName}</option>    
+                                    <select class="form-control" name="customerId" onChange={this.onValueChange} >
+                                        <option value="">Customer</option>
+                                        {this.state.customers.map(c=> 
+                                            <option value={c.id}>{c.customerName}</option>    
                                         )}
                                     </select>
-                                
+                    
                                     &nbsp;
                                     
                                     <button class="btn btn-default" onClick={this.filterPointOfSales}><i class="fa fa-filter"></i></button>
@@ -207,7 +205,7 @@ class PointOfSaleByCategoryRpt extends Component
                                         <li><Link to="/customer-rpt" class="dropdown-item">Customer</Link></li>
                                         <li><Link to="/supplier-rpt" class="dropdown-item">Supplier</Link></li>
                                         <li class="dropdown-divider"></li>
-                                        <li><Link to="/pos-customer-rpt" class="dropdown-item">Point of Sale by Customer</Link></li>
+                                        <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Customer</Link></li>
                                         <li><Link to="/pos-category-rpt" class="dropdown-item">Point of Sale by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/sales-invoice-customer-rpt" class="dropdown-item">Sales Invoice by Customer</Link></li>
@@ -217,6 +215,8 @@ class PointOfSaleByCategoryRpt extends Component
                                         <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/expense-rpt" class="dropdown-item">Expense</Link></li>
+
+
                                     </ul>
                                     &nbsp;
                             
@@ -235,10 +235,14 @@ class PointOfSaleByCategoryRpt extends Component
 
                         <div class="ibox-content p-xl">
                                 <div class="row">
-    
+
+                                    
+                                    
                                     <div class="col-sm-6">
-                                        <h2>Point of Sale by Category ({this.state.pointOfSales.length})</h2>
-                                        <span class="label label-primary">{this.state.categoryName}</span>
+                                
+                                
+                                        <h2>Point of Sale by Customer ({this.state.pointOfSales.length})</h2>
+                                        <span class="label label-primary">{this.state.customerName}</span>
                                     </div>
 
                                 </div>
@@ -318,4 +322,4 @@ class PointOfSaleByCategoryRpt extends Component
 
 }
 
-export default PointOfSaleByCategoryRpt;
+export default PointOfSaleByCustomerRpt;

@@ -50,15 +50,16 @@ import Setting from './Setting/Setting';
 import User from './Setting/User';
 import ProductRpt from './Report/ProductRpt';
 import EmployeeRpt from './Report/EmployeeRpt';
-import SalesInvoiceRpt from './Report/SalesInvoiceRpt';
+import SalesInvoiceByCustomerRpt from './Report/SalesInvoiceByCustomerRpt';
 import RoleAccess from './Setting/RoleAccess';
 import RoleAccessAdd from './Setting/RoleAccessAdd';
 import RoleAccessEdit from './Setting/RoleAccessEdit';
 import SalesInvoicePrint from './Invoice/SalesInvoicePrint';
 import PurchaseInvoicePrint from './Invoice/PurchaseInvoicePrint';
 import PointOfSalePrint from './Sales/PointOfSalePrint';
-import PointOfSaleRpt from './Report/PointOfSaleRpt';
+import PointOfSaleByCustomerRpt from './Report/PointOfSaleByCustomerRpt';
 import PointOfSaleByCategoryRpt from './Report/PointOfSaleByCategoryRpt';
+import SalesInvoiceByCategoryRpt from './Report/SalesInvoiceByCategoryRpt';
 
 
 
@@ -137,10 +138,11 @@ class App extends Component
                 
                 <Route exact path="/product-rpt" component={ProductRpt}/>
                 <Route exact path="/employee-rpt" component={EmployeeRpt}/>
-                <Route exact path="/sales-invoice-rpt" component={SalesInvoiceRpt}/>
-                <Route exact path="/pos-rpt" component={PointOfSaleRpt}/>
+                <Route exact path="/pos-customer-rpt" component={PointOfSaleByCustomerRpt}/>
                 <Route exact path="/pos-category-rpt" component={PointOfSaleByCategoryRpt}/>
-
+                <Route exact path="/sales-invoice-customer-rpt" component={SalesInvoiceByCustomerRpt}/>
+                <Route exact path="/sales-invoice-category-rpt" component={SalesInvoiceByCategoryRpt}/>
+               
                 
             </div>
   

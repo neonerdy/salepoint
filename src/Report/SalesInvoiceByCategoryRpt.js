@@ -10,16 +10,17 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import Header from '../Shared/Header';
 import NavBar from '../Shared/NavBar';
 
-class PointOfSaleRpt extends Component
+class SalesInvoiceByCategoryRpt extends Component
 {
    
     constructor(props) {
         super(props);
         this.state = {
-            company: {},
-            customers: [],
-            customerName: 'All',
-            pointOfSales: [],
+            category: {},
+            categories: [],
+            categoryId: '',
+            categoryName: 'All',
+            salesInvoices: [],
             startDate: moment().subtract(29, 'days'),
             endDate: moment()
         }
@@ -30,51 +31,71 @@ class PointOfSaleRpt extends Component
         
         window.scrollTo(0, 0);
 
-        this.getCompanyById('E8DC5367-D553-4232-E621-08D84993E0DB');
-        this.getCustomers();
-        this.getPointOfSales(this.state.startDate.toDate(), this.state.endDate.toDate());
-
+        this.getCategories();
+        this.getSalesInvoices(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.categoryId);
     }
 
   
-    handleCallback = (start, end) => {
-        this.setState({ start, end});
+    handleDateCallback = (startDate, endDate) => {
+        this.setState({ startDate, endDate});
     }
 
 
-    getCompanyById = (id) => {
-        axios.get(config.serverUrl + '/api/company/getById/' + id).then(response=> {
+    getCategories = () => {
+        axios.get(config.serverUrl + '/api/productcategory/getall').then(response=> {
             this.setState({
-                company: response.data
-            })
-
-        })
-    }
-
-
-    getCustomers = () => {
-        axios.get(config.serverUrl + '/api/customer/getall').then(response=> {
-            this.setState({
-                customers: response.data
+                categories: response.data
             })
         })
     }
 
 
-    getPointOfSales = (startDate, endDate) => {
+    getCategoryById = (id) => {
+        axios.get(config.serverUrl + '/api/productcategory/getbyid/' + id).then(response=> {
+            this.setState({
+                categoryName: response.data.categoryName
+            })
+        })
+    }
 
-        var dateRange = {
+    
+    getSalesInvoices = (startDate, endDate, categoryId) => {
+
+        var filter = {
             startDate: startDate,
-            endDate: endDate
+            endDate: endDate,
+            keyword: categoryId
         }
 
-        axios.post(config.serverUrl + '/api/pointofsale/getbydate', dateRange).then(response=> {
+        axios.post(config.serverUrl + '/api/salesinvoice/getbycategory', filter).then(response=> {
             this.setState({
-                pointOfSales: response.data
+                salesInvoices: response.data
             })
+        
+            if (categoryId !== '') {
+                this.getCategoryById(categoryId);
+             } else {
+                this.setState({
+                    categoryName: 'All'
+                })
+             }
         })
     }
 
+
+
+    onValueChange = (e) => {
+
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+
+    }
+
+
+    filterSalesInvoices = () => {
+        this.getSalesInvoices(this.state.startDate.toDate(), this.state.endDate.toDate(), this.state.categoryId);
+    }
 
 
 
@@ -82,11 +103,15 @@ class PointOfSaleRpt extends Component
 
        
         let dateLabel = this.state.startDate.format('MMMM D, YYYY') + ' - ' + this.state.endDate.format('MMMM D, YYYY'); 
-        let totalSales = 0;
+        let totalInvoice = 0;
+        let totalPaid = 0;
         
-        this.state.pointOfSales.map(si=> {
-            totalSales += si.total;
+        this.state.salesInvoices.map(si=> {
+            totalInvoice += si.total;
+            totalPaid += si.amountPaid;
         });
+
+        let totalUnpaid = totalInvoice - totalPaid;
 
         return(
      
@@ -102,10 +127,10 @@ class PointOfSaleRpt extends Component
                             <h2>Reports</h2>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    Point of Sale
+                                    Sales Invoice
                                 </li>    
                                 <li class="breadcrumb-item">
-                                    {this.state.customerName}
+                                    {this.state.categoryName}
                                 </li>                        
                             </ol>
                             
@@ -116,7 +141,7 @@ class PointOfSaleRpt extends Component
 
                             <div class="btn-group2">
 
-                                <DateRangePicker
+                                  <DateRangePicker
                                         initialSettings={{
                                         startDate: this.state.startDate.toDate(),
                                         endDate: this.state.endDate.toDate(),
@@ -161,27 +186,24 @@ class PointOfSaleRpt extends Component
                                         <span>{dateLabel}</span> <i className="fa fa-caret-down"></i>
                                         </div>
                                     </DateRangePicker>
-
+                         
 
 
 
                                         &nbsp;&nbsp;
 
 
-                                        <select class="form-control" onChange={this.onValueChange}>
-                                        <option value="">Customer</option>
-                                        {this.state.customers.map(c=> 
-                                            <option value={c.id}>{c.customerName}</option>    
+                                        <select class="form-control" name="categoryId" onChange={this.onValueChange}>
+                                        <option value="">Category</option>
+                                        {this.state.categories.map(c=> 
+                                            <option value={c.id}>{c.categoryName}</option>    
                                         )}
                                     </select>
                                 
-
-
                                     &nbsp;
                                     
-                                    <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                                    <button class="btn btn-default" onClick={this.filterSalesInvoices}><i class="fa fa-filter"></i></button>
                                     &nbsp;&nbsp;&nbsp;
-
 
                                     <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false"><i class="fa fa-archive"></i></button>
                                     <ul class="dropdown-menu" x-placement="bottom-start">
@@ -190,18 +212,16 @@ class PointOfSaleRpt extends Component
                                         <li><Link to="/customer-rpt" class="dropdown-item">Customer</Link></li>
                                         <li><Link to="/supplier-rpt" class="dropdown-item">Supplier</Link></li>
                                         <li class="dropdown-divider"></li>
-                                        <li><Link to="/pos-rpt" class="dropdown-item">Point of Sale by Customer</Link></li>
+                                        <li><Link to="/pos-customer-rpt" class="dropdown-item">Point of Sale by Customer</Link></li>
                                         <li><Link to="/pos-category-rpt" class="dropdown-item">Point of Sale by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
-                                        <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Customer</Link></li>
-                                        <li><Link to="/sales-invoice-rpt" class="dropdown-item">Sales Invoice by Product Category</Link></li>
+                                        <li><Link to="/sales-invoice-customer-rpt" class="dropdown-item">Sales Invoice by Customer</Link></li>
+                                        <li><Link to="/sales-invoice-category-rpt" class="dropdown-item">Sales Invoice by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Supplier</Link></li>
                                         <li><Link to="/purchase-invoice-rpt" class="dropdown-item">Purchase Invoice by Product Category</Link></li>
                                         <li class="dropdown-divider"></li>
                                         <li><Link to="/expense-rpt" class="dropdown-item">Expense</Link></li>
-
-
                                     </ul>
                                     &nbsp;
                             
@@ -221,53 +241,41 @@ class PointOfSaleRpt extends Component
                         <div class="ibox-content p-xl">
                                 <div class="row">
 
-                                    
-                                    
                                     <div class="col-sm-6">
-                                
-                                
-                                        <h2>Point of Sale by Customer ({this.state.pointOfSales.length})</h2>
-                                        <span class="label label-primary">{this.state.customerName}</span>
+                                        <h2>Sales Invoice ({this.state.salesInvoices.length})</h2>
+                                        <span class="label label-primary">{this.state.categoryName}</span>
                                     </div>
 
-                                    <div class="col-sm-6 text-right">
-                                    
-                                        <address>
-                                            <strong>{this.state.company.companyName}</strong><br/>
-                                            {this.state.company.address}<br/>
-                                            {this.state.company.city}<br/>
-                                            <abbr title="Phone"></abbr> {this.state.company.phone}
-                                        </address>
-                                        
-                                    </div>
                                 </div>
 
                                 <div>
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th>Sale Code</th>
+                                            <th>Invoice Code</th>
                                             <th>Customer Name</th>
-                                            <th>Date</th>
-                                            <th>Cashier</th>
-                                            <th>Payment Type</th>
-                                            <th>Total</th>
+                                            <th>Invoice Date</th>
+                                            <th>Due Date</th>
+                                            <th>Sales Person</th>
+                                            <th>Total Invoice</th>
+                                            <th>Amount Paid</th>
                                             <th>Status</th>
                                         </tr>
                                         </thead>
                                         
                                         <tbody>
                                             
-                                            {this.state.pointOfSales.map(pos=> 
+                                            {this.state.salesInvoices.map(si=> 
                                                 
-                                            <tr key={pos.id}>
-                                                    <td>{pos.salesCode}</td>
-                                                    <td>{pos.customerName}</td>
-                                                    <td>{moment(pos.salesDate).format("MM/DD/YYYY")}</td>
-                                                    <td>{pos.cashier}</td>
-                                                    <td>{pos.paymentType}</td>
-                                                    <td>{pos.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                                                    <td>{pos.status}</td>
+                                            <tr key={si.id}>
+                                                    <td>{si.invoiceCode}</td>
+                                                    <td>{si.customerName}</td>
+                                                    <td>{moment(si.invoiceDate).format("MM/DD/YYYY")}</td>
+                                                    <td>{moment(si.dueDate).format("MM/DD/YYYY")}</td>
+                                                    <td>{si.salesPerson}</td>
+                                                    <td>{si.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                    <td>{si.amountPaid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                                    <td>{si.status}</td>
                                             </tr>
                                                 
                                             )} 
@@ -282,9 +290,18 @@ class PointOfSaleRpt extends Component
                                 <table class="table invoice-total">
                                     <tbody>
                                     <tr>
-                                        <td><strong>Total Sales :</strong></td>
-                                        <td>{totalSales.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                        <td><strong>Total Invoice :</strong></td>
+                                        <td>{totalInvoice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                     </tr>
+                                    <tr>
+                                        <td><strong>Total Paid :</strong></td>
+                                        <td>{totalPaid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Unpaid :</strong></td>
+                                        <td>{totalUnpaid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                    </tr>
+                                    
                                     </tbody>
                                 </table>
             
@@ -317,4 +334,5 @@ class PointOfSaleRpt extends Component
 
 }
 
-export default PointOfSaleRpt;
+export default SalesInvoiceByCategoryRpt;
+
