@@ -307,9 +307,9 @@ namespace SalePointAPI.Controllers
 
                 var setting = await context.Settings.FindAsync(new Guid(SETTING_ID));
 
-                foreach(var pii in purchaseInvoice.PurchaseInvoiceItems) 
+                if (setting.IsEnableStockTracking)
                 {
-                    if (setting.IsEnableStockTracking) 
+                    foreach(var pii in purchaseInvoice.PurchaseInvoiceItems) 
                     {
                         var product = await context.Products.Where(p=>p.ID == pii.ProductId).SingleOrDefaultAsync();
                         product.Stock = product.Stock - pii.Qty;

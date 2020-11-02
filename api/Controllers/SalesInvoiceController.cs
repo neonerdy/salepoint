@@ -353,16 +353,17 @@ namespace SalePointAPI.Controllers
 
                 var setting = await context.Settings.FindAsync(new Guid(SETTING_ID));
 
-                foreach(var sii in salesInvoice.SalesInvoiceItems) 
+                if (setting.IsEnableStockTracking)
                 {
-                    if (setting.IsEnableStockTracking) 
+                    foreach(var sii in salesInvoice.SalesInvoiceItems) 
                     {
                         var product = await context.Products.Where(p=>p.ID == sii.ProductId).SingleOrDefaultAsync();
                         product.Stock = product.Stock - sii.Qty;
                         context.Update(product);
                     }
                 }
-
+                
+                
                 //Update record counter 
 
                 var recordCounter = await context.RecordCounters.Where(rc=>rc.Month == DateTime.Now.Month 
