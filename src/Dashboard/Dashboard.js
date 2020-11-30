@@ -17,9 +17,20 @@ class Dashboard extends Component
         super(props);
         
         this.state = {
+            totalSales: '',
+            totalPurchase: '',
+            totalExpense: '',
             startDate: moment().subtract(29, 'days'),
             endDate: moment()
         }
+    }
+
+
+    componentDidMount() {
+
+        this.getTotalSales(this.state.startDate.toDate(), this.state.endDate.toDate());
+        this.getTotalPurchase(this.state.startDate.toDate(), this.state.endDate.toDate());
+        this.getTotalExpense(this.state.startDate.toDate(), this.state.endDate.toDate());
     }
 
 
@@ -27,11 +38,70 @@ class Dashboard extends Component
         this.setState({ startDate, endDate});
     }
 
+    
+    getTotalPurchase = (startDate, endDate) => {
+
+        var dateRange = {
+            startDate: startDate,
+            endDate: endDate
+        }
+
+        axios.post(config.serverUrl + '/api/purchaseinvoice/gettotalpurchase', dateRange).then(response=> {
+            this.setState({
+                totalPurchase: response.data,
+            })
+        })
+    }
+
+
+    getTotalSales = (startDate, endDate) => {
+
+        var dateRange = {
+            startDate: startDate,
+            endDate: endDate
+        }
+
+        axios.post(config.serverUrl + '/api/salesinvoice/gettotalsales', dateRange).then(response=> {
+            this.setState({
+                totalSales: response.data,
+            })
+        })
+    }
+
+
+
+    getTotalExpense = (startDate, endDate) => {
+
+        var dateRange = {
+            startDate: startDate,
+            endDate: endDate
+        }
+
+        axios.post(config.serverUrl + '/api/expense/gettotalexpense', dateRange).then(response=> {
+            this.setState({
+                totalExpense: response.data,
+            })
+        })
+    }
+
+
+
+    filterDashboard = () => {
+    
+        this.getTotalSales(this.state.startDate.toDate(), this.state.endDate.toDate());
+        this.getTotalPurchase(this.state.startDate.toDate(), this.state.endDate.toDate());
+        this.getTotalExpense(this.state.startDate.toDate(), this.state.endDate.toDate());
+    }
+
+
+
+
+
     render()
     {
 
         let dateLabel = this.state.startDate.format('MMMM D, YYYY') + ' - ' + this.state.endDate.format('MMMM D, YYYY'); 
-
+        let profiltLoss = this.state.totalSales - (this.state.totalPurchase+this.state.totalExpense);
 
         return (
 
@@ -99,7 +169,7 @@ class Dashboard extends Component
                         </DateRangePicker>
                     
                         &nbsp;&nbsp;
-                        <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                        <button class="btn btn-default" onClick={this.filterDashboard}><i class="fa fa-filter"></i></button>
 
                     </div>
                       
@@ -116,7 +186,7 @@ class Dashboard extends Component
                                 
                                     <div class="col-8">
                                         <span> PURCHASES </span>
-                                        <h2 class="font-bold">6,200</h2>
+                                            <h2 class="font-bold">{this.state.totalPurchase}</h2>
                                     </div>
                                 </div>
                         </div>
@@ -127,7 +197,7 @@ class Dashboard extends Component
                                 
                                 <div class="col-8">
                                     <span> SALES</span>
-                                    <h2 class="font-bold">14,000</h2>
+                                    <h2 class="font-bold">{this.state.totalSales}</h2>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +208,7 @@ class Dashboard extends Component
                             
                                 <div class="col-8">
                                     <span> EXPENSES</span>
-                                    <h2 class="font-bold">4,500</h2>
+                                         <h2 class="font-bold">{this.state.totalExpense}</h2>
                                 </div>
                             </div>
                         </div>
@@ -151,7 +221,7 @@ class Dashboard extends Component
                                         <div class="row">
                                             <div class="col-8">
                                                 <span> PROFIT LOSS</span>
-                                                <h2 class="font-bold">9,500</h2>
+                                                <h2 class="font-bold">{profiltLoss}</h2>
                                             </div>
                                         </div>
 

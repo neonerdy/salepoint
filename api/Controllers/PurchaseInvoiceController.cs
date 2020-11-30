@@ -25,6 +25,26 @@ namespace SalePointAPI.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> GetTotalPurchase([FromBody] DateRangeViewModel dateRange)
+        {
+            try
+            {
+                var totalPurchase = context.PurchaseInvoices
+                     .Where(pi=>pi.InvoiceDate.Date >= dateRange.StartDate.Date && pi.InvoiceDate.Date <= dateRange.EndDate.Date)
+                     .Sum(e=>e.Amount);  
+
+                return Ok(totalPurchase);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();    
+        }
+
+
 
         [HttpPost()]
         public async Task<IActionResult> GetByDate([FromBody] DateRangeViewModel dateRange)

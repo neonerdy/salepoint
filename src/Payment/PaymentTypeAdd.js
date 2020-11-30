@@ -84,7 +84,7 @@ class PaymentTypeAdd extends Component
                 <Header/>
                 <NavBar/>
             
-            <div id="page-wrapper" class="gray-bg">
+               <div id="page-wrapper" class="gray-bg">
 
 
                 <div class="row wrapper border-bottom white-bg page-heading">

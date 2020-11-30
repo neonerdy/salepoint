@@ -26,6 +26,35 @@ namespace SalePointAPI.Controllers
             context = new AppDbContext();
         }
 
+        
+        [HttpPost]
+        public async Task<IActionResult> GetTotalSales([FromBody] DateRangeViewModel dateRange)
+        {
+            try
+            {
+
+                var totalPos = context.PointOfSales
+                     .Where(po=>po.SalesDate.Date >= dateRange.StartDate.Date && po.SalesDate.Date <= dateRange.EndDate.Date)
+                     .Sum(e=>e.Amount);  
+
+
+                var totalSalesInvoice = context.SalesInvoices
+                     .Where(si=>si.InvoiceDate.Date >= dateRange.StartDate.Date && si.InvoiceDate.Date <= dateRange.EndDate.Date)
+                     .Sum(e=>e.Amount);  
+
+                var totalSales = totalPos + totalSalesInvoice;
+
+                return Ok(totalSales);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+            }
+
+            return Ok();    
+        }
+
+
 
         [HttpPost()]
         public async Task<IActionResult> GetByDate([FromBody] DateRangeViewModel dateRange)
