@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 import Footer from '../Shared/Footer';
 import axios from 'axios';
 import config from '../Shared/Config';
+import Header from '../Shared/Header';
+import NavBar from '../Shared/NavBar';
 
 
 class PaymentTypeEdit extends Component
@@ -99,70 +101,79 @@ class PaymentTypeEdit extends Component
 
 
         return(
+
+            <div>
+
+                <Header/>
+                <NavBar/>
+            
            
-           <div id="page-wrapper" class="gray-bg">
-                
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-lg-8">
-                    <h2>Edit Payment Type</h2>
+                <div id="page-wrapper" class="gray-bg">
+                    
+                <div class="row wrapper border-bottom white-bg page-heading">
+                    <div class="col-lg-8">
+                        <h2>Edit Payment Type</h2>
+                    </div>
                 </div>
-            </div>
 
-        <br/>
+            <br/>
 
-        <div class="row">
-            <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
 
-                <div class="ibox">
+                    <div class="ibox">
 
-                      <div class="ibox-content">
+                        <div class="ibox-content">
 
-                      <br/>
-                            <form>
+                        <br/>
+                                <form>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Name</label>
-                                    <div class="col-md-7 col-sm-12 required">
-                                        <input type="text" class="form-control" name="paymentTypeName" onChange={this.onValueChange} value={this.state.paymentTypeName}/>
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Payment Name</label>
+                                        <div class="col-md-7 col-sm-12 required">
+                                            <input type="text" class="form-control" name="paymentTypeName" onChange={this.onValueChange} value={this.state.paymentTypeName}/>
+                                        </div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.paymentTypeName}</span>
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style={errStyle}>{this.state.error.paymentTypeName}</span>
-                                </div>
 
-                                <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
-                                    <div class="col-md-7 col-sm-12">
-                                        <input type="text" class="form-control" name="description" onChange={this.onValueChange} value={this.state.description}/>
+                                    <div class="form-group  row"><label class="col-md-3 control-label" style={{textAlign:'right'}}>Description</label>
+                                        <div class="col-md-7 col-sm-12">
+                                            <input type="text" class="form-control" name="description" onChange={this.onValueChange} value={this.state.description}/>
+                                        </div>
                                     </div>
-                                </div>
-                                <br/><br/>
+                                    <br/><br/>
 
-                                <div class="hr-line-dashed"></div>
+                                    <div class="hr-line-dashed"></div>
+                                
+
+                                    <div class="text-right">
+                                            <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>&nbsp;
+                                            <button type="button" onClick={this.updatePaymentType} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
+                                    </div>
+
                             
-
-                                <div class="text-right">
-                                        <a class="btn btn-link text-left" href="#" onClick={this.cancelUpdate}>Cancel</a>&nbsp;
-                                        <button type="button" onClick={this.updatePaymentType} class="btn btn-success"><i class="fa fa-check icon-white"></i> Update</button>
-                                </div>
-
-                          
-                            </form>
+                                </form>
 
 
 
-                      </div>
-                      
+                        </div>
+                        
 
 
+                    </div>
+
+                
                 </div>
-
-            
+                
+                
             </div>
-            
-            
-        </div>
 
+            
+            <Footer/>
+
+            </div>
+
+         </div>
         
-        <Footer/>
-
-        </div>
         )
 
     }

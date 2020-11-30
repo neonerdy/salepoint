@@ -167,9 +167,7 @@ class ProductRpt extends Component
                                     </select>
                                     &nbsp;
                                     <button class="btn btn-default"><i class="fa fa-filter"></i></button>
-                                    <button class="btn btn-default"><i class="fa fa-print"></i></button>
                                     &nbsp;&nbsp;&nbsp;
-
 
                                     <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false"><i class="fa fa-archive"></i></button>
                                     <ul class="dropdown-menu" x-placement="bottom-start">
