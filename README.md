@@ -11,7 +11,7 @@ Web based Point of Sale
 
 ![Alt text](https://github.com/neonerdy/salepoint/blob/master/pos.JPG "POS")
 
-![Alt text](https://github.com/neonerdy/salepoint/blob/master/expense.JPG "Expense")
+![Alt text](https://github.com/neonerdy/salepoint/blob/master/expense2.JPG "Expense")
 
 
 
